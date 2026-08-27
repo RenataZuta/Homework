@@ -1,0 +1,13 @@
+# Credenciales (NUNCA subir esto a un repositorio público)
+.env
+
+# Archivos generados por el programa
+output/
+*.csv
+*.png
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/

@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Blitz de los Lunes",
+    "weekday": 0,
+    "time": "18:00",
+    "clock_time": 3,
+    "clock_increment": 2,
+    "minutes": 60,
+    "variant": "standard",
+    "rated": true
+  },
+  {
+    "name": "Rapid de los Miércoles",
+    "weekday": 2,
+    "time": "19:00",
+    "clock_time": 10,
+    "clock_increment": 0,
+    "minutes": 90,
+    "variant": "standard",
+    "rated": true
+  },
+  {
+    "name": "Chess960 de los Viernes",
+    "weekday": 4,
+    "time": "20:00",
+    "clock_time": 5,
+    "clock_increment": 3,
+    "minutes": 60,
+    "variant": "chess960",
+    "rated": true
+  }
+]
