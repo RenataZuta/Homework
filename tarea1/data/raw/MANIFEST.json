@@ -1,0 +1,51 @@
+{
+  "version_manifiesto": 1,
+  "documentos": {
+    "ley_32069": {
+      "documento": "ley_32069",
+      "nombre": "Ley N.° 32069, Ley General de Contrataciones Públicas (versión actualizada al 19.07.2026)",
+      "version": "ley_vigente",
+      "archivo": "ley_32069.pdf",
+      "url_pagina": "https://www.gob.pe/institucion/osce/colecciones/45029-ley-n-32069-ley-general-de-contrataciones-publicas",
+      "url_origen": "https://cdn.www.gob.pe/uploads/document/file/9295551/6444155-ley-general-de-contrataciones-publicas-con-modificaciones-posteriores-hasta-el-19-07-2026.pdf?v=1787002595",
+      "fecha_descarga": "2026-09-21T10:21:39-05:00",
+      "sha256": "f14ffa37b824b8af03c0b97e0603839a786ed61c7ca07b1d300c9af928d133f7",
+      "bytes": 547209,
+      "paginas": 63,
+      "content_type": "application/pdf",
+      "origen": "descarga",
+      "nota": "Compendio \"versión actualizada\" elaborado por el OECE (fuente base: SPIJ) e integrado con las modificatorias posteriores hasta el 19.07.2026. NO es el texto original publicado en El Peruano. Es lo único que la colección oficial del OECE ofrece para la Ley."
+    },
+    "ds_009_2025_ef": {
+      "documento": "ds_009_2025_ef",
+      "nombre": "Decreto Supremo N.° 009-2025-EF, Reglamento de la Ley N.° 32069",
+      "version": "reglamento_original_2025",
+      "archivo": "ds_009_2025_ef.pdf",
+      "url_pagina": "https://www.gob.pe/institucion/mef/normas-legales/6401561-009-2025-ef",
+      "url_origen": "https://cdn.www.gob.pe/uploads/document/file/7530416/6401561-ds009_2025ef.pdf?v=1737643286",
+      "fecha_descarga": "2026-09-21T10:21:42-05:00",
+      "sha256": "a3d39c7de4541866c20efa68623827bb7cc1e18410f099a5bfc8b1866788da08",
+      "bytes": 19584058,
+      "paginas": 196,
+      "content_type": "application/pdf",
+      "origen": "descarga",
+      "nota": "PDF escaneado (sin capa de texto): requiere OCR. La página oficial también publica una fe de erratas (https://cdn.www.gob.pe/uploads/document/file/7577939/6401561-fe-de-erratas-del-ds-n-009-2025-ef.pdf) que NO se incluye en el corpus; se declara como limitación."
+    },
+    "ds_001_2026_ef": {
+      "documento": "ds_001_2026_ef",
+      "nombre": "Decreto Supremo N.° 001-2026-EF, modifica el Reglamento de la Ley N.° 32069",
+      "version": "modificatoria_2026-01",
+      "archivo": "ds_001_2026_ef.pdf",
+      "url_pagina": "https://busquedas.elperuano.pe/dispositivo/NL/2474920-3",
+      "url_origen": "https://busquedas.elperuano.pe/api/archivo/file/4UFSj6jQKdnBeQxKkvTolN/*/2474920-3.PDF",
+      "fecha_descarga": "2026-09-21T10:21:43-05:00",
+      "sha256": "2c272250c2cf5b5b3236be8bb5d9ef4622892d99f9e8c00caa485b710828b038",
+      "bytes": 3730404,
+      "paginas": 16,
+      "content_type": "application/pdf",
+      "origen": "descarga",
+      "nota": "Publicado en El Peruano el 08/01/2026 (según la ficha oficial de la norma)."
+    }
+  },
+  "actualizado": "2026-09-21T10:21:43-05:00"
+}
