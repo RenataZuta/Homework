@@ -1,0 +1,45 @@
+{
+ "documento": "ds_001_2026_ef",
+ "nombre": "Decreto Supremo N.° 001-2026-EF, modifica el Reglamento de la Ley N.° 32069",
+ "version": "modificatoria_2026-01",
+ "generado": "2026-09-21T11:15:55-05:00",
+ "convencion_pagina": "pagina = índice del PDF, empezando en 1",
+ "paginas": {
+  "total_pdf": 16,
+  "procesadas": 16,
+  "por_origen": {
+   "texto": 16,
+   "ocr": 0
+  },
+  "excluidas": 0,
+  "excluidas_por_motivo": {}
+ },
+ "caracteres": {
+  "total": 103454,
+  "por_pagina": {
+   "media": 6465.88,
+   "mediana": 6804.0,
+   "min": 214,
+   "max": 7845
+  }
+ },
+ "paginas_con_poco_texto": [],
+ "ocr": null,
+ "limpieza": {
+  "paginas_con_cabecera_eliminada": 16,
+  "lineas_de_cabecera_eliminadas": 72,
+  "paginas_con_sello_de_firma": 1,
+  "paginas_recortadas_por_fin_de_norma": 1,
+  "lineas_de_otras_normas_descartadas": 141
+ },
+ "indicador_calidad": {
+  "pct_alfabeticos_medio": 0.944,
+  "pct_palabras_conocidas_medio_ocr": null,
+  "confianza_ocr_media": null
+ },
+ "muestra_del_medio": {
+  "pagina": 9,
+  "origen": "texto",
+  "texto": "“Artículo 194. Prestaciones adicionales de obra\nbajo el sistema de entrega solo construcción\n(…)\n194.3. No corresponde suscribir una adenda al contrato\npor la aprobación de la prestación adicional, bastando\ncon su publicación en la Pladicop para que surta todos\nsus efectos. Se encuentra prohibida la aprobación de\nprestaciones adicionales en vía de regularización.\n(…)”\n“Artículo 195. Prestaciones adicionales de obra\nbajo el sistema de entrega diseño y construcción\n(…)\n195.2. La aprobación de las prestaciones adicionales\nen el componente de diseño se realiza conforme al\nnumeral 193.1 del artículo 193.\n(…)\n195.4. No corresponde suscribir una adenda al\ncontrato por la aprobación del adicional, bastando con\nsu publicación en la Pladicop para que surta todos sus\nefectos. Se encuentra prohibida la aprobación de\nprestaciones adicionales en vía de regularización.\n(…)”\n“Artículo 198. Ampliación de"
+ }
+}

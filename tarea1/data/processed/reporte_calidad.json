@@ -1,0 +1,282 @@
+{
+ "documentos": [
+  {
+   "documento": "ley_32069",
+   "nombre": "Ley N.° 32069, Ley General de Contrataciones Públicas (versión actualizada al 19.07.2026)",
+   "version": "ley_vigente",
+   "generado": "2026-09-21T11:15:55-05:00",
+   "convencion_pagina": "pagina = índice del PDF, empezando en 1",
+   "paginas": {
+    "total_pdf": 63,
+    "procesadas": 63,
+    "por_origen": {
+     "texto": 63,
+     "ocr": 0
+    },
+    "excluidas": 0,
+    "excluidas_por_motivo": {}
+   },
+   "caracteres": {
+    "total": 215269,
+    "por_pagina": {
+     "media": 3416.97,
+     "mediana": 3474,
+     "min": 1179,
+     "max": 4200
+    }
+   },
+   "paginas_con_poco_texto": [],
+   "ocr": null,
+   "limpieza": {
+    "paginas_con_cabecera_eliminada": 0,
+    "lineas_de_cabecera_eliminadas": 0,
+    "paginas_con_sello_de_firma": 0,
+    "paginas_recortadas_por_fin_de_norma": 0,
+    "lineas_de_otras_normas_descartadas": 0
+   },
+   "indicador_calidad": {
+    "pct_alfabeticos_medio": 0.962,
+    "pct_palabras_conocidas_medio_ocr": null,
+    "confianza_ocr_media": null
+   },
+   "muestra_del_medio": {
+    "pagina": 32,
+    "origen": "texto",
+    "texto": "Artículo 66. Adelantos\n\n66.1. La entidad contratante puede entregar adelantos al contratista con la finalidad de otorgarle\nfinanciamiento o liquidez para la ejecución del contrato en las condiciones establecidas y\nfundamentadas en la estrategia de contratación.\n\n66.2. El adelanto puede ser:\n\na) Directo.\nb) Para materiales e insumos, equipamiento y mobiliario.\nc) Otros que sean establecidos en el reglamento.\n\n66.3. Los documentos del procedimiento de selección pueden establecer adelantos directos al\ncontratista, los que en ningún caso exceden en conjunto del 30 % del monto del contrato original.\n\n66.4. El reglamento establece las condiciones y demás criterios para otorgar los adelantos y para\nsu amortización, así como asegurar que se cumpla la finalidad de los adelantos.\n\nArtículo 67. Pagos\n\n67.1. Las entidades contratantes realizan el pago al contratista de forma oportuna luego de\nhabers"
+   }
+  },
+  {
+   "documento": "ds_009_2025_ef",
+   "nombre": "Decreto Supremo N.° 009-2025-EF, Reglamento de la Ley N.° 32069",
+   "version": "reglamento_original_2025",
+   "generado": "2026-09-21T11:15:55-05:00",
+   "convencion_pagina": "pagina = índice del PDF, empezando en 1",
+   "paginas": {
+    "total_pdf": 196,
+    "procesadas": 75,
+    "por_origen": {
+     "texto": 0,
+     "ocr": 75
+    },
+    "excluidas": 121,
+    "excluidas_por_motivo": {
+     "escasa_lectura (portada, formulario o tabla)": [
+      1,
+      2,
+      22,
+      23,
+      24,
+      25,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116,
+      117,
+      118,
+      119,
+      120,
+      121,
+      122,
+      123,
+      124,
+      125,
+      126,
+      127,
+      128,
+      129,
+      130,
+      131,
+      132,
+      133,
+      134,
+      135,
+      136,
+      137,
+      138,
+      139,
+      140,
+      141,
+      142,
+      143,
+      144,
+      145,
+      146,
+      147,
+      148,
+      149,
+      150,
+      151,
+      152,
+      153,
+      154,
+      155,
+      156,
+      157,
+      158,
+      159,
+      160,
+      161,
+      162,
+      163,
+      164,
+      165,
+      166,
+      167,
+      168,
+      169,
+      170,
+      171,
+      172,
+      173,
+      174,
+      175,
+      176,
+      177,
+      178,
+      179,
+      180,
+      181,
+      182,
+      183,
+      184,
+      185,
+      186,
+      187,
+      188,
+      189,
+      190,
+      191,
+      192,
+      193,
+      194,
+      195,
+      196
+     ],
+     "menor prioridad (fuera del subconjunto de OCR)": [
+      8,
+      12,
+      35,
+      49,
+      61,
+      66,
+      69,
+      72,
+      75,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      95,
+      99,
+      101,
+      102,
+      103,
+      104
+     ]
+    }
+   },
+   "caracteres": {
+    "total": 529118,
+    "por_pagina": {
+     "media": 7054.91,
+     "mediana": 7072,
+     "min": 4795,
+     "max": 7868
+    }
+   },
+   "paginas_con_poco_texto": [],
+   "ocr": {
+    "paginas": 75,
+    "motor": "tesseract",
+    "dpi": 200,
+    "segundos_por_pagina": {
+     "media": 4.45,
+     "mediana": 4.46,
+     "min": 2.89,
+     "max": 5.01
+    },
+    "segundos_total": 333.5,
+    "confianza_motor": {
+     "media": 88.89,
+     "mediana": 88.9,
+     "min": 80.3,
+     "max": 90.5
+    }
+   },
+   "limpieza": {
+    "paginas_con_cabecera_eliminada": 75,
+    "lineas_de_cabecera_eliminadas": 161,
+    "paginas_con_sello_de_firma": 0,
+    "paginas_recortadas_por_fin_de_norma": 0,
+    "lineas_de_otras_normas_descartadas": 0
+   },
+   "indicador_calidad": {
+    "pct_alfabeticos_medio": 0.962,
+    "pct_palabras_conocidas_medio_ocr": 0.882,
+    "confianza_ocr_media": 88.9
+   },
+   "muestra_del_medio": {
+    "pagina": 47,
+    "origen": "ocr",
+    "texto": "Cc) La entidad contratante notifica la resolución que se\npronuncia sobre la solicitud de la prestación adicional en un\nplazo máximo de cinco días habiles contabilizados desde\nel día siguiente de recibido el sustento del supervisor,\nsegún corresponda.\n\n193.3. En caso se aprueben adicionales de obra que\nimpacten de forma directa en la ejecución del contrato de\nsupervisión de obra, las prestaciones del supervisor que\nderiven de este no se consideran un adicional del contrato\nde supervisión, por lo que no se encuentra sujeta al límite\nmáximo del 25% establecido en el numeral 64.1 del artículo\n54 de la Ley Para la aprobación de estas prestaciones se\naplica el siguiente procedimiento:\n\na) En un plazo: máximo de cinco dias hábiles desde la\nremisión de su opinión favorable o del expediente técnico\ndel adicional elaborado por el, a la que hace referencia\nel literal d) del numeral 194.2 del artícu"
+   }
+  },
+  {
+   "documento": "ds_001_2026_ef",
+   "nombre": "Decreto Supremo N.° 001-2026-EF, modifica el Reglamento de la Ley N.° 32069",
+   "version": "modificatoria_2026-01",
+   "generado": "2026-09-21T11:15:55-05:00",
+   "convencion_pagina": "pagina = índice del PDF, empezando en 1",
+   "paginas": {
+    "total_pdf": 16,
+    "procesadas": 16,
+    "por_origen": {
+     "texto": 16,
+     "ocr": 0
+    },
+    "excluidas": 0,
+    "excluidas_por_motivo": {}
+   },
+   "caracteres": {
+    "total": 103454,
+    "por_pagina": {
+     "media": 6465.88,
+     "mediana": 6804.0,
+     "min": 214,
+     "max": 7845
+    }
+   },
+   "paginas_con_poco_texto": [],
+   "ocr": null,
+   "limpieza": {
+    "paginas_con_cabecera_eliminada": 16,
+    "lineas_de_cabecera_eliminadas": 72,
+    "paginas_con_sello_de_firma": 1,
+    "paginas_recortadas_por_fin_de_norma": 1,
+    "lineas_de_otras_normas_descartadas": 141
+   },
+   "indicador_calidad": {
+    "pct_alfabeticos_medio": 0.944,
+    "pct_palabras_conocidas_medio_ocr": null,
+    "confianza_ocr_media": null
+   },
+   "muestra_del_medio": {
+    "pagina": 9,
+    "origen": "texto",
+    "texto": "“Artículo 194. Prestaciones adicionales de obra\nbajo el sistema de entrega solo construcción\n(…)\n194.3. No corresponde suscribir una adenda al contrato\npor la aprobación de la prestación adicional, bastando\ncon su publicación en la Pladicop para que surta todos\nsus efectos. Se encuentra prohibida la aprobación de\nprestaciones adicionales en vía de regularización.\n(…)”\n“Artículo 195. Prestaciones adicionales de obra\nbajo el sistema de entrega diseño y construcción\n(…)\n195.2. La aprobación de las prestaciones adicionales\nen el componente de diseño se realiza conforme al\nnumeral 193.1 del artículo 193.\n(…)\n195.4. No corresponde suscribir una adenda al\ncontrato por la aprobación del adicional, bastando con\nsu publicación en la Pladicop para que surta todos sus\nefectos. Se encuentra prohibida la aprobación de\nprestaciones adicionales en vía de regularización.\n(…)”\n“Artículo 198. Ampliación de"
+   }
+  }
+ ]
+}

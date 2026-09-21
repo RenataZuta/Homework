@@ -1,0 +1,2900 @@
+{
+ "documento": "ds_009_2025_ef",
+ "motor": "tesseract",
+ "dpi": 200,
+ "paginas": {
+  "1": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {},
+   "caracteres": 401,
+   "confianza": 66.0,
+   "segundos": 0.72,
+   "muestra": "DIARIO OFICIAL DEL BICENTENARIO — 154 ES _. MIÉRCOLES 22 eru ano > LIADO 2318 CITAS 14 1% POR ES ERA DOS SIMON POH IVAR “AÑO DE LA RECUPERACIÓN Y CONSOLIDACIÓN "
+  },
+  "2": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {},
+   "caracteres": 0,
+   "confianza": null,
+   "segundos": 0.18,
+   "muestra": ""
+  },
+  "3": {
+   "encabezados": [
+    {
+     "nivel": "titulo",
+     "texto": "TÍTULO 1 DISPOSICIONES GENERALES"
+    }
+   ],
+   "articulos": [
+    1,
+    2,
+    3,
+    1,
+    2,
+    3
+   ],
+   "palabras_clave": {
+    "registro_proveedores": 1
+   },
+   "caracteres": 5644,
+   "confianza": 87.7,
+   "segundos": 3.53,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES 3 DECRETO SUPREMO N\" 009-2025-EF DECRETO SUPREMO QUE APRUEBA EL REGLAMENTO DE LA LEY N* 32069, LEY GEN"
+  },
+  "4": {
+   "encabezados": [
+    {
+     "nivel": "titulo",
+     "texto": "TÍTULO 1"
+    }
+   ],
+   "articulos": [
+    5,
+    7,
+    8,
+    9
+   ],
+   "palabras_clave": {
+    "contratacion_menor": 1,
+    "registro_proveedores": 3,
+    "seleccion": 1,
+    "controversias": 1,
+    "pladicop": 1
+   },
+   "caracteres": 6307,
+   "confianza": 87.3,
+   "segundos": 3.96,
+   "muestra": "4 NORMAS LEGALES Miércoñes 22 05 enero se 2025/ MY Erporuano p) INDECOPE Instituto Nacional de Defensa de Artículo 6. Plan Anual de Supervisión y Asistencia la "
+  },
+  "5": {
+   "encabezados": [
+    {
+     "nivel": "capitulo",
+     "texto": "CAPÍTULO II ENTIDADES CONTRATANTES"
+    }
+   ],
+   "articulos": [
+    10,
+    11,
+    12,
+    13,
+    15,
+    16,
+    17
+   ],
+   "palabras_clave": {
+    "contratacion_menor": 1,
+    "garantias_penalidades": 1,
+    "pladicop": 4
+   },
+   "caracteres": 7003,
+   "confianza": 88.1,
+   "segundos": 4.31,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES 5 Articulo 10. Obligación de entregar información al QECE 10.1 ELOEGE enel desarrollodesu función supe"
+  },
+  "6": {
+   "encabezados": [
+    {
+     "nivel": "subcapitulo",
+     "texto": "SUBCAPÍTULO 1"
+    }
+   ],
+   "articulos": [
+    15,
+    20,
+    21,
+    22
+   ],
+   "palabras_clave": {
+    "registro_proveedores": 36,
+    "pladicop": 2
+   },
+   "caracteres": 6977,
+   "confianza": 88.4,
+   "segundos": 4.31,
+   "muestra": "6 NORMAS LEGALES Miércoses 22 48 enero de 2005 / E3 ElPerano funcionarios y servidores que cuenten con la certificación vigente, asi como el nivel alcanzado. 17"
+  },
+  "7": {
+   "encabezados": [],
+   "articulos": [
+    25
+   ],
+   "palabras_clave": {
+    "registro_proveedores": 12,
+    "garantias_penalidades": 1
+   },
+   "caracteres": 6909,
+   "confianza": 87.5,
+   "segundos": 4.2,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES 7 b) Los patrimonios autónomos para celebrar contratos sobre bienes y servicios; tales como sociedad c"
+  },
+  "8": {
+   "encabezados": [],
+   "articulos": [
+    26,
+    27,
+    29
+   ],
+   "palabras_clave": {
+    "contratacion_menor": 1,
+    "registro_proveedores": 11,
+    "seleccion": 1,
+    "pladicop": 1
+   },
+   "caracteres": 6782,
+   "confianza": 88.3,
+   "segundos": 4.29,
+   "muestra": "8 NORMAS LEGALES Miércoses 22 48 enero e 2005 / 85 ElPerano determinar su capacidad máxima de contratación, y en el caso de consultores de obra, aquella que acr"
+  },
+  "9": {
+   "encabezados": [],
+   "articulos": [
+    30,
+    31,
+    33,
+    34,
+    35,
+    36
+   ],
+   "palabras_clave": {
+    "registro_proveedores": 43,
+    "seleccion": 2,
+    "pladicop": 2
+   },
+   "caracteres": 6934,
+   "confianza": 89.3,
+   "segundos": 4.27,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES 9 obra 3 suscribir el contrato. El procedimiento de expedición de la COLC es electrónico y de aprobaci"
+  },
+  "10": {
+   "encabezados": [],
+   "articulos": [
+    37,
+    39
+   ],
+   "palabras_clave": {
+    "registro_proveedores": 28,
+    "garantias_penalidades": 2,
+    "pladicop": 2
+   },
+   "caracteres": 7448,
+   "confianza": 88.4,
+   "segundos": 4.59,
+   "muestra": "NORMAS LEGALES Miércoses 22 48 enero de 2005 / E54 ElPerano a) Contratos suscritos con entidades contratantes. asi como sus modificatorias. bj) Contratos de car"
+  },
+  "11": {
+   "encabezados": [
+    {
+     "nivel": "titulo",
+     "texto": "TÍTULO Ii"
+    },
+    {
+     "nivel": "capitulo",
+     "texto": "CAPÍTULO 1 ACTUACIONES PREPARATORIAS"
+    },
+    {
+     "nivel": "subcapitulo",
+     "texto": "SUBCAPÍTULO 1"
+    }
+   ],
+   "articulos": [
+    40,
+    41,
+    43
+   ],
+   "palabras_clave": {
+    "contratacion_menor": 1,
+    "registro_proveedores": 6,
+    "seleccion": 4,
+    "garantias_penalidades": 1,
+    "pladicop": 2
+   },
+   "caracteres": 7150,
+   "confianza": 88.2,
+   "segundos": 4.42,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES ”“ 39.4. Para los casos de excepción de las causales de impedimento debido a parentesco. establecido e"
+  },
+  "12": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "seleccion": 1,
+    "garantias_penalidades": 3,
+    "pladicop": 2
+   },
+   "caracteres": 7185,
+   "confianza": 88.3,
+   "segundos": 4.41,
+   "muestra": "Y NORMAS LEGALES Miércoses 22 48 enero de 2005 / E34 ElPerano 447. La DEC verífica que el requeñmiento cumpla las disposiciones de la Ley y el Reglamento y, de "
+  },
+  "13": {
+   "encabezados": [],
+   "articulos": [
+    43,
+    50,
+    51,
+    52,
+    53
+   ],
+   "palabras_clave": {
+    "registro_proveedores": 11,
+    "seleccion": 1,
+    "pladicop": 4
+   },
+   "caracteres": 7089,
+   "confianza": 88.8,
+   "segundos": 4.32,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES LE] Asimismo, se puede solicitar información-a los potenciales proveedores del rubro del objeto de la "
+  },
+  "14": {
+   "encabezados": [],
+   "articulos": [
+    55,
+    56,
+    59
+   ],
+   "palabras_clave": {
+    "registro_proveedores": 1,
+    "seleccion": 5,
+    "pladicop": 1
+   },
+   "caracteres": 7108,
+   "confianza": 88.9,
+   "segundos": 4.46,
+   "muestra": "14 NORMAS LEGALES Miércoses 22 48 enero de 2005 / E54 ElPerano 544. Guando un procedimiento de selección sea declarado desierto, la siguiente convocatoria no re"
+  },
+  "15": {
+   "encabezados": [
+    {
+     "nivel": "subcapitulo",
+     "texto": "SUBCAPÍTULO 1"
+    }
+   ],
+   "articulos": [
+    60,
+    61,
+    62,
+    63
+   ],
+   "palabras_clave": {
+    "registro_proveedores": 6,
+    "seleccion": 12,
+    "pladicop": 6
+   },
+   "caracteres": 6065,
+   "confianza": 90.3,
+   "segundos": 3.69,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES 5 c) Los acuerdos que adopte y los votos en discordia, con su respectiva fundamentación, constan en ac"
+  },
+  "16": {
+   "encabezados": [],
+   "articulos": [
+    65,
+    67,
+    68
+   ],
+   "palabras_clave": {
+    "registro_proveedores": 5,
+    "seleccion": 3,
+    "garantias_penalidades": 1,
+    "pladicop": 8
+   },
+   "caracteres": 7733,
+   "confianza": 89.5,
+   "segundos": 4.73,
+   "muestra": "16 NORMAS LEGALES Miércoses 22 48 enero de 2005 / E54 ElPerano b) Lista abierta con invitación: la entidad contratante invita a detenminados proveedores a regis"
+  },
+  "17": {
+   "encabezados": [],
+   "articulos": [
+    70,
+    74,
+    72,
+    73
+   ],
+   "palabras_clave": {
+    "registro_proveedores": 1,
+    "seleccion": 4,
+    "pladicop": 1
+   },
+   "caracteres": 7536,
+   "confianza": 88.7,
+   "segundos": 4.58,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES 7 d) Promesa de consorcio con finmas electrónicas, o en su defecto, finmas legalizadas, de ser el caso"
+  },
+  "18": {
+   "encabezados": [],
+   "articulos": [
+    75,
+    77
+   ],
+   "palabras_clave": {
+    "mype": 1,
+    "registro_proveedores": 3,
+    "seleccion": 1,
+    "garantias_penalidades": 1,
+    "pladicop": 2
+   },
+   "caracteres": 6896,
+   "confianza": 88.1,
+   "segundos": 4.26,
+   "muestra": "18 NORMAS LEGALES Miércoses 22 48 enero e 2005 / 85 ElPerano a) De manera simultánea a la evaluación técnica: la oferta económica es un factor de evaluación. b)"
+  },
+  "19": {
+   "encabezados": [],
+   "articulos": [
+    78,
+    80,
+    81,
+    82
+   ],
+   "palabras_clave": {
+    "mype": 4,
+    "seleccion": 2,
+    "garantias_penalidades": 2,
+    "controversias": 1,
+    "pladicop": 4
+   },
+   "caracteres": 7264,
+   "confianza": 89.5,
+   "segundos": 4.54,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES 19 miembro del jurado que es servidor o funcionario del area usuaña hace las veces de la no objeción c"
+  },
+  "20": {
+   "encabezados": [],
+   "articulos": [
+    85,
+    86,
+    87,
+    58,
+    89,
+    30
+   ],
+   "palabras_clave": {
+    "registro_proveedores": 2,
+    "seleccion": 5,
+    "garantias_penalidades": 2,
+    "pladicop": 2
+   },
+   "caracteres": 7262,
+   "confianza": 88.9,
+   "segundos": 4.5,
+   "muestra": "20 NORMAS LEGALES Miércoses 22 48 enero de 2005 / E54 ElPerano a) Los evaluadores remiten a la DEC y al funcionario oO servidor que aprobó el expediente de coni"
+  },
+  "21": {
+   "encabezados": [],
+   "articulos": [
+    92,
+    93
+   ],
+   "palabras_clave": {
+    "seleccion": 7,
+    "garantias_penalidades": 2
+   },
+   "caracteres": 4859,
+   "confianza": 80.3,
+   "segundos": 2.87,
+   "muestra": "a BiPeruanof Miércoles 22 de enero de 2075 NORMAS LEGALES 21 pro, se perfecciona el contrato, con su suscripción con ta recepción de la orden de compra o de ser"
+  },
+  "22": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {},
+   "caracteres": 723,
+   "confianza": 54.3,
+   "segundos": 0.74,
+   "muestra": "NORMAS LEGALES Miércoles 22 de enero de 2025 / Tipo de Condiciones para 54 150 ¡Anuncio de sr] futura Registro de participantes Exaluadores 4. Se trate de la se"
+  },
+  "23": {
+   "encabezados": [],
+   "articulos": [
+    94
+   ],
+   "palabras_clave": {
+    "seleccion": 2
+   },
+   "caracteres": 2623,
+   "confianza": 55.4,
+   "segundos": 1.82,
+   "muestra": "MA peruano! msercotes226s enerae705 NORMAS LEGALES 23 | Amvuncio de xl del pliego de | Tapode pad | Modañitad | Condiciones p lo Hinds 36 E para su so ¿contrata"
+  },
+  "24": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {},
+   "caracteres": 245,
+   "confianza": 58.0,
+   "segundos": 0.45,
+   "muestra": "NORMASLEGALES —— mercoss2202enerooe2005/ 8% erporiano Tipo de Condiciones de uso Anuncio de bo futura Etapas. Registro de participantes Evaluadores Basa del peg"
+  },
+  "25": {
+   "encabezados": [],
+   "articulos": [
+    95
+   ],
+   "palabras_clave": {
+    "seleccion": 2
+   },
+   "caracteres": 2079,
+   "confianza": 56.5,
+   "segundos": 1.27,
+   "muestra": "Artículo 95. Otras Modalidades diferenciadas Son olras modalidades diferenciadas: Z e ¡Registro de Tipo de evaluación Modalidad Condiciones deso | contratación "
+  },
+  "26": {
+   "encabezados": [
+    {
+     "nivel": "capitulo",
+     "texto": "CAPITULO 111 DISPOSICIONES ESPECIALES PARA LAS"
+    },
+    {
+     "nivel": "subcapitulo",
+     "texto": "SUBCAPÍTULO 1"
+    },
+    {
+     "nivel": "capitulo",
+     "texto": "CAPÍTULO Iv A"
+    }
+   ],
+   "articulos": [
+    96,
+    97,
+    98,
+    399
+   ],
+   "palabras_clave": {
+    "registro_proveedores": 6,
+    "seleccion": 19,
+    "pladicop": 4
+   },
+   "caracteres": 6874,
+   "confianza": 89.4,
+   "segundos": 4.24,
+   "muestra": "NORMAS LEGALES Miércoses 22 48 enero de 2005 / E54 ElPerano CAPITULO 111 DISPOSICIONES ESPECIALES PARA LAS OTRAS MODALIDADES DIFERENCIADAS DE PROCEDIMIENTOS DE "
+  },
+  "27": {
+   "encabezados": [],
+   "articulos": [
+    101,
+    102
+   ],
+   "palabras_clave": {
+    "registro_proveedores": 6,
+    "seleccion": 1,
+    "garantias_penalidades": 1,
+    "controversias": 1
+   },
+   "caracteres": 7821,
+   "confianza": 89.9,
+   "segundos": 4.95,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES 21 relacionada com su conocimiento profesional, artístico, científico 0 tecnológico: que permita «sati"
+  },
+  "28": {
+   "encabezados": [
+    {
+     "nivel": "subcapitulo",
+     "texto": "SUBCAPÍTULO 1"
+    }
+   ],
+   "articulos": [
+    103,
+    105,
+    106,
+    107
+   ],
+   "palabras_clave": {
+    "registro_proveedores": 1,
+    "seleccion": 2,
+    "garantias_penalidades": 3,
+    "pladicop": 2
+   },
+   "caracteres": 7358,
+   "confianza": 89.1,
+   "segundos": 4.54,
+   "muestra": "NORMAS LEGALES Miércoses 22 48 enero e 2005 / 85 ElPerano 102.2. El titular de la entidad aprueba la contratación mediante procedimientos no competitivos en las"
+  },
+  "29": {
+   "encabezados": [],
+   "articulos": [
+    108,
+    109,
+    110,
+    111,
+    112,
+    143
+   ],
+   "palabras_clave": {
+    "registro_proveedores": 1,
+    "garantias_penalidades": 12,
+    "pladicop": 4
+   },
+   "caracteres": 6950,
+   "confianza": 89.3,
+   "segundos": 4.3,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES 29 causa imputable a la entidad contratante, sin perjuicio de iniciarse el respectivo deslinde de resp"
+  },
+  "30": {
+   "encabezados": [],
+   "articulos": [
+    114,
+    115,
+    116,
+    118
+   ],
+   "palabras_clave": {
+    "mype": 1,
+    "garantias_penalidades": 41,
+    "controversias": 1
+   },
+   "caracteres": 7477,
+   "confianza": 89.3,
+   "segundos": 4.63,
+   "muestra": "30 NORMAS LEGALES Miércoses 22 48 enero de 2005 / E54 ElPerano cuando estos se garanticen por idéntico monto, sin excepción, que puede ser (1) fideicomiso, (11)"
+  },
+  "31": {
+   "encabezados": [],
+   "articulos": [
+    119,
+    120,
+    121,
+    122
+   ],
+   "palabras_clave": {
+    "garantias_penalidades": 23
+   },
+   "caracteres": 6803,
+   "confianza": 88.9,
+   "segundos": 4.25,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES 31 SUBCAPÍTULO 3 Incumplimiento del contrato Articulo 119. Penalidades 119.1. El contrato establece la"
+  },
+  "32": {
+   "encabezados": [
+    {
+     "nivel": "titulo",
+     "texto": "TÍTULO IV"
+    }
+   ],
+   "articulos": [
+    126,
+    127
+   ],
+   "palabras_clave": {
+    "registro_proveedores": 1,
+    "seleccion": 1,
+    "garantias_penalidades": 3,
+    "pladicop": 2
+   },
+   "caracteres": 7184,
+   "confianza": 88.9,
+   "segundos": 4.47,
+   "muestra": "32 NORMAS LEGALES Miércoses 22 48 enero de 2005 / E3 ElPerano 1234. La parte que comunica la resolución del contrato debe indicar, con al menos tres días hábile"
+  },
+  "33": {
+   "encabezados": [
+    {
+     "nivel": "capitulo",
+     "texto": "CAPÍTULO 1 DISPOSICIONES ESPECIALES DE LA FASE DE"
+    }
+   ],
+   "articulos": [
+    128,
+    130,
+    131,
+    132,
+    133
+   ],
+   "palabras_clave": {
+    "registro_proveedores": 1,
+    "seleccion": 5,
+    "garantias_penalidades": 3,
+    "pladicop": 1
+   },
+   "caracteres": 6823,
+   "confianza": 89.9,
+   "segundos": 4.22,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES 33 d) Consulta al mercado avanzada: para requerimientos estratégicos. 1272. La DEC puede utilizar un n"
+  },
+  "34": {
+   "encabezados": [
+    {
+     "nivel": "capitulo",
+     "texto": "CAPITULO 11 DISPOSICIONES ESPECÍFICAS DE LA FASE DE"
+    },
+    {
+     "nivel": "subcapitulo",
+     "texto": "SUBCAPÍTULO 1"
+    }
+   ],
+   "articulos": [
+    136,
+    137
+   ],
+   "palabras_clave": {
+    "garantias_penalidades": 28
+   },
+   "caracteres": 7031,
+   "confianza": 89.6,
+   "segundos": 4.43,
+   "muestra": "34 NORMAS LEGALES Miércoses 22 48 enero de 2005 / E3 ElPerano proyecto se realiza sobre cien puntos, considerando los factores de evaluación obligatorios señala"
+  },
+  "35": {
+   "encabezados": [],
+   "articulos": [
+    140,
+    141,
+    142,
+    144
+   ],
+   "palabras_clave": {
+    "garantias_penalidades": 5,
+    "pladicop": 5
+   },
+   "caracteres": 7324,
+   "confianza": 89.8,
+   "segundos": 4.69,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES 35 de procedimientos de selección por relación de Ítems, adjudicados a un mismo postor, superen el mon"
+  },
+  "36": {
+   "encabezados": [],
+   "articulos": [
+    145,
+    146,
+    147,
+    148,
+    149,
+    150
+   ],
+   "palabras_clave": {
+    "seleccion": 1,
+    "garantias_penalidades": 12
+   },
+   "caracteres": 7776,
+   "confianza": 88.8,
+   "segundos": 4.79,
+   "muestra": "NORMAS LEGALES Miércoses 22 48 enero e 2005 / 85 ElPerano 14465. Cuando la entidad contratante exceda el plazo previsto para emitir la conformidad o pronunciars"
+  },
+  "37": {
+   "encabezados": [
+    {
+     "nivel": "capitulo",
+     "texto": "CAPITULO 1 DISPOSICIONES ESPECIALES PARA LA FASE DE"
+    }
+   ],
+   "articulos": [
+    151,
+    152,
+    153,
+    154
+   ],
+   "palabras_clave": {
+    "seleccion": 1
+   },
+   "caracteres": 6706,
+   "confianza": 89.0,
+   "segundos": 4.15,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES 37 SUECAPÍTULO 6 Asistencia técnica especializada en gestión de proyectos Articulo 151. Condiciones pa"
+  },
+  "38": {
+   "encabezados": [],
+   "articulos": [
+    155,
+    157,
+    158
+   ],
+   "palabras_clave": {
+    "garantias_penalidades": 1,
+    "pladicop": 1
+   },
+   "caracteres": 7118,
+   "confianza": 88.7,
+   "segundos": 4.44,
+   "muestra": "38 NORMAS LEGALES Miercoñes 22 05 enero se 2025/ MY Erporuano de inversiones, según corresponda, así como los b) Obras o consultoría en obras viales, puertos y "
+  },
+  "39": {
+   "encabezados": [
+    {
+     "nivel": "capitulo",
+     "texto": "CAPÍTULO 11 DISPOSICIONES ESPECIALES DE FASE DE"
+    }
+   ],
+   "articulos": [
+    160,
+    161,
+    162,
+    163
+   ],
+   "palabras_clave": {
+    "registro_proveedores": 1,
+    "seleccion": 1,
+    "garantias_penalidades": 7
+   },
+   "caracteres": 6889,
+   "confianza": 90.5,
+   "segundos": 4.32,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES 39 de los subcontratistas que ejecutan la obra, sin asumir la responsabilidad de los resultados de dic"
+  },
+  "40": {
+   "encabezados": [
+    {
+     "nivel": "capitulo",
+     "texto": "CAPÍTULO Il zi"
+    },
+    {
+     "nivel": "subcapitulo",
+     "texto": "SUBCAPÍTULO 1"
+    }
+   ],
+   "articulos": [
+    165,
+    166,
+    167,
+    169
+   ],
+   "palabras_clave": {
+    "registro_proveedores": 4,
+    "seleccion": 4
+   },
+   "caracteres": 7118,
+   "confianza": 89.8,
+   "segundos": 4.44,
+   "muestra": "40 NORMAS LEGALES Miércoses 22 48 enero de 2005 / E54 ElPerano cuantía de la contratación correspondiente al presupuesto definido en el expediente técnico. Arti"
+  },
+  "41": {
+   "encabezados": [],
+   "articulos": [
+    170,
+    173
+   ],
+   "palabras_clave": {},
+   "caracteres": 7303,
+   "confianza": 89.8,
+   "segundos": 4.58,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES 41 no menos de dos años de experiencia en alguno de estos puestos o similares como coordinador de obra"
+  },
+  "42": {
+   "encabezados": [],
+   "articulos": [
+    176,
+    178
+   ],
+   "palabras_clave": {
+    "garantias_penalidades": 14,
+    "pladicop": 2
+   },
+   "caracteres": 7184,
+   "confianza": 90.1,
+   "segundos": 4.44,
+   "muestra": "NORMAS LEGALES Miércoses 22 48 enero e 2005 / E3 ElPerano SUBCAPÍTULO 3 Inicio de la ejecución contractual en obras y consultoría de obrás Articulo 176. Inicio "
+  },
+  "43": {
+   "encabezados": [],
+   "articulos": [
+    179,
+    180,
+    183
+   ],
+   "palabras_clave": {
+    "garantias_penalidades": 46,
+    "controversias": 3
+   },
+   "caracteres": 7058,
+   "confianza": 90.1,
+   "segundos": 4.4,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES 43 bj) Para obras en el sistema de entrega de solo construcción, el adelanto directo y el adelanto par"
+  },
+  "44": {
+   "encabezados": [],
+   "articulos": [
+    184,
+    185,
+    186
+   ],
+   "palabras_clave": {
+    "seleccion": 1,
+    "garantias_penalidades": 16,
+    "controversias": 1
+   },
+   "caracteres": 7337,
+   "confianza": 89.0,
+   "segundos": 4.62,
+   "muestra": "44 NORMAS LEGALES Miércoses 22 48 enero de 2005 / E3 ElPerano 183.3. Para esta reducción, en el caso de cartas fianzas o contratos de seguro, el contratista sol"
+  },
+  "45": {
+   "encabezados": [],
+   "articulos": [
+    187,
+    188,
+    189,
+    190
+   ],
+   "palabras_clave": {
+    "registro_proveedores": 1,
+    "seleccion": 1,
+    "garantias_penalidades": 3,
+    "pladicop": 2
+   },
+   "caracteres": 7327,
+   "confianza": 89.7,
+   "segundos": 4.57,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES 45 Articulo 187. Funciones de la supervisión de obras y consultoria de obras 187.1. La supervisión es "
+  },
+  "46": {
+   "encabezados": [],
+   "articulos": [
+    191
+   ],
+   "palabras_clave": {},
+   "caracteres": 6906,
+   "confianza": 88.9,
+   "segundos": 4.26,
+   "muestra": "NORMAS LEGALES Miércoses 22 48 enero de 2005 / E54 ElPerano el día siguiente de realizada la anotación. Al día siguiente. la entidad contratante la remite al pr"
+  },
+  "47": {
+   "encabezados": [],
+   "articulos": [
+    194,
+    195
+   ],
+   "palabras_clave": {
+    "garantias_penalidades": 5,
+    "pladicop": 1
+   },
+   "caracteres": 7889,
+   "confianza": 89.8,
+   "segundos": 4.89,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES 47 Cc) La entidad contratante notifica la resolución que se pronuncia sobre la solicitud de la prestac"
+  },
+  "48": {
+   "encabezados": [],
+   "articulos": [
+    196,
+    197,
+    193
+   ],
+   "palabras_clave": {
+    "garantias_penalidades": 4,
+    "controversias": 1,
+    "pladicop": 1
+   },
+   "caracteres": 7268,
+   "confianza": 90.3,
+   "segundos": 4.54,
+   "muestra": "48 NORMAS LEGALES Miércoses 22 48 enero de 2005 / E54 ElPerano c) En caso se supere el límite máximo de prestaciones adicionales establecido en los fiterales 3)"
+  },
+  "49": {
+   "encabezados": [],
+   "articulos": [
+    200,
+    202
+   ],
+   "palabras_clave": {
+    "garantias_penalidades": 6,
+    "pladicop": 2
+   },
+   "caracteres": 7428,
+   "confianza": 89.9,
+   "segundos": 4.64,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES 49 198.4. No corresponde suscribir una adenda al contrato por la aprobación de una ampliación de plazo"
+  },
+  "50": {
+   "encabezados": [],
+   "articulos": [
+    204,
+    205,
+    206,
+    207,
+    208
+   ],
+   "palabras_clave": {
+    "garantias_penalidades": 3
+   },
+   "caracteres": 7275,
+   "confianza": 90.0,
+   "segundos": 4.59,
+   "muestra": "NORMAS LEGALES Miércoses 22 48 enero e 2005 / 85 ElPerano Articulo 204. Ejecución rápida (Fast Track) en obras bajo el sistema de entrega de diseño y construcci"
+  },
+  "51": {
+   "encabezados": [],
+   "articulos": [
+    209,
+    210,
+    211,
+    212
+   ],
+   "palabras_clave": {
+    "garantias_penalidades": 19
+   },
+   "caracteres": 7593,
+   "confianza": 89.3,
+   "segundos": 4.78,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES 51 Articulo 209. Reajustes en obras y consultoría de obras 209.1. Los reajustes se realizan aplicando "
+  },
+  "52": {
+   "encabezados": [],
+   "articulos": [
+    215
+   ],
+   "palabras_clave": {
+    "garantias_penalidades": 7,
+    "controversias": 2
+   },
+   "caracteres": 7924,
+   "confianza": 89.4,
+   "segundos": 5.01,
+   "muestra": "52 NORMAS LEGALES Miércoses 22 48 enero e 2005 / E3 ElPerano contractual, así como el correcto funcionamiento u operatividad de la edificación o infraestructura"
+  },
+  "53": {
+   "encabezados": [
+    {
+     "nivel": "capitulo",
+     "texto": "CAPÍTULO IV CONTRATOS ESTANDARIZADO 5"
+    }
+   ],
+   "articulos": [
+    217,
+    248,
+    219,
+    220
+   ],
+   "palabras_clave": {
+    "registro_proveedores": 1,
+    "seleccion": 1,
+    "garantias_penalidades": 4,
+    "controversias": 2
+   },
+   "caracteres": 7036,
+   "confianza": 88.9,
+   "segundos": 4.36,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES 53 quidación se considera consentida o aprobada con las observaciones formuladas: 215.5. Consentida la"
+  },
+  "54": {
+   "encabezados": [
+    {
+     "nivel": "titulo",
+     "texto": "TÍTULO VI"
+    }
+   ],
+   "articulos": [
+    221,
+    222,
+    223,
+    224,
+    225,
+    226,
+    227
+   ],
+   "palabras_clave": {
+    "contratacion_menor": 3,
+    "garantias_penalidades": 4,
+    "controversias": 5,
+    "pladicop": 2
+   },
+   "caracteres": 7024,
+   "confianza": 88.8,
+   "segundos": 4.4,
+   "muestra": "54 NORMAS LEGALES Miércoses 22 48 enero e 2005 / E3 ElPerano debe realizar las actualizaciones correspondientes de la certificación de crédito presupuestario y/"
+  },
+  "55": {
+   "encabezados": [
+    {
+     "nivel": "capitulo",
+     "texto": "CAPÍTULO 1 COMPRA CENTRALIZADA"
+    }
+   ],
+   "articulos": [
+    228,
+    230,
+    231,
+    232
+   ],
+   "palabras_clave": {
+    "contratacion_menor": 2,
+    "registro_proveedores": 4,
+    "seleccion": 1,
+    "garantias_penalidades": 6,
+    "pladicop": 7
+   },
+   "caracteres": 7272,
+   "confianza": 88.7,
+   "segundos": 4.53,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES 55 modiñcar directamente su contenido, para lo cual solicita al area usuaria la no objeción al requeri"
+  },
+  "56": {
+   "encabezados": [
+    {
+     "nivel": "capitulo",
+     "texto": "CAPÍTULO Il COMPRAS POR ENCARGO"
+    }
+   ],
+   "articulos": [
+    236,
+    237,
+    238
+   ],
+   "palabras_clave": {
+    "registro_proveedores": 1,
+    "seleccion": 1,
+    "controversias": 1
+   },
+   "caracteres": 7505,
+   "confianza": 88.8,
+   "segundos": 4.7,
+   "muestra": "NORMAS LEGALES Miércoses 22 48 enero de 2005 / E54 ElPerano de contralación pública eficiente se vaya a realizar en el siguiente año fiscal, tanto la(s) entidad"
+  },
+  "57": {
+   "encabezados": [
+    {
+     "nivel": "capitulo",
+     "texto": "CAPÍTULO IV COMPRA CORPORATIVA"
+    }
+   ],
+   "articulos": [
+    239,
+    240,
+    241,
+    242,
+    243
+   ],
+   "palabras_clave": {
+    "contratacion_menor": 1,
+    "registro_proveedores": 5,
+    "seleccion": 2,
+    "controversias": 1,
+    "pladicop": 14
+   },
+   "caracteres": 7389,
+   "confianza": 89.5,
+   "segundos": 4.68,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES 51 porlas razones señaladas en el numeral 238.1, precisando la conveniencia y ventajas de efectuarlas "
+  },
+  "58": {
+   "encabezados": [
+    {
+     "nivel": "capitulo",
+     "texto": "CAPÍTULO VI o"
+    }
+   ],
+   "articulos": [
+    246,
+    247
+   ],
+   "palabras_clave": {
+    "registro_proveedores": 11,
+    "seleccion": 1,
+    "pladicop": 17
+   },
+   "caracteres": 6894,
+   "confianza": 88.5,
+   "segundos": 4.35,
+   "muestra": "NORMAS LEGALES Miércoses 22 48 enero de 2005 / E54 ElPerano 2437. Los contratos derivados de una compra corporativa, así como la información referida a su ejecu"
+  },
+  "59": {
+   "encabezados": [
+    {
+     "nivel": "titulo",
+     "texto": "TÍTULO vil"
+    },
+    {
+     "nivel": "capitulo",
+     "texto": "CAPÍTULO 1 PLADICOP"
+    }
+   ],
+   "articulos": [
+    249,
+    250,
+    251,
+    252,
+    253,
+    254,
+    255,
+    256
+   ],
+   "palabras_clave": {
+    "registro_proveedores": 6,
+    "garantias_penalidades": 4,
+    "pladicop": 6
+   },
+   "caracteres": 7130,
+   "confianza": 88.7,
+   "segundos": 4.5,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES 59 puede ofrecer el mercado. así como acudir a fuentes de vigilancia tecnológica para determinar la ex"
+  },
+  "60": {
+   "encabezados": [
+    {
+     "nivel": "capitulo",
+     "texto": "CAPÍTULO 1 ESTANDARIZACIÓN DE REQUERIMIENTOS"
+    }
+   ],
+   "articulos": [
+    257,
+    258,
+    259,
+    260,
+    261,
+    262,
+    263,
+    264,
+    265
+   ],
+   "palabras_clave": {
+    "registro_proveedores": 3,
+    "seleccion": 7,
+    "pladicop": 11
+   },
+   "caracteres": 7365,
+   "confianza": 89.9,
+   "segundos": 4.77,
+   "muestra": "NORMAS LEGALES Miércoses 22 48 enero e 2005 / 85 ElPerano años, aplicando estándares internacionales de seguridad de la información, ciberseguridad y privacidad"
+  },
+  "61": {
+   "encabezados": [],
+   "articulos": [
+    266,
+    267,
+    268,
+    269,
+    270,
+    271
+   ],
+   "palabras_clave": {
+    "registro_proveedores": 5,
+    "seleccion": 1,
+    "garantias_penalidades": 1,
+    "controversias": 1,
+    "pladicop": 12
+   },
+   "caracteres": 7339,
+   "confianza": 89.4,
+   "segundos": 4.61,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES 61 los que se encuentran publicados en la Pladicop. Estos documentos pueden ser objeto de modificación"
+  },
+  "62": {
+   "encabezados": [],
+   "articulos": [
+    273,
+    275,
+    277,
+    279,
+    280
+   ],
+   "palabras_clave": {
+    "registro_proveedores": 12,
+    "seleccion": 3,
+    "controversias": 1,
+    "pladicop": 28
+   },
+   "caracteres": 7134,
+   "confianza": 88.8,
+   "segundos": 4.45,
+   "muestra": "NORMAS LEGALES Miércoses 22 48 enero de 2005 / E54 ElPerano catalogos elecirónicos de acuerdos marco cuentan con inscripción vigente en el RNP. no deben estar i"
+  },
+  "63": {
+   "encabezados": [],
+   "articulos": [
+    281,
+    282,
+    283,
+    284,
+    285,
+    286
+   ],
+   "palabras_clave": {
+    "registro_proveedores": 6,
+    "seleccion": 1,
+    "garantias_penalidades": 10,
+    "pladicop": 2
+   },
+   "caracteres": 7067,
+   "confianza": 89.1,
+   "segundos": 4.39,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES solicitud de colización cuando: 1) la entidad contratante mantenga retrasos en el pago de deudas deriv"
+  },
+  "64": {
+   "encabezados": [],
+   "articulos": [
+    267,
+    288
+   ],
+   "palabras_clave": {
+    "registro_proveedores": 2,
+    "seleccion": 4,
+    "garantias_penalidades": 10,
+    "pladicop": 4
+   },
+   "caracteres": 6935,
+   "confianza": 89.0,
+   "segundos": 4.33,
+   "muestra": "NORMAS LEGALES Miércoses 22 48 enero e 2005 / E3 ElPerano de cumplir con sus obligaciones de forma efectiva, en caso se produzca el hecho generador de la activa"
+  },
+  "65": {
+   "encabezados": [
+    {
+     "nivel": "titulo",
+     "texto": "TÍTULO IX"
+    }
+   ],
+   "articulos": [
+    292,
+    293,
+    295
+   ],
+   "palabras_clave": {
+    "registro_proveedores": 1,
+    "seleccion": 4
+   },
+   "caracteres": 6922,
+   "confianza": 89.5,
+   "segundos": 4.37,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES 65 UIT para gobiernos regionales y 30 UIT para el gobierno nacional. bj) Exonerar de presentar carta f"
+  },
+  "66": {
+   "encabezados": [],
+   "articulos": [
+    296,
+    297,
+    298
+   ],
+   "palabras_clave": {
+    "registro_proveedores": 6,
+    "seleccion": 2,
+    "garantias_penalidades": 10,
+    "pladicop": 1
+   },
+   "caracteres": 7179,
+   "confianza": 89.8,
+   "segundos": 4.49,
+   "muestra": "NORMAS LEGALES Miércoses 22 48 enero de 2005 / E3 ElPerano suscribirse un acuerdo MDA para el tratamiento de una misma patología. 235.4 El MDA es evaluado por u"
+  },
+  "67": {
+   "encabezados": [
+    {
+     "nivel": "titulo",
+     "texto": "TÍTULO X"
+    }
+   ],
+   "articulos": [
+    300,
+    301,
+    302,
+    303,
+    305
+   ],
+   "palabras_clave": {
+    "mype": 2,
+    "contratacion_menor": 1,
+    "registro_proveedores": 3,
+    "seleccion": 16,
+    "garantias_penalidades": 1,
+    "controversias": 7,
+    "pladicop": 6
+   },
+   "caracteres": 6920,
+   "confianza": 89.6,
+   "segundos": 4.33,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES 67 Artículo 300. Acuerdos MDA hibridos La entidad contratante puede celebrar acuerdos de tipo híbrido "
+  },
+  "68": {
+   "encabezados": [],
+   "articulos": [
+    308,
+    309,
+    310
+   ],
+   "palabras_clave": {
+    "mype": 1,
+    "registro_proveedores": 1,
+    "seleccion": 1,
+    "garantias_penalidades": 11,
+    "controversias": 14,
+    "pladicop": 5
+   },
+   "caracteres": 7619,
+   "confianza": 88.8,
+   "segundos": 4.74,
+   "muestra": "NORMAS LEGALES Miércoses 22 48 enero de 2005 / E54 ElPerano O) La firma del impugnante o de su representante. En el caso de consorcios basta la firma del repres"
+  },
+  "69": {
+   "encabezados": [],
+   "articulos": [
+    311,
+    312,
+    313
+   ],
+   "palabras_clave": {
+    "controversias": 9,
+    "pladicop": 4
+   },
+   "caracteres": 7676,
+   "confianza": 90.3,
+   "segundos": 4.8,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES que coadyuven a la resolución de dicho procedimiento, presentados dentro del plazo legal. 5 Al interpo"
+  },
+  "70": {
+   "encabezados": [
+    {
+     "nivel": "titulo",
+     "texto": "TÍTULO XI"
+    },
+    {
+     "nivel": "capitulo",
+     "texto": "CAPITULO 1 REGISTRO DE INSTITUCIONES ARBITRALES Y"
+    }
+   ],
+   "articulos": [
+    314,
+    316,
+    317,
+    348
+   ],
+   "palabras_clave": {
+    "garantias_penalidades": 6,
+    "controversias": 7
+   },
+   "caracteres": 6954,
+   "confianza": 89.0,
+   "segundos": 4.38,
+   "muestra": "70 NORMAS LEGALES Miércoses 22 48 enero de 2005 / E3 ElPerano el recurso sea declarado improcedente, sin perjuicio de la ejecución de la garantía presentada con"
+  },
+  "71": {
+   "encabezados": [],
+   "articulos": [
+    320,
+    321,
+    322,
+    323
+   ],
+   "palabras_clave": {
+    "registro_proveedores": 1,
+    "controversias": 9
+   },
+   "caracteres": 7213,
+   "confianza": 88.6,
+   "segundos": 4.52,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES El] Pp Gontar con sede institucional que cuente con las autorizaciones pertinentes para su funcionamie"
+  },
+  "72": {
+   "encabezados": [],
+   "articulos": [
+    325,
+    326
+   ],
+   "palabras_clave": {
+    "garantias_penalidades": 1,
+    "controversias": 13,
+    "pladicop": 2
+   },
+   "caracteres": 7720,
+   "confianza": 89.7,
+   "segundos": 4.78,
+   "muestra": "72 NORMAS LEGALES Miércoses 22 48 enero de 2005 / E54 ElPerano Disputas sancionado con el refiro temporal o la exclusión del REGAJU, no administra nuevos arbilr"
+  },
+  "73": {
+   "encabezados": [
+    {
+     "nivel": "capitulo",
+     "texto": "CAPÍTULO ll IMPEDIMENTOS Y REQUISITOS PARA LOS"
+    }
+   ],
+   "articulos": [
+    327,
+    328,
+    329,
+    330,
+    334
+   ],
+   "palabras_clave": {
+    "contratacion_menor": 1,
+    "controversias": 14,
+    "pladicop": 2
+   },
+   "caracteres": 6970,
+   "confianza": 88.4,
+   "segundos": 4.28,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES LE c) Contrato iniparito y actas de imicio de funciones o el documento que haga sus Veces. d)Enlos cas"
+  },
+  "74": {
+   "encabezados": [],
+   "articulos": [
+    332,
+    334,
+    335,
+    337,
+    338
+   ],
+   "palabras_clave": {
+    "registro_proveedores": 3,
+    "seleccion": 1,
+    "controversias": 39
+   },
+   "caracteres": 7430,
+   "confianza": 88.2,
+   "segundos": 4.61,
+   "muestra": "74 NORMAS LEGALES Miércoses 22 48 enero e 2005 / E3 ElPerano El arbitraje al que se refiere la Ley es de derecho, nacional O intemacional y se desarrolla en idi"
+  },
+  "75": {
+   "encabezados": [],
+   "articulos": [
+    339,
+    340,
+    341,
+    342,
+    343,
+    344,
+    345
+   ],
+   "palabras_clave": {
+    "garantias_penalidades": 2,
+    "controversias": 20,
+    "pladicop": 3
+   },
+   "caracteres": 7290,
+   "confianza": 89.6,
+   "segundos": 4.53,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES 15 Artículo 339. Independencia, imparcialidad y deber de información 339,1. Los arbitros son y permane"
+  },
+  "76": {
+   "encabezados": [],
+   "articulos": [
+    346,
+    347,
+    348,
+    349,
+    350,
+    351
+   ],
+   "palabras_clave": {
+    "registro_proveedores": 1,
+    "seleccion": 3,
+    "garantias_penalidades": 1,
+    "controversias": 5,
+    "pladicop": 1
+   },
+   "caracteres": 7571,
+   "confianza": 88.1,
+   "segundos": 4.76,
+   "muestra": "76 NORMAS LEGALES Miércoses 22 48 enero e 2005 / 854 ElPerano automática a primer requerimiento y sin beneñcio de excusión, con una vigencia no menor de seis Me"
+  },
+  "77": {
+   "encabezados": [],
+   "articulos": [
+    352,
+    354
+   ],
+   "palabras_clave": {
+    "garantias_penalidades": 3,
+    "controversias": 21
+   },
+   "caracteres": 7930,
+   "confianza": 88.8,
+   "segundos": 5.08,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES T asentimiento de la otra, la JPRD asiste a las partes para lograr entendimientos o acuerdos. los cual"
+  },
+  "78": {
+   "encabezados": [
+    {
+     "nivel": "titulo",
+     "texto": "TÍTULO XII RÉGIMEN DE INFRACCIONES Y SANCIONES"
+    },
+    {
+     "nivel": "capitulo",
+     "texto": "CAPITULO 1 PROCEDIMIENTO SANCIONADOR A"
+    }
+   ],
+   "articulos": [
+    356,
+    359,
+    360
+   ],
+   "palabras_clave": {
+    "registro_proveedores": 4,
+    "seleccion": 2,
+    "garantias_penalidades": 5,
+    "pladicop": 1
+   },
+   "caracteres": 6776,
+   "confianza": 88.6,
+   "segundos": 4.21,
+   "muestra": "18 NORMAS LEGALES Miércoses 22 48 enero de 2005 / E54 ElPerano 354.2. La relribución, costos y/o gaslos se asigna a las partes y son asumidos en partes iguales,"
+  },
+  "79": {
+   "encabezados": [],
+   "articulos": [
+    362,
+    363
+   ],
+   "palabras_clave": {
+    "garantias_penalidades": 1,
+    "controversias": 2,
+    "pladicop": 1
+   },
+   "caracteres": 7675,
+   "confianza": 88.6,
+   "segundos": 4.84,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES 79 aj La fase instrucliva, se encuentra a cargo de las ST PAS y comprende las actuaciones conducentes "
+  },
+  "80": {
+   "encabezados": [],
+   "articulos": [
+    364,
+    365,
+    366,
+    367,
+    368,
+    369
+   ],
+   "palabras_clave": {
+    "mype": 1,
+    "contratacion_menor": 1,
+    "registro_proveedores": 9,
+    "seleccion": 1,
+    "garantias_penalidades": 6,
+    "pladicop": 1
+   },
+   "caracteres": 6542,
+   "confianza": 87.0,
+   "segundos": 4.06,
+   "muestra": "NORMAS LEGALES Miercoles 2208 enero ge2005/ %Í Erporuano 363.3. La prescripción es declarada de oficio o a pedido de parte en cualquier fase del procedimiento a"
+  },
+  "81": {
+   "encabezados": [
+    {
+     "nivel": "capitulo",
+     "texto": "CAPÍTULO 1 PROCEDIMIENTO SANCIONADOR A INSTITUCIONES"
+    }
+   ],
+   "articulos": [
+    370,
+    371,
+    372,
+    373
+   ],
+   "palabras_clave": {
+    "registro_proveedores": 2,
+    "garantias_penalidades": 3,
+    "controversias": 1
+   },
+   "caracteres": 7407,
+   "confianza": 89.8,
+   "segundos": 4.6,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES 81 Artículo 370. Recurso de reconsideración 3701 Gontra lo resuelto por el TCP en un procedimiento san"
+  },
+  "82": {
+   "encabezados": [
+    {
+     "nivel": "capitulo",
+     "texto": "CAPÍTULO 1 CONDICIONES Y REQUISITOS DE LOS"
+    }
+   ],
+   "articulos": [
+    376,
+    377,
+    378,
+    379,
+    380,
+    381
+   ],
+   "palabras_clave": {
+    "registro_proveedores": 6,
+    "garantias_penalidades": 7,
+    "controversias": 4
+   },
+   "caracteres": 6407,
+   "confianza": 89.4,
+   "segundos": 4.07,
+   "muestra": "NORMAS LEGALES Miércoses 22 48 enero de 2005 / E54 ElPerano a) Gravedad de la infracción cometida; b) Goncurrencia en la comisión de varias infracciones: £) Con"
+  },
+  "83": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 21,
+    "garantias_penalidades": 7
+   },
+   "caracteres": 7259,
+   "confianza": 88.6,
+   "segundos": 4.66,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES 83 3. Copia de la escritura pública inscrita en Registros Públicos o ante autoridad competente en su p"
+  },
+  "84": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 15,
+    "seleccion": 1,
+    "garantias_penalidades": 4
+   },
+   "caracteres": 7349,
+   "confianza": 89.4,
+   "segundos": 4.71,
+   "muestra": "NORMAS LEGALES Miércoses 22 48 enero de 2005 / E54 ElPerano c) Copia del documento de aprobación del expediente técnico o documento que declara viable ta ficha "
+  },
+  "85": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 14,
+    "seleccion": 1,
+    "garantias_penalidades": 4
+   },
+   "caracteres": 7862,
+   "confianza": 90.0,
+   "segundos": 5.02,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES 85 documento suscrito por el órgano de administración que cuente con facultades para realizar dichas d"
+  },
+  "86": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 12,
+    "seleccion": 1,
+    "garantias_penalidades": 4
+   },
+   "caracteres": 7417,
+   "confianza": 89.2,
+   "segundos": 4.57,
+   "muestra": "NORMAS LEGALES Miércoses 22 48 enero de 2005 / E3 ElPerano Situacionales conteniendo como mínimo el Estado de Situación Financiera, Esiado de Resuitados y las M"
+  },
+  "87": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 9,
+    "seleccion": 4,
+    "garantias_penalidades": 1
+   },
+   "caracteres": 7193,
+   "confianza": 90.3,
+   "segundos": 4.63,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES 87 fa naturaleza de la obra no exista autoridad competente, la conformidad debe ser emitida por el órg"
+  },
+  "88": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 9,
+    "seleccion": 5,
+    "garantias_penalidades": 3
+   },
+   "caracteres": 7602,
+   "confianza": 89.5,
+   "segundos": 4.73,
+   "muestra": "NORMAS LEGALES Miércoses 22 48 enero de 2005 / E54 ElPerano a) Gopía del contralto de ejecución de obra. En caso dicho documento se encuentre registrado en la p"
+  },
+  "89": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 7,
+    "seleccion": 2,
+    "garantias_penalidades": 1
+   },
+   "caracteres": 7455,
+   "confianza": 89.7,
+   "segundos": 4.73,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES obra, días de ampliación de plazo otorgado, fecha de recepción del subcontrato de obra, fecha de liqui"
+  },
+  "90": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 1,
+    "seleccion": 4,
+    "garantias_penalidades": 3
+   },
+   "caracteres": 6909,
+   "confianza": 90.1,
+   "segundos": 4.26,
+   "muestra": "NORMAS LEGALES Miércoses 22 48 enero e 2005 / E5 ElPerano del subcontrato de obra; monto de los adicionales del subconirato de obra, monto de los deductivos del"
+  },
+  "91": {
+   "encabezados": [],
+   "articulos": [
+    382
+   ],
+   "palabras_clave": {
+    "seleccion": 1,
+    "garantias_penalidades": 3,
+    "controversias": 4,
+    "pladicop": 1
+   },
+   "caracteres": 7294,
+   "confianza": 88.1,
+   "segundos": 4.54,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES 91 del subcontralo de obra, monto de los deductivos del subcontrato de obra, y monto lotal del subcont"
+  },
+  "92": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "garantias_penalidades": 1,
+    "controversias": 5
+   },
+   "caracteres": 7448,
+   "confianza": 88.2,
+   "segundos": 4.6,
+   "muestra": "NORMAS LEGALES Miércoses 22 48 enero e 2005 / E5 ElPerano 3, Copia simple de la vigencia de poder del representante legal con una antigiedad no mayor de un mes."
+  },
+  "93": {
+   "encabezados": [],
+   "articulos": [
+    385
+   ],
+   "palabras_clave": {
+    "garantias_penalidades": 1,
+    "controversias": 10
+   },
+   "caracteres": 7348,
+   "confianza": 87.4,
+   "segundos": 4.6,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES 93 b) El enlace a su portal institucional en el que obre contar con la tabla de determinación de gasto"
+  },
+  "94": {
+   "encabezados": [
+    {
+     "nivel": "capitulo",
+     "texto": "CAPÍTULO 11 REQUISITOS DE LOS SERVICIOS PRESTADOS EN"
+    }
+   ],
+   "articulos": [
+    386,
+    387,
+    388,
+    389
+   ],
+   "palabras_clave": {
+    "garantias_penalidades": 6,
+    "controversias": 5
+   },
+   "caracteres": 6351,
+   "confianza": 89.9,
+   "segundos": 3.95,
+   "muestra": "NORMAS LEGALES Miércoses 22 48 enero e 2005 / E54 ElPerano marco de un arbitraje, asi como de las certificaciones internacionales vigentes con las que puedan co"
+  },
+  "95": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "contratacion_menor": 1,
+    "registro_proveedores": 5,
+    "seleccion": 1,
+    "garantias_penalidades": 3,
+    "controversias": 2,
+    "pladicop": 2
+   },
+   "caracteres": 7022,
+   "confianza": 89.0,
+   "segundos": 4.42,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES 95 2. La normativa de los regimenes especiales incluye de manera obligatoria las siguientes disposicio"
+  },
+  "96": {
+   "encabezados": [
+    {
+     "nivel": "disposicion",
+     "texto": "DISPOSICIÓN COMPLEMENTARIA FINAL"
+    }
+   ],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 2,
+    "seleccion": 6,
+    "garantias_penalidades": 1,
+    "pladicop": 4
+   },
+   "caracteres": 7180,
+   "confianza": 88.4,
+   "segundos": 4.54,
+   "muestra": "NORMAS LEGALES Miércoses 22 48 enero e 2005 / 85 ElPerano bimestre del ejercicio presupuestal previo o en los tres primeros trimestres del ejercicio presupuesta"
+  },
+  "97": {
+   "encabezados": [
+    {
+     "nivel": "disposicion",
+     "texto": "DISPOSICIÓN COMPLEMENTARIA TRANSITORIA"
+    },
+    {
+     "nivel": "disposicion",
+     "texto": "DISPOSICIÓN COMPLEMENTARIA TRANSITORIA"
+    }
+   ],
+   "articulos": [],
+   "palabras_clave": {
+    "contratacion_menor": 1,
+    "registro_proveedores": 13,
+    "seleccion": 1
+   },
+   "caracteres": 7662,
+   "confianza": 89.2,
+   "segundos": 4.81,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES 97 segmentación de contrataciones se realiza respecto de este Plan Anual de Contrataciones actualizado"
+  },
+  "98": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "contratacion_menor": 1,
+    "registro_proveedores": 26,
+    "controversias": 1,
+    "pladicop": 1
+   },
+   "caracteres": 7447,
+   "confianza": 90.1,
+   "segundos": 4.69,
+   "muestra": "NORMAS LEGALES Miércoses 22 48 enero de 2005 / E54 ElPerano revalúe y asigne las nuevas categorías en función de lo establecido en el articulo 27. En caso no so"
+  },
+  "99": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 1,
+    "garantias_penalidades": 3,
+    "controversias": 14,
+    "pladicop": 3
+   },
+   "caracteres": 7835,
+   "confianza": 89.4,
+   "segundos": 4.98,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES región; de no haber una institución en la región, las partes acuden a alguna de las regiones cercanas "
+  },
+  "100": {
+   "encabezados": [
+    {
+     "nivel": "anexo",
+     "texto": "ANEXO"
+    }
+   ],
+   "articulos": [],
+   "palabras_clave": {
+    "contratacion_menor": 2,
+    "registro_proveedores": 8,
+    "seleccion": 8,
+    "pladicop": 5
+   },
+   "caracteres": 6831,
+   "confianza": 88.7,
+   "segundos": 4.25,
+   "muestra": "NORMAS LEGALES Miércoses 22 48 enero de 2005 / E34 ElPerano 3. En tanto se implementen las funcionalidades de la Pladicop para generar las constancias de presta"
+  },
+  "101": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 4,
+    "seleccion": 2,
+    "garantias_penalidades": 3,
+    "controversias": 2,
+    "pladicop": 3
+   },
+   "caracteres": 6873,
+   "confianza": 90.0,
+   "segundos": 4.32,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES 101 haberse presentado consultas y/u obseryaciones, ni se hayan realizado acciones de supervisión. 5, "
+  },
+  "102": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 4,
+    "garantias_penalidades": 4
+   },
+   "caracteres": 7319,
+   "confianza": 89.0,
+   "segundos": 4.52,
+   "muestra": "NORMAS LEGALES Miércoses 22 48 enero de 2005 / E54 ElPerano 30. Esquema mixto: modalidad de pago aplicable cuando la entidad contratante puede utilizar más de u"
+  },
+  "103": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 4,
+    "seleccion": 4,
+    "garantias_penalidades": 6
+   },
+   "caracteres": 7127,
+   "confianza": 89.4,
+   "segundos": 4.46,
+   "muestra": "a BiPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES 103 52. Mora: el retraso parcial o total, continuado y acumulativo en el cumplimiento de prestaciones "
+  },
+  "104": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 1,
+    "garantias_penalidades": 2,
+    "pladicop": 1
+   },
+   "caracteres": 6980,
+   "confianza": 88.6,
+   "segundos": 4.32,
+   "muestra": "104 NORMAS LEGALES Miércoses 22 48 enero de 2005 / E3 ElPerano 75. Riesgo: evento o condición incierta que es inherente a cualquier contratación y, de producirs"
+  },
+  "105": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 12
+   },
+   "caracteres": 2786,
+   "confianza": 52.1,
+   "segundos": 2.1,
+   "muestra": "a EPeruano! Miércotes220senerode2025 NORMAS LEGALES 105 ANEXO il PROCEDIMIENTOS ADMINISTRATIVOS A CARGO DE OECE Formularios de los procedimientos administrativo"
+  },
+  "106": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {},
+   "caracteres": 2617,
+   "confianza": 54.7,
+   "segundos": 1.41,
+   "muestra": "106 NORMAS LEGALES Miercoles 2208 enero ge2005/ 8%Í Erporuano 1 o Ingres= aut DECLARACIÓN JURADA DE VERACIDAD DE DOCUMENTOS, INFORMACIÓN Y DECLARACIONES PRESENT"
+  },
+  "107": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 6
+   },
+   "caracteres": 1389,
+   "confianza": 41.9,
+   "segundos": 1.44,
+   "muestra": "MM EsPeruano/ Msercotes220e eneradez05 NORMAS LEGALES 107 1.2. Inscripción o reinscripción de proveedores de bienes y servicios, persona jurídica extranjera no "
+  },
+  "108": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 2
+   },
+   "caracteres": 4342,
+   "confianza": 52.7,
+   "segundos": 2.3,
+   "muestra": "108 NORMASLEGALES — mercoss2200eneroge2005/ 8% Erporiano - ACCIONES RESTANTES ALA ACTUALDAD: a BUMERO DE ACOOMES. ] WMALOR TOTAL DELAS ACOONES PORCENTAJE Aa ACT"
+  },
+  "109": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 8,
+    "garantias_penalidades": 1
+   },
+   "caracteres": 2702,
+   "confianza": 55.3,
+   "segundos": 1.64,
+   "muestra": "a EPeruano! Miércotes220senerode2025 NORMAS LEGALES 109 1.3. Inscripción o reinscripción de persona natural y juridica extranjera no domiciliada sin representan"
+  },
+  "110": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {},
+   "caracteres": 2530,
+   "confianza": 58.6,
+   "segundos": 1.34,
+   "muestra": "no NORMAS LEGALES Miércoses 22 48 enero e 2005 / E54 DECLARACIÓN JURADA DE WERACIDAD DE DOCUMENTOS, INFORMACIÓN Y DECLARACIONES PRESENTADAS Dedara bajo jurament"
+  },
+  "111": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 3
+   },
+   "caracteres": 709,
+   "confianza": 58.9,
+   "segundos": 0.73,
+   "muestra": "MN Peruano! muercoes720ecnerogezozs NORMAS LEGALES 1.32. Personería Juridica FORMULARIO ELECTRÓNICO TRÁMITE: INSCRIPOION/REMSCAIPCIÓN REGISTRO: BlENES/SERYICIOS"
+  },
+  "112": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 4
+   },
+   "caracteres": 4204,
+   "confianza": 41.7,
+   "segundos": 2.59,
+   "muestra": "NÚMERO DE ACCIORES VALOR TOTAL DE LAS ACCIONES ] PORCENTAJE DATOS DE LA ACTIVIDAD PRINCIPAL DEL BIENSORSTICADO O SERVICIO ESPEDALIZADO NOMBRE DU 1 l CARACTERÍST"
+  },
+  "113": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 10,
+    "garantias_penalidades": 1
+   },
+   "caracteres": 2371,
+   "confianza": 56.9,
+   "segundos": 1.33,
+   "muestra": "a EPeruano! Miércotes220senerode2025 NORMAS LEGALES 1m 1.4. Inscripción o reinscripción de proveedores de bienes y servicios, personas naturales, nacionales o e"
+  },
+  "114": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {},
+   "caracteres": 2363,
+   "confianza": 53.0,
+   "segundos": 1.34,
+   "muestra": "n4 NORMAS LEGALES Miercoles 2208 enero ge2005/ 8%Í Erporuano A AO RS EE Darlsro bajo juramarto quer a) Hañzido y acepto lo estáblación an los sárminos y condici"
+  },
+  "115": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 7
+   },
+   "caracteres": 4700,
+   "confianza": 53.5,
+   "segundos": 2.55,
+   "muestra": "a BiPeruano/ Miercotes22deenerode2075 NORMAS LEGALES 1.4.2. Personería Natural de origen nacional FORMULARIO ELECTRÓNICO TRÁMITE: INSCRIPCION REINSCRIPCIÓN. REG"
+  },
+  "116": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 9,
+    "garantias_penalidades": 1
+   },
+   "caracteres": 1151,
+   "confianza": 57.1,
+   "segundos": 0.94,
+   "muestra": "16 NORMAS LEGALES Miércoñes 2208 enero se 2025 / MEN EJPoruano 1.5. Inscripción o reinscripción de proveedores de bienes y servicios, personas jurídicas, nacion"
+  },
+  "117": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 1
+   },
+   "caracteres": 4256,
+   "confianza": 55.9,
+   "segundos": 2.2,
+   "muestra": "a BiPeruano/ Miercotes22deenerode2075 NORMAS LEGALES NÚMERO 05 ACCIONES 3 7 ACTIVIDAD PRINCIPAL [Catálogo de Blesa y dervsios - ONU) LN =] Bj Ei] | TÉRMINOS Y C"
+  },
+  "118": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 7
+   },
+   "caracteres": 1088,
+   "confianza": 49.6,
+   "segundos": 0.99,
+   "muestra": "ne NORMASLEGALES —— mercoss220eenerone2025/ M4 esporano 1.5.2. Personería Jurídica de origen Nacional FORMULARIO ELECTRÓNICO TRÁMITE: INSCRIPCIÓN REINSCRIPCIÓN "
+  },
+  "119": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 1
+   },
+   "caracteres": 4134,
+   "confianza": 53.3,
+   "segundos": 2.1,
+   "muestra": "a BiPeruano/ Miercotes22deenerode2075 NORMAS LEGALES IPPO DE TEE BAJODELLA ACTIVIDAR PRINOFAL ATIVIDRD PNOPAL [Cetálogs de Sanos y baraicios- DIU 3 El El fñ a +"
+  },
+  "120": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 9
+   },
+   "caracteres": 1023,
+   "confianza": 45.7,
+   "segundos": 1.01,
+   "muestra": "10 NORMAS LEGALES Miércoñes 2208 enero se 2025 / MEN EJPoruano Consultores de Obras 1.6. Inscripción o reinscripción de consultores de obras, persona natural na"
+  },
+  "121": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {},
+   "caracteres": 864,
+   "confianza": 44.8,
+   "segundos": 0.73,
+   "muestra": "a EPeruano! Miércotes220senerode2025 NORMAS LEGALES dfn ea ¡DEMOSTRATIVO DE COBELICTORÍA DE OBRAS REMUZADAS ¡Deba tecagear infermación referendo! Em elcaco de i"
+  },
+  "122": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {},
+   "caracteres": 821,
+   "confianza": 41.7,
+   "segundos": 0.69,
+   "muestra": "NORMASLEGALES — mercoss2200eneroge2005/ 8% Erporiano [Q] Corsultoria deobrs en aicadones y afines O 110 (O Corsutraria snabres viales, puertos y afines OlOloOlO"
+  },
+  "123": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 1
+   },
+   "caracteres": 4551,
+   "confianza": 42.1,
+   "segundos": 2.65,
+   "muestra": "a EPeruano! Miércotes220senerode2025 NORMAS LEGALES 123 TÉRMINOS Y CONDICIONES DE USO DE LOS SERVICHOS ENP e el Todaiatétor al Batomisa consomianto sel Dectiogs"
+  },
+  "124": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 6,
+    "garantias_penalidades": 1
+   },
+   "caracteres": 992,
+   "confianza": 54.7,
+   "segundos": 0.85,
+   "muestra": "124 NORMASLEGALES —— mercoss220eenerone2025/ M4 esporano 1.7. Inscripción o reinscripción de consultores de obras, persona natura! extranjera 1.7.1. Personería "
+  },
+  "125": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {},
+   "caracteres": 1470,
+   "confianza": 45.0,
+   "segundos": 1.12,
+   "muestra": "MN Peruano! muercoes720ecnerogezozs NORMAS LEGALES 125 3 ESENTIDAD PÚSUCA (PRIVADA. PAmana o PRESUF ENTIDAD: DESCRIPCIÓN DE LA. MONTO DEL CONTRATO DE FECHA DEL "
+  },
+  "126": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 2
+   },
+   "caracteres": 4751,
+   "confianza": 54.7,
+   "segundos": 2.56,
+   "muestra": "NORMAS LEGALES Miércoñes 2208 enero se 2025 / MEN EJPoruano CUADRO DEMOSTRATIVO DE CONSULTORÍA DEOBRAS REALIZADAS Ilsbe cossignar información referencial) ESPEC"
+  },
+  "127": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 8
+   },
+   "caracteres": 1526,
+   "confianza": 49.1,
+   "segundos": 1.19,
+   "muestra": "MN Peruano! muercoes720ecnerogezozs NORMAS LEGALES 1.7.2, Personeña natural de Origen extranjero No domiciliado TRÁMITE: INSCRIPCIÓN REINSCRIPCIÓN REGISTRO: COM"
+  },
+  "128": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {},
+   "caracteres": 1924,
+   "confianza": 31.7,
+   "segundos": 1.73,
+   "muestra": "128 NORMASLEGALES —— mercoss220eenerone2025/ M4 esporano CUACRO DEMOSRATIvÓ De cónducramia DE OSMA REAUERDAS [cis Smaras PErmacds riel ] \"tr = aus Sc imanpode, "
+  },
+  "129": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {},
+   "caracteres": 3978,
+   "confianza": 31.8,
+   "segundos": 3.2,
+   "muestra": "a EPeruano! Miércotes220senerode2025 NORMAS LEGALES 8 [Data comigsar letormación vetarencial A. Formulación da Mchas Eionicas de livarsignas o ertuaios ds prelm"
+  },
+  "130": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 8
+   },
+   "caracteres": 1217,
+   "confianza": 38.4,
+   "segundos": 1.19,
+   "muestra": "0 NORMAS LEGALES Miércoñes 2208 enero se 2025 / MEN EJPoruano 1.8, Inscripción o reinscripción de consultores de obras, persona jurídica nacional FORMULARIO ELE"
+  },
+  "131": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {},
+   "caracteres": 502,
+   "confianza": 25.5,
+   "segundos": 0.71,
+   "muestra": "a EPeruano! Miércotes220senerode2025 NORMAS LEGALES a FECHA DEUCIO DE ACTIVIDADES [degur SumaTÍ Emma mice rosutanió mescral an uz Pentemete: e Y main Safimfanas"
+  },
+  "132": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {},
+   "caracteres": 1833,
+   "confianza": 27.1,
+   "segundos": 1.95,
+   "muestra": "NORMASLEGALES — mercoss2200eneroge2005/ 8% Erporiano e eins A E CUADAO Dembimma ride COMSULTOnia De OSmas MERLUTADAS (Subs soregoar intermación reterercal Nte i"
+  },
+  "133": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 1
+   },
+   "caracteres": 4684,
+   "confianza": 42.1,
+   "segundos": 2.69,
+   "muestra": "MM EsPeruano/ Msercotes220e eneradez05 NORMAS LEGALES 133 ai =l TÉRMINOS Y CONDICIONES DE USO DELOS SERMICAOS ANP. ESPECIALIDADES / CATEGORÍAS SOLICITADAS | A F"
+  },
+  "134": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 8
+   },
+   "caracteres": 925,
+   "confianza": 45.5,
+   "segundos": 0.92,
+   "muestra": "14 NORMAS LEGALES Miércoñes 2208 enero se 2025 / MEN EJPoruano 1.9. Inscripción o reinscripción de consultores de obras, persona jurídica extranjera 1.9.1. Pers"
+  },
+  "135": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 1
+   },
+   "caracteres": 1417,
+   "confianza": 44.6,
+   "segundos": 1.1,
+   "muestra": "MN Peruano! muercoes720ecnerogezozs NORMAS LEGALES 135 si 5 TIPO DE DOCUMENTO ED. DEDOCIMENTO pasto FECHA DE INGRESO canso APELLIDOS Y NOMBRES > TIPO DE DOCUMEN"
+  },
+  "136": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 1
+   },
+   "caracteres": 1194,
+   "confianza": 41.2,
+   "segundos": 1.0,
+   "muestra": "136 NORMASLEGALES —— mercoss220eenerone2025/ M4 esporano A BE E D |] Consultor de obras an adificadones y afines OJGIC|O | —] Consultora en obras vislas, pierto"
+  },
+  "137": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 2
+   },
+   "caracteres": 4744,
+   "confianza": 52.6,
+   "segundos": 2.49,
+   "muestra": "8 a BiPeruano/ Miercotes22deenerode2075 NORMAS LEGALES A Formulación deficha támica de manion= o tutos di pralmenión que confanaan componente de sdficadón o inf"
+  },
+  "138": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 8
+   },
+   "caracteres": 1041,
+   "confianza": 51.3,
+   "segundos": 0.97,
+   "muestra": "138 NORMASLEGALES —— mercoss220eenerone2025/ M4 esporano 1.9.2. Personería jurídica extranjero no domiciliado FORMULARIO ELECTRÓNICO TRÁMITE: INSCRIPCIÓN REINSC"
+  },
+  "139": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {},
+   "caracteres": 1017,
+   "confianza": 25.8,
+   "segundos": 1.13,
+   "muestra": "a EPeruano! Miércotes220senerode2025 NORMAS LEGALES Ainas Trans merece Tp emos he temen Total Panes Tomlente Total Sabor ue Temieres Tola Total retiene amtucian"
+  },
+  "140": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {},
+   "caracteres": 695,
+   "confianza": 43.6,
+   "segundos": 0.69,
+   "muestra": "NORMAS LEGALES —— mercoecz2oseneroge2025/ 14 Erporano [] Consultoria de obras an edificaciones y afines Consultoda 20 obras vales, puertos y afines —) Consultod"
+  },
+  "141": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 2
+   },
+   "caracteres": 4843,
+   "confianza": 54.6,
+   "segundos": 2.65,
+   "muestra": "a BPeruano/ Miércoles 22 de enero de 2025 NORMAS LEGALES 141 E] 4 =i ñ El =l 5 3) DADO DEMOSTRATIVO DE CONEUITONÍA DECIAS RETALES” E Formulación deficiasticicas"
+  },
+  "142": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 7,
+    "garantias_penalidades": 1
+   },
+   "caracteres": 1107,
+   "confianza": 42.8,
+   "segundos": 1.14,
+   "muestra": "142 NORMAS LEGALES Miércoñes 2208 enero se 2025 / MEN EJPoruano Ejecutores de obras 1.10. Inscripción o reinscripción de ejecutores de obras, persona natural na"
+  },
+  "143": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 2
+   },
+   "caracteres": 2585,
+   "confianza": 50.9,
+   "segundos": 1.54,
+   "muestra": "a EPeruano! Miércotes220senerode2025 NORMAS LEGALES nen CUADRO DENOSTRÁTIVO DE SXECUCIÓN DE OBRA [Dése ccnalgnar itarmación reterandal] Enel caso de irscipaón, "
+  },
+  "144": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 1
+   },
+   "caracteres": 2370,
+   "confianza": 56.2,
+   "segundos": 1.33,
+   "muestra": "= El E al DECLARACIÓN JURADA DE VERACIDAD Dada bajo jusamento que: NORMAS LEGALES Miércoses 22 48 enero e 2005 / E54 EJPoruano Halaido y acepto lo assabladido e"
+  },
+  "145": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 9,
+    "garantias_penalidades": 1
+   },
+   "caracteres": 1213,
+   "confianza": 48.0,
+   "segundos": 1.09,
+   "muestra": "MM EsPeruano/ Msercotes220e eneradez05 NORMAS LEGALES 145 1.11, Inscripción o reinscripción de ejecutores de obras, persona natural extranjera 1.111. Personería"
+  },
+  "146": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 1
+   },
+   "caracteres": 4051,
+   "confianza": 52.8,
+   "segundos": 2.13,
+   "muestra": "146 NORMASLEGALES —— mercoesz2orenerogez02s/ Él erperiano TÉRMINOS Y CONDICIONES DE USO DE LOS SERVICIOS RIP So La nsifcaión de todos los aos de procsrriento se"
+  },
+  "147": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 5
+   },
+   "caracteres": 690,
+   "confianza": 55.4,
+   "segundos": 0.68,
+   "muestra": "MN Peruano! muercoes720ecnerogezozs NORMAS LEGALES 3 1.11.2, Personería natural extranjero no domiciliado FORMULARIO ELECTRÓNICO TRÁMITE: INSCRIPOÓN/REINSCRIPCI"
+  },
+  "148": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 2
+   },
+   "caracteres": 5053,
+   "confianza": 51.4,
+   "segundos": 2.7,
+   "muestra": "NORMAS LEGALES Miércoses 22 48 enero e 2005 / E54 EJPoruano = En 6 ama demacripción, Ralnicrboón o Aumento de Espacio mata de contratación, dl Iscar axpariandia"
+  },
+  "149": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 7
+   },
+   "caracteres": 901,
+   "confianza": 36.8,
+   "segundos": 0.94,
+   "muestra": "MM EsPeruano/ Msercotes220e eneradez05 NORMAS LEGALES 149 1.12, Inscripción o reinscripción de ejecutores de obras, persona juridica nacional TRÁMITE: INSCRIPCI"
+  },
+  "150": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {},
+   "caracteres": 454,
+   "confianza": 28.4,
+   "segundos": 0.64,
+   "muestra": "NORMASLEGALES —— mercoss2202enerooe2005/ 8% erporiano PEER, DE AMIA PA CrIiaDRs Page Suma E [ 22 marras = TEIBUTAMIÓ inemra jas Cue pentenmde AESmIEN deuneal a "
+  },
+  "151": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 3
+   },
+   "caracteres": 5061,
+   "confianza": 53.3,
+   "segundos": 2.69,
+   "muestra": "a BPeruano/ Miércoles 22 de enero de 2025 NORMAS LEGALES 151 F CUADRO DEMOSTRATIVO DE EECUCÓN DE OBRA ¡Tera cocagrsr [ófmacós rataraneai] + Ensl ascos Insoripci"
+  },
+  "152": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 4
+   },
+   "caracteres": 752,
+   "confianza": 42.7,
+   "segundos": 0.96,
+   "muestra": "NORMASLEGALES — mercoss2200eneroge2005/ 8% Erporiano 113. Inscripción o reinscripción de ejecutores de obras, persona jurídica extranjera 1.13.1. Personería jur"
+  },
+  "153": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {},
+   "caracteres": 2668,
+   "confianza": 35.0,
+   "segundos": 2.16,
+   "muestra": "a EPeruano! Miércotes220senerode2025 NORMAS LEGALES 50005 / ACOOMISTAS /TEUAAR rare pa n Ml PEE ICOONS PE Pra ERE [APORTES LJ aroRrES TIFO DE PERSONERÍA. PERSON"
+  },
+  "154": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {},
+   "caracteres": 1901,
+   "confianza": 32.4,
+   "segundos": 1.67,
+   "muestra": "NORMAS LEGALES Miércoñes 2208 enero se 2025 / MEN EJPoruano DECLAMACIÓN JUBADA DE VENACDAD DE DOCUMENTOS, MPONMACIÓN Y DECLAMACIÓNES PRESENT: Declara bal jarama"
+  },
+  "155": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 4
+   },
+   "caracteres": 909,
+   "confianza": 52.6,
+   "segundos": 0.88,
+   "muestra": "MN Peruano! muercoes720ecnerogezozs NORMAS LEGALES 1.13,2. Personería jurídica extranjero no domiciliado FORMULARIO ELECTRÓNICO TRÁMITE: INSCRIPOÓN/REMNSCRIPCIÓ"
+  },
+  "156": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 2
+   },
+   "caracteres": 3061,
+   "confianza": 47.2,
+   "segundos": 1.83,
+   "muestra": "156 NORMASLEGALES —— mescossz20seneroge200s/Ñ Enperuano [MAD DE ACCIONES | WALOR TOTAL DE NAOLDE AFELUIDOS Y Pals DE ORIGEN E DOCUMENTO DE HOMBRES. onini ¡ 4 A "
+  },
+  "157": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {},
+   "caracteres": 2501,
+   "confianza": 54.7,
+   "segundos": 1.35,
+   "muestra": "a BiPeruano/ Miercotes22deenerode2075 NORMAS LEGALES a al 5 e) NL SANO Dadaro bajo juramento que: Haiaido y acaptolo establecido es los términos y conficdanas d"
+  },
+  "158": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 1
+   },
+   "caracteres": 242,
+   "confianza": 74.5,
+   "segundos": 0.39,
+   "muestra": "158 NORMAS LEGALES Miércoses 27 de enero de 2025 / 1.14. Ampliación de Categorías para Consultores de Obras FORMULARIO SOLICITUD PARA AMPLIACIÓN DE CATEGORÍAS P"
+  },
+  "159": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {},
+   "caracteres": 360,
+   "confianza": 40.2,
+   "segundos": 0.53,
+   "muestra": "MM EsPeruano/ Msercotes220e eneradez05 NORMAS LEGALES 159 Misdecpa odon toa. ESPECIALIDADES CATEGORÍAS BOLICITADA E Comsufarlede poes en eficaciones 7 aMhes Don"
+  },
+  "160": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {},
+   "caracteres": 375,
+   "confianza": 24.7,
+   "segundos": 0.75,
+   "muestra": "160 NORMASLEGALES —— mercoss220senerone 2025/14 esporuano PUTA amo MD DE MNSOA Ae or e Mc A SA ALTO A A q cocinan pco dt Ir iacara A arar ee ens a ra Eo de laci"
+  },
+  "161": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 5
+   },
+   "caracteres": 3282,
+   "confianza": 42.7,
+   "segundos": 1.95,
+   "muestra": "a EPeruano! Miércotes220senerode2025 NORMAS LEGALES 161 el =) nn ” 15 nogcación ds todos les soto del proccalmiecto se neslas s ls calls electrónica 04) DECE, a"
+  },
+  "162": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 1
+   },
+   "caracteres": 277,
+   "confianza": 82.4,
+   "segundos": 0.43,
+   "muestra": "162 NORMAS LEGALES Miércolas 27 de enero de 2025 / 1.15, Aumento de Capacidad Máxima de Contratación para Ejecutores de Obras FORMULARIO SOUCTUD PARA AUMENTO DE"
+  },
+  "163": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 3
+   },
+   "caracteres": 4145,
+   "confianza": 55.3,
+   "segundos": 2.29,
+   "muestra": "a BiPeruano/ Miercotes22deenerode2075 NORMAS LEGALES «En elcaso de Aumento de Capacidad Maxima de Contratación, de tensrexperiencia, consignarias obras culminad"
+  },
+  "164": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 1,
+    "seleccion": 2,
+    "garantias_penalidades": 1
+   },
+   "caracteres": 983,
+   "confianza": 77.9,
+   "segundos": 0.91,
+   "muestra": "164 NORMASLEGALES —— mercoss220eenerone2025/ M4 esporano 1.16. Expedición de constancia de capacidad libre de contratación: FORMULARIO SOLICITUD PARA LA EXPEDIC"
+  },
+  "165": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "registro_proveedores": 1
+   },
+   "caracteres": 2693,
+   "confianza": 68.7,
+   "segundos": 1.59,
+   "muestra": "a EPeruano! Miércotes220senerode2025 NORMAS LEGALES 165 DECLARACIÓN JURADA DE VERACIDAD DE DOCUMENTOS. INFORMACIÓN Y DECLARACIONES PRESENTADAS: Declaro bajo jur"
+  },
+  "166": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {},
+   "caracteres": 1943,
+   "confianza": 72.9,
+   "segundos": 1.33,
+   "muestra": "166 NORMAS LEGALES — mercosszzosererooe2025/Í%4 erporuano Formularios de los procedimientos administrativos relacionados a las Instituciones Arbitrales o de Cen"
+  },
+  "167": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {},
+   "caracteres": 2476,
+   "confianza": 75.7,
+   "segundos": 1.55,
+   "muestra": "a BiPeruano/ Miercoles 22deenerode2075 NORMAS LEGALES 167 1.17.2. Formulario “Declaración Jurada” Incorporación de Instituciones Arbitrales o de Centros de Admi"
+  },
+  "168": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "controversias": 2
+   },
+   "caracteres": 3493,
+   "confianza": 75.3,
+   "segundos": 2.22,
+   "muestra": "NORMAS LEGALES Miércoses 22 48 enero e 2005 / E54 EJPoruano 1.17.3. Formulario de enlaces Incorporación de Instituciones Arbitrales o de Centros de Administraci"
+  },
+  "169": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {},
+   "caracteres": 3517,
+   "confianza": 75.1,
+   "segundos": 2.13,
+   "muestra": "MM EsPeruano/ Msercotes220e eneradez05 NORMAS LEGALES 169 FORMULARIO 1.8 . (CENTROS DE ADMINISTRACIÓN DE JUNTA DE RESOLUCIÓN DE DISPUTAS) Ay en calidad de repre"
+  },
+  "170": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "garantias_penalidades": 2,
+    "controversias": 2
+   },
+   "caracteres": 2326,
+   "confianza": 71.9,
+   "segundos": 1.46,
+   "muestra": "10 NORMAS LEGALES —— mercoecz2oseneroge2025/ 14 Erporano 1.18. Incorporación de Instituciones Arbitrales o de Juntas de Prevención y Resolución de Disputas para"
+  },
+  "171": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "controversias": 2
+   },
+   "caracteres": 2209,
+   "confianza": 79.3,
+   "segundos": 1.32,
+   "muestra": "a BiPeruano/ Miercotes22deenerode2075 NORMAS LEGALES 3 1.18.2. Formulario “Declaración Jurada” Incorporación de Instituciones Arbitrales o de Juntas de Prevenci"
+  },
+  "172": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "controversias": 4
+   },
+   "caracteres": 3909,
+   "confianza": 76.1,
+   "segundos": 2.39,
+   "muestra": "172 NORMAS LEGALES Miércoses 22 48 enero e 2005 / E54 EJPoruano 1.18.3. Formulario de enlace Incorporación de Instituciones Arbitrales o de Juntas de Prevención"
+  },
+  "173": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "controversias": 1
+   },
+   "caracteres": 3858,
+   "confianza": 77.5,
+   "segundos": 2.47,
+   "muestra": "a BiPeruano/ Miercoles 22deenerode2075 NORMAS LEGALES 3 YO —.. de. e. . FORMULARIO 2.B z - (CENTROS DE ADMINISTRACION DE JUNTAS DE PREVENCIÓN Y RESOLUCION DE DI"
+  },
+  "174": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {},
+   "caracteres": 1341,
+   "confianza": 65.6,
+   "segundos": 0.91,
+   "muestra": "ra NORMAS LEGALES —— mercoecz2oseneroge2025/ 14 Erporano 1.19, Incorporación de Instituciones Arbitrales o Centros de Administración de Juntas de Prevención y R"
+  },
+  "175": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {},
+   "caracteres": 2166,
+   "confianza": 78.0,
+   "segundos": 1.35,
+   "muestra": "a BiPeruano/ Miercoles 22deenerode2075 NORMAS LEGALES 15 1.19.2. Formulario “Declaración Jurada” Incorporación de Instituciones Arbitrales o Centros de Administ"
+  },
+  "176": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "controversias": 4
+   },
+   "caracteres": 3951,
+   "confianza": 73.0,
+   "segundos": 2.35,
+   "muestra": "16 NORMAS LEGALES Miércoses 22 48 enero e 2005 / E54 EJPoruano 1.19.3. Formulario de enlaces Incorporación de Instituciones Arbitrales o Centros de Administraci"
+  },
+  "177": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "controversias": 3
+   },
+   "caracteres": 4035,
+   "confianza": 77.1,
+   "segundos": 2.51,
+   "muestra": "a BiPeruano/ Miercoles 22deenerode2075 NORMAS LEGALES 171 Ya. FORMULARIO 3.B (CENTROS DE ADMINISTRACIÓN DE JUNTA DE PREVENCIÓN Y RESOLUCIÓN DE DISPUTAS) - ident"
+  },
+  "178": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "controversias": 4
+   },
+   "caracteres": 1659,
+   "confianza": 70.6,
+   "segundos": 1.15,
+   "muestra": "178 NORMAS LEGALES Miercolas 27 de enero de 2025 / 1.20, Incorporación de Instituciones Arbitrales para administrar arbitrajes de mayor envergadura sobre contro"
+  },
+  "179": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "controversias": 2
+   },
+   "caracteres": 2049,
+   "confianza": 82.0,
+   "segundos": 1.26,
+   "muestra": "a BPeruano/ Miércoles 22 de enero de 2075 NORMAS LEGALES 1.20.2. Formulario “Declaración Jurada” Incorporación de Instituciones Arbitrales para administrar arbi"
+  },
+  "180": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "controversias": 4
+   },
+   "caracteres": 3786,
+   "confianza": 71.2,
+   "segundos": 2.34,
+   "muestra": "180 NORMAS LEGALES Miércoñes 22 05 enero se 2025/ MY Erporuano 1.20.3. Formulario de enlace Incorporación de Instituciones Arbitrales para administrar arbitraje"
+  },
+  "181": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {},
+   "caracteres": 1440,
+   "confianza": 74.1,
+   "segundos": 1.02,
+   "muestra": "MN Peruano! muercoes720ecnerogezozs NORMAS LEGALES 181 1.21, Modificación de registro de Instituciones Arbitrales o Centros Administración de Juntas de Prevenci"
+  },
+  "182": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "controversias": 1
+   },
+   "caracteres": 2478,
+   "confianza": 79.8,
+   "segundos": 1.51,
+   "muestra": "182 NORMAS LEGALES Miércoses 22 48 enero e 2005 / E54 EJPoruano 1.21.2. Formulario “Declaración Jurada” Incorporación de Instituciones Arbitrales o de Centros d"
+  },
+  "183": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "controversias": 2
+   },
+   "caracteres": 3104,
+   "confianza": 76.5,
+   "segundos": 1.93,
+   "muestra": "a BiPeruano/ Miercoles 22deenerode2075 NORMAS LEGALES 183 FORMULARIO 1.4 (INSTITUCIONES ARBITRALES)] PP? 4 a entificado con DANI? o representante legal de... oo"
+  },
+  "184": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "controversias": 1
+   },
+   "caracteres": 3530,
+   "confianza": 78.0,
+   "segundos": 2.1,
+   "muestra": "E NORMAS LEGALES Miércoses 22 48 enero e 2005 / E54 EJPoruano FORMULARIO 1.8 , (CENTROS DE ADMINISTRACIÓN DE JUNTA DE RESOLUCIÓN DE DISPUTAS) . identificado con"
+  },
+  "185": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "controversias": 2
+   },
+   "caracteres": 2156,
+   "confianza": 75.7,
+   "segundos": 1.34,
+   "muestra": "MM EsPeruano/ Msercotes220e eneradez05 NORMAS LEGALES 185 Incorporación de Instituciones Arbitrales o de Juntas de Prevención y Resolución de Disputas para admi"
+  },
+  "186": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "controversias": 3
+   },
+   "caracteres": 3546,
+   "confianza": 74.8,
+   "segundos": 2.19,
+   "muestra": "NORMAS LEGALES Miércoses 22 48 enero e 2005 / E54 EJPoruano FORMULARIO 2.A (INSTITUCIONES ARBITRALES) identificado con DINHN*-—.......—... en calidad de represe"
+  },
+  "187": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "controversias": 1
+   },
+   "caracteres": 3778,
+   "confianza": 75.5,
+   "segundos": 2.46,
+   "muestra": "a BiPeruano/ Miercoles 22deenerode2075 NORMAS LEGALES 187 Yo . FORMULARIO 28. , (CENTROS DE ADMINISTRACIÓN DE JUNTAS DE PREVENCIÓN Y RESOLUCIÓN DE DISPUTAS) ide"
+  },
+  "188": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {},
+   "caracteres": 2123,
+   "confianza": 78.1,
+   "segundos": 1.36,
+   "muestra": "188 NORMAS LEGALES Miércoses 22 48 enero e 2005 / E54 EJPoruano Incorporación de Instituciones Arbitrales o Centros de Administración de Juntas de Prevención y "
+  },
+  "189": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "controversias": 5
+   },
+   "caracteres": 3778,
+   "confianza": 74.9,
+   "segundos": 2.4,
+   "muestra": "MA peruano! msercotes226s enerae705 NORMAS LEGALES 189 FORMULARIO 3.4. (INSTITUCIONES ARBITRALE 5) Ya identificado con DNI WN“... representante legal con RUEN +"
+  },
+  "190": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "controversias": 3
+   },
+   "caracteres": 4000,
+   "confianza": 77.3,
+   "segundos": 2.55,
+   "muestra": "E NORMAS LEGALES Miércoses 22 48 enero e 2005 / E54 EJPoruano Yo — con RUC NP a , FORMULARIO 3.8. 5 (CENTROS DE ADMINISTRACIÓN DE JUNTA DE PREVENCIÓN Y RESOLUCI"
+  },
+  "191": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "controversias": 2
+   },
+   "caracteres": 1930,
+   "confianza": 75.9,
+   "segundos": 1.22,
+   "muestra": "MM EsPeruano/ Msercotes220e eneradez05 NORMAS LEGALES 191 Incorporación de Instituciones Arbitrales para administrar arbitrajes de mayor envergadura sobre contr"
+  },
+  "192": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "controversias": 2
+   },
+   "caracteres": 3871,
+   "confianza": 78.0,
+   "segundos": 2.44,
+   "muestra": "192 NORMAS LEGALES —— mercoesz20sensroae2075/ El ErPorano FORMULARIO 4 Ya E identificado con DORE o en calidad de representante legal de indico lo siguiente: El"
+  },
+  "193": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {},
+   "caracteres": 1185,
+   "confianza": 80.2,
+   "segundos": 0.86,
+   "muestra": "MM EsPeruano/ Msercotes220e eneradez05 NORMAS LEGALES 193 1.22. Suspensión a pedido de parte de Instituciones Arbitrales o de Centros de Administración de Junta"
+  },
+  "194": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {},
+   "caracteres": 1456,
+   "confianza": 72.9,
+   "segundos": 0.98,
+   "muestra": "194 NORMAS LEGALES Miércoñes 22 05 enero se 2025/ MY Erporuano 1.22.2. Formulario “Declaración Jurada” Suspensión a pedido de parte de Instituciones Arbitrates "
+  },
+  "195": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {
+    "garantias_penalidades": 1
+   },
+   "caracteres": 1634,
+   "confianza": 62.4,
+   "segundos": 1.03,
+   "muestra": "MM EsPeruano/ Msercotes220e eneradez05 NORMAS LEGALES 195 1.23, Retiro definitivo a pedido de parte de Instituciones Arbitrales o de Centros de Administración d"
+  },
+  "196": {
+   "encabezados": [],
+   "articulos": [],
+   "palabras_clave": {},
+   "caracteres": 1454,
+   "confianza": 78.1,
+   "segundos": 1.01,
+   "muestra": "196 NORMAS LEGALES Miércoñes 22 05 enero se 2025/ MY Erporuano 1.23.2, Formulario “Declaración Jurada” Retiro definitivo a pedido de parte de Instituciones Arbi"
+  }
+ },
+ "generado": "2026-09-21T11:02:12-05:00"
+}

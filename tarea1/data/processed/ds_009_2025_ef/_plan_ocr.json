@@ -1,0 +1,2388 @@
+{
+ "documento": "ds_009_2025_ef",
+ "generado": "2026-09-21",
+ "paginas_incluidas": [
+  3,
+  4,
+  5,
+  6,
+  7,
+  9,
+  10,
+  11,
+  13,
+  14,
+  15,
+  16,
+  17,
+  18,
+  19,
+  20,
+  21,
+  26,
+  27,
+  28,
+  29,
+  30,
+  31,
+  32,
+  33,
+  34,
+  36,
+  37,
+  38,
+  39,
+  40,
+  41,
+  42,
+  43,
+  44,
+  45,
+  46,
+  47,
+  48,
+  50,
+  51,
+  52,
+  53,
+  54,
+  55,
+  56,
+  57,
+  58,
+  59,
+  60,
+  62,
+  63,
+  64,
+  65,
+  67,
+  68,
+  70,
+  71,
+  73,
+  74,
+  76,
+  77,
+  78,
+  79,
+  80,
+  81,
+  82,
+  91,
+  92,
+  93,
+  94,
+  96,
+  97,
+  98,
+  100
+ ],
+ "rangos": "3-7, 9-11, 13-21, 26-34, 36-48, 50-60, 62-65, 67-68, 70-71, 73-74, 76-82, 91-94, 96-98, 100",
+ "prioridad": [
+  3,
+  4,
+  5,
+  6,
+  11,
+  15,
+  26,
+  28,
+  32,
+  33,
+  34,
+  37,
+  39,
+  40,
+  53,
+  54,
+  55,
+  56,
+  57,
+  58,
+  59,
+  60,
+  65,
+  67,
+  70,
+  73,
+  78,
+  81,
+  82,
+  94,
+  96,
+  97,
+  100
+ ],
+ "cobertura_articulos_modificados": {
+  "total": 105,
+  "con_pagina_incluida": 104,
+  "sin_cubrir": [
+   94
+  ]
+ },
+ "decisiones": [
+  {
+   "pagina": 1,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (401 car., confianza 66.0); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 2,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (0 car., confianza None); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 3,
+   "incluida": true,
+   "puntaje": 10.177,
+   "modificados": [
+    3
+   ],
+   "encabezados": [
+    "TÍTULO 1 DISPOSICIONES GENERALES"
+   ],
+   "motivos": [
+    "cobertura de estructura: empieza TÍTULO 1 DISPOSICIONES GENERALES",
+    "además: artículos modificados que empiezan aquí: 3"
+   ]
+  },
+  {
+   "pagina": 4,
+   "incluida": true,
+   "puntaje": 1.11,
+   "modificados": [],
+   "encabezados": [
+    "TÍTULO 1"
+   ],
+   "motivos": [
+    "cobertura de estructura: empieza TÍTULO 1"
+   ]
+  },
+  {
+   "pagina": 5,
+   "incluida": true,
+   "puntaje": 30.857,
+   "modificados": [
+    15,
+    16,
+    17
+   ],
+   "encabezados": [
+    "CAPÍTULO II ENTIDADES CONTRATANTES"
+   ],
+   "motivos": [
+    "cobertura de estructura: empieza CAPÍTULO II ENTIDADES CONTRATANTES",
+    "además: artículos modificados que empiezan aquí: 15, 16, 17"
+   ]
+  },
+  {
+   "pagina": 6,
+   "incluida": true,
+   "puntaje": 5.446,
+   "modificados": [],
+   "encabezados": [
+    "SUBCAPÍTULO 1"
+   ],
+   "motivos": [
+    "cobertura de estructura: empieza SUBCAPÍTULO 1"
+   ]
+  },
+  {
+   "pagina": 7,
+   "incluida": true,
+   "puntaje": 11.882,
+   "modificados": [
+    25
+   ],
+   "encabezados": [],
+   "motivos": [
+    "artículos modificados por el DS 001-2026-EF que empiezan aquí: 25",
+    "relevancia para una MYPE (palabras clave)"
+   ]
+  },
+  {
+   "pagina": 8,
+   "incluida": false,
+   "puntaje": 2.064,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "menor prioridad (puesto 11 de los excluidos): sin encabezado, con 0 artículos modificados y puntaje 2.064"
+   ]
+  },
+  {
+   "pagina": 9,
+   "incluida": true,
+   "puntaje": 6.778,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "relevancia para una MYPE (palabras clave)"
+   ]
+  },
+  {
+   "pagina": 10,
+   "incluida": true,
+   "puntaje": 14.296,
+   "modificados": [
+    37
+   ],
+   "encabezados": [],
+   "motivos": [
+    "artículos modificados por el DS 001-2026-EF que empiezan aquí: 37",
+    "relevancia para una MYPE (palabras clave)"
+   ]
+  },
+  {
+   "pagina": 11,
+   "incluida": true,
+   "puntaje": 41.958,
+   "modificados": [
+    40,
+    42,
+    43,
+    46
+   ],
+   "encabezados": [
+    "TÍTULO Ii",
+    "CAPÍTULO 1 ACTUACIONES PREPARATORIAS",
+    "SUBCAPÍTULO 1"
+   ],
+   "motivos": [
+    "cobertura de estructura: empieza TÍTULO Ii; CAPÍTULO 1 ACTUACIONES PREPARATORIAS",
+    "además: artículos modificados que empiezan aquí: 40, 42, 43, 46"
+   ]
+  },
+  {
+   "pagina": 12,
+   "incluida": false,
+   "puntaje": 0.835,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "menor prioridad (puesto 22 de los excluidos): sin encabezado, con 0 artículos modificados y puntaje 0.835"
+   ]
+  },
+  {
+   "pagina": 13,
+   "incluida": true,
+   "puntaje": 42.257,
+   "modificados": [
+    50,
+    51,
+    52,
+    53
+   ],
+   "encabezados": [],
+   "motivos": [
+    "artículos modificados por el DS 001-2026-EF que empiezan aquí: 50, 51, 52, 53",
+    "relevancia para una MYPE (palabras clave)"
+   ]
+  },
+  {
+   "pagina": 14,
+   "incluida": true,
+   "puntaje": 10.985,
+   "modificados": [
+    55
+   ],
+   "encabezados": [],
+   "motivos": [
+    "artículos modificados por el DS 001-2026-EF que empiezan aquí: 55",
+    "relevancia para una MYPE (palabras clave)"
+   ]
+  },
+  {
+   "pagina": 15,
+   "incluida": true,
+   "puntaje": 23.957,
+   "modificados": [
+    60,
+    64
+   ],
+   "encabezados": [
+    "SUBCAPÍTULO 1"
+   ],
+   "motivos": [
+    "cobertura de estructura: empieza SUBCAPÍTULO 1",
+    "además: artículos modificados que empiezan aquí: 60, 64"
+   ]
+  },
+  {
+   "pagina": 16,
+   "incluida": true,
+   "puntaje": 22.198,
+   "modificados": [
+    67,
+    69
+   ],
+   "encabezados": [],
+   "motivos": [
+    "artículos modificados por el DS 001-2026-EF que empiezan aquí: 67, 69",
+    "relevancia para una MYPE (palabras clave)"
+   ]
+  },
+  {
+   "pagina": 17,
+   "incluida": true,
+   "puntaje": 20.796,
+   "modificados": [
+    70,
+    72
+   ],
+   "encabezados": [],
+   "motivos": [
+    "artículos modificados por el DS 001-2026-EF que empiezan aquí: 70, 72",
+    "relevancia para una MYPE (palabras clave)"
+   ]
+  },
+  {
+   "pagina": 18,
+   "incluida": true,
+   "puntaje": 21.16,
+   "modificados": [
+    75,
+    76
+   ],
+   "encabezados": [],
+   "motivos": [
+    "artículos modificados por el DS 001-2026-EF que empiezan aquí: 75, 76",
+    "relevancia para una MYPE (palabras clave)"
+   ]
+  },
+  {
+   "pagina": 19,
+   "incluida": true,
+   "puntaje": 21.79,
+   "modificados": [
+    78,
+    82
+   ],
+   "encabezados": [],
+   "motivos": [
+    "artículos modificados por el DS 001-2026-EF que empiezan aquí: 78, 82",
+    "relevancia para una MYPE (palabras clave)"
+   ]
+  },
+  {
+   "pagina": 20,
+   "incluida": true,
+   "puntaje": 31.515,
+   "modificados": [
+    85,
+    88,
+    91
+   ],
+   "encabezados": [],
+   "motivos": [
+    "artículos modificados por el DS 001-2026-EF que empiezan aquí: 85, 88, 91",
+    "relevancia para una MYPE (palabras clave)"
+   ]
+  },
+  {
+   "pagina": 21,
+   "incluida": true,
+   "puntaje": 11.852,
+   "modificados": [
+    92
+   ],
+   "encabezados": [],
+   "motivos": [
+    "artículos modificados por el DS 001-2026-EF que empiezan aquí: 92",
+    "relevancia para una MYPE (palabras clave)"
+   ]
+  },
+  {
+   "pagina": 22,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (723 car., confianza 54.3); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 23,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (2623 car., confianza 55.4); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 24,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (245 car., confianza 58.0); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 25,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (2079 car., confianza 56.5); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 26,
+   "incluida": true,
+   "puntaje": 34.219,
+   "modificados": [
+    96,
+    98,
+    100
+   ],
+   "encabezados": [
+    "CAPITULO 111 DISPOSICIONES ESPECIALES PARA LAS",
+    "SUBCAPÍTULO 1",
+    "CAPÍTULO Iv A"
+   ],
+   "motivos": [
+    "cobertura de estructura: empieza CAPITULO 111 DISPOSICIONES ESPECIALES PARA LAS; SUBCAPÍTULO 1",
+    "además: artículos modificados que empiezan aquí: 96, 98, 100"
+   ]
+  },
+  {
+   "pagina": 27,
+   "incluida": true,
+   "puntaje": 11.151,
+   "modificados": [
+    101
+   ],
+   "encabezados": [],
+   "motivos": [
+    "artículos modificados por el DS 001-2026-EF que empiezan aquí: 101",
+    "relevancia para una MYPE (palabras clave)"
+   ]
+  },
+  {
+   "pagina": 28,
+   "incluida": true,
+   "puntaje": 41.087,
+   "modificados": [
+    103,
+    105,
+    106,
+    107
+   ],
+   "encabezados": [
+    "SUBCAPÍTULO 1"
+   ],
+   "motivos": [
+    "cobertura de estructura: empieza SUBCAPÍTULO 1",
+    "además: artículos modificados que empiezan aquí: 103, 105, 106, 107"
+   ]
+  },
+  {
+   "pagina": 29,
+   "incluida": true,
+   "puntaje": 12.446,
+   "modificados": [
+    113
+   ],
+   "encabezados": [],
+   "motivos": [
+    "artículos modificados por el DS 001-2026-EF que empiezan aquí: 113",
+    "relevancia para una MYPE (palabras clave)"
+   ]
+  },
+  {
+   "pagina": 30,
+   "incluida": true,
+   "puntaje": 15.751,
+   "modificados": [
+    114
+   ],
+   "encabezados": [],
+   "motivos": [
+    "artículos modificados por el DS 001-2026-EF que empiezan aquí: 114",
+    "relevancia para una MYPE (palabras clave)"
+   ]
+  },
+  {
+   "pagina": 31,
+   "incluida": true,
+   "puntaje": 33.381,
+   "modificados": [
+    122,
+    123,
+    125
+   ],
+   "encabezados": [],
+   "motivos": [
+    "artículos modificados por el DS 001-2026-EF que empiezan aquí: 122, 123, 125",
+    "relevancia para una MYPE (palabras clave)"
+   ]
+  },
+  {
+   "pagina": 32,
+   "incluida": true,
+   "puntaje": 0.974,
+   "modificados": [],
+   "encabezados": [
+    "TÍTULO IV"
+   ],
+   "motivos": [
+    "cobertura de estructura: empieza TÍTULO IV"
+   ]
+  },
+  {
+   "pagina": 33,
+   "incluida": true,
+   "puntaje": 11.466,
+   "modificados": [
+    132
+   ],
+   "encabezados": [
+    "CAPÍTULO 1 DISPOSICIONES ESPECIALES DE LA FASE DE"
+   ],
+   "motivos": [
+    "cobertura de estructura: empieza CAPÍTULO 1 DISPOSICIONES ESPECIALES DE LA FASE DE",
+    "además: artículos modificados que empiezan aquí: 132"
+   ]
+  },
+  {
+   "pagina": 34,
+   "incluida": true,
+   "puntaje": 13.982,
+   "modificados": [
+    136
+   ],
+   "encabezados": [
+    "CAPITULO 11 DISPOSICIONES ESPECÍFICAS DE LA FASE DE",
+    "SUBCAPÍTULO 1"
+   ],
+   "motivos": [
+    "cobertura de estructura: empieza CAPITULO 11 DISPOSICIONES ESPECÍFICAS DE LA FASE DE; SUBCAPÍTULO 1",
+    "además: artículos modificados que empiezan aquí: 136"
+   ]
+  },
+  {
+   "pagina": 35,
+   "incluida": false,
+   "puntaje": 1.365,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "menor prioridad (puesto 17 de los excluidos): sin encabezado, con 0 artículos modificados y puntaje 1.365"
+   ]
+  },
+  {
+   "pagina": 36,
+   "incluida": true,
+   "puntaje": 21.672,
+   "modificados": [
+    148,
+    149
+   ],
+   "encabezados": [],
+   "motivos": [
+    "artículos modificados por el DS 001-2026-EF que empiezan aquí: 148, 149",
+    "relevancia para una MYPE (palabras clave)"
+   ]
+  },
+  {
+   "pagina": 37,
+   "incluida": true,
+   "puntaje": 10.149,
+   "modificados": [
+    153
+   ],
+   "encabezados": [
+    "CAPITULO 1 DISPOSICIONES ESPECIALES PARA LA FASE DE"
+   ],
+   "motivos": [
+    "cobertura de estructura: empieza CAPITULO 1 DISPOSICIONES ESPECIALES PARA LA FASE DE",
+    "además: artículos modificados que empiezan aquí: 153"
+   ]
+  },
+  {
+   "pagina": 38,
+   "incluida": true,
+   "puntaje": 10.281,
+   "modificados": [
+    158
+   ],
+   "encabezados": [],
+   "motivos": [
+    "artículos modificados por el DS 001-2026-EF que empiezan aquí: 158",
+    "relevancia para una MYPE (palabras clave)"
+   ]
+  },
+  {
+   "pagina": 39,
+   "incluida": true,
+   "puntaje": 11.306,
+   "modificados": [
+    161
+   ],
+   "encabezados": [
+    "CAPÍTULO 11 DISPOSICIONES ESPECIALES DE FASE DE"
+   ],
+   "motivos": [
+    "cobertura de estructura: empieza CAPÍTULO 11 DISPOSICIONES ESPECIALES DE FASE DE",
+    "además: artículos modificados que empiezan aquí: 161"
+   ]
+  },
+  {
+   "pagina": 40,
+   "incluida": true,
+   "puntaje": 21.124,
+   "modificados": [
+    166,
+    169
+   ],
+   "encabezados": [
+    "CAPÍTULO Il zi",
+    "SUBCAPÍTULO 1"
+   ],
+   "motivos": [
+    "cobertura de estructura: empieza CAPÍTULO Il zi; SUBCAPÍTULO 1",
+    "además: artículos modificados que empiezan aquí: 166, 169"
+   ]
+  },
+  {
+   "pagina": 41,
+   "incluida": true,
+   "puntaje": 10.0,
+   "modificados": [
+    170
+   ],
+   "encabezados": [],
+   "motivos": [
+    "artículos modificados por el DS 001-2026-EF que empiezan aquí: 170"
+   ]
+  },
+  {
+   "pagina": 42,
+   "incluida": true,
+   "puntaje": 12.227,
+   "modificados": [
+    176
+   ],
+   "encabezados": [],
+   "motivos": [
+    "artículos modificados por el DS 001-2026-EF que empiezan aquí: 176",
+    "relevancia para una MYPE (palabras clave)"
+   ]
+  },
+  {
+   "pagina": 43,
+   "incluida": true,
+   "puntaje": 36.942,
+   "modificados": [
+    179,
+    180,
+    183
+   ],
+   "encabezados": [],
+   "motivos": [
+    "artículos modificados por el DS 001-2026-EF que empiezan aquí: 179, 180, 183",
+    "relevancia para una MYPE (palabras clave)"
+   ]
+  },
+  {
+   "pagina": 44,
+   "incluida": true,
+   "puntaje": 22.453,
+   "modificados": [
+    185,
+    186
+   ],
+   "encabezados": [],
+   "motivos": [
+    "artículos modificados por el DS 001-2026-EF que empiezan aquí: 185, 186",
+    "relevancia para una MYPE (palabras clave)"
+   ]
+  },
+  {
+   "pagina": 45,
+   "incluida": true,
+   "puntaje": 40.955,
+   "modificados": [
+    187,
+    188,
+    189,
+    190
+   ],
+   "encabezados": [],
+   "motivos": [
+    "artículos modificados por el DS 001-2026-EF que empiezan aquí: 187, 188, 189, 190",
+    "relevancia para una MYPE (palabras clave)"
+   ]
+  },
+  {
+   "pagina": 46,
+   "incluida": true,
+   "puntaje": 20.0,
+   "modificados": [
+    191,
+    193
+   ],
+   "encabezados": [],
+   "motivos": [
+    "artículos modificados por el DS 001-2026-EF que empiezan aquí: 191, 193"
+   ]
+  },
+  {
+   "pagina": 47,
+   "incluida": true,
+   "puntaje": 20.761,
+   "modificados": [
+    194,
+    195
+   ],
+   "encabezados": [],
+   "motivos": [
+    "artículos modificados por el DS 001-2026-EF que empiezan aquí: 194, 195",
+    "relevancia para una MYPE (palabras clave)"
+   ]
+  },
+  {
+   "pagina": 48,
+   "incluida": true,
+   "puntaje": 10.826,
+   "modificados": [
+    198
+   ],
+   "encabezados": [],
+   "motivos": [
+    "artículos modificados por el DS 001-2026-EF que empiezan aquí: 198",
+    "relevancia para una MYPE (palabras clave)"
+   ]
+  },
+  {
+   "pagina": 49,
+   "incluida": false,
+   "puntaje": 1.077,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "menor prioridad (puesto 21 de los excluidos): sin encabezado, con 0 artículos modificados y puntaje 1.077"
+   ]
+  },
+  {
+   "pagina": 50,
+   "incluida": true,
+   "puntaje": 10.412,
+   "modificados": [
+    207
+   ],
+   "encabezados": [],
+   "motivos": [
+    "artículos modificados por el DS 001-2026-EF que empiezan aquí: 207",
+    "relevancia para una MYPE (palabras clave)"
+   ]
+  },
+  {
+   "pagina": 51,
+   "incluida": true,
+   "puntaje": 12.502,
+   "modificados": [
+    211
+   ],
+   "encabezados": [],
+   "motivos": [
+    "artículos modificados por el DS 001-2026-EF que empiezan aquí: 211",
+    "relevancia para una MYPE (palabras clave)"
+   ]
+  },
+  {
+   "pagina": 52,
+   "incluida": true,
+   "puntaje": 11.136,
+   "modificados": [
+    215
+   ],
+   "encabezados": [],
+   "motivos": [
+    "artículos modificados por el DS 001-2026-EF que empiezan aquí: 215",
+    "relevancia para una MYPE (palabras clave)"
+   ]
+  },
+  {
+   "pagina": 53,
+   "incluida": true,
+   "puntaje": 11.137,
+   "modificados": [
+    218
+   ],
+   "encabezados": [
+    "CAPÍTULO IV CONTRATOS ESTANDARIZADO 5"
+   ],
+   "motivos": [
+    "cobertura de estructura: empieza CAPÍTULO IV CONTRATOS ESTANDARIZADO 5",
+    "además: artículos modificados que empiezan aquí: 218"
+   ]
+  },
+  {
+   "pagina": 54,
+   "incluida": true,
+   "puntaje": 21.993,
+   "modificados": [
+    223,
+    227
+   ],
+   "encabezados": [
+    "TÍTULO VI"
+   ],
+   "motivos": [
+    "cobertura de estructura: empieza TÍTULO VI",
+    "además: artículos modificados que empiezan aquí: 223, 227"
+   ]
+  },
+  {
+   "pagina": 55,
+   "incluida": true,
+   "puntaje": 42.75,
+   "modificados": [
+    229,
+    230,
+    231,
+    232
+   ],
+   "encabezados": [
+    "CAPÍTULO 1 COMPRA CENTRALIZADA"
+   ],
+   "motivos": [
+    "cobertura de estructura: empieza CAPÍTULO 1 COMPRA CENTRALIZADA",
+    "además: artículos modificados que empiezan aquí: 229, 230, 231, 232"
+   ]
+  },
+  {
+   "pagina": 56,
+   "incluida": true,
+   "puntaje": 0.4,
+   "modificados": [],
+   "encabezados": [
+    "CAPÍTULO Il COMPRAS POR ENCARGO"
+   ],
+   "motivos": [
+    "cobertura de estructura: empieza CAPÍTULO Il COMPRAS POR ENCARGO"
+   ]
+  },
+  {
+   "pagina": 57,
+   "incluida": true,
+   "puntaje": 13.113,
+   "modificados": [
+    244
+   ],
+   "encabezados": [
+    "CAPÍTULO IV COMPRA CORPORATIVA"
+   ],
+   "motivos": [
+    "cobertura de estructura: empieza CAPÍTULO IV COMPRA CORPORATIVA",
+    "además: artículos modificados que empiezan aquí: 244"
+   ]
+  },
+  {
+   "pagina": 58,
+   "incluida": true,
+   "puntaje": 4.207,
+   "modificados": [],
+   "encabezados": [
+    "CAPÍTULO VI o"
+   ],
+   "motivos": [
+    "cobertura de estructura: empieza CAPÍTULO VI o"
+   ]
+  },
+  {
+   "pagina": 59,
+   "incluida": true,
+   "puntaje": 2.244,
+   "modificados": [],
+   "encabezados": [
+    "TÍTULO vil",
+    "CAPÍTULO 1 PLADICOP"
+   ],
+   "motivos": [
+    "cobertura de estructura: empieza TÍTULO vil; CAPÍTULO 1 PLADICOP"
+   ]
+  },
+  {
+   "pagina": 60,
+   "incluida": true,
+   "puntaje": 22.851,
+   "modificados": [
+    259,
+    260
+   ],
+   "encabezados": [
+    "CAPÍTULO 1 ESTANDARIZACIÓN DE REQUERIMIENTOS"
+   ],
+   "motivos": [
+    "cobertura de estructura: empieza CAPÍTULO 1 ESTANDARIZACIÓN DE REQUERIMIENTOS",
+    "además: artículos modificados que empiezan aquí: 259, 260"
+   ]
+  },
+  {
+   "pagina": 61,
+   "incluida": false,
+   "puntaje": 2.725,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "menor prioridad (puesto 3 de los excluidos): sin encabezado, con 0 artículos modificados y puntaje 2.725"
+   ]
+  },
+  {
+   "pagina": 62,
+   "incluida": true,
+   "puntaje": 16.168,
+   "modificados": [
+    277
+   ],
+   "encabezados": [],
+   "motivos": [
+    "artículos modificados por el DS 001-2026-EF que empiezan aquí: 277",
+    "relevancia para una MYPE (palabras clave)"
+   ]
+  },
+  {
+   "pagina": 63,
+   "incluida": true,
+   "puntaje": 22.689,
+   "modificados": [
+    285,
+    286
+   ],
+   "encabezados": [],
+   "motivos": [
+    "artículos modificados por el DS 001-2026-EF que empiezan aquí: 285, 286",
+    "relevancia para una MYPE (palabras clave)"
+   ]
+  },
+  {
+   "pagina": 64,
+   "incluida": true,
+   "puntaje": 22.884,
+   "modificados": [
+    289,
+    290
+   ],
+   "encabezados": [],
+   "motivos": [
+    "artículos modificados por el DS 001-2026-EF que empiezan aquí: 289, 290",
+    "relevancia para una MYPE (palabras clave)"
+   ]
+  },
+  {
+   "pagina": 65,
+   "incluida": true,
+   "puntaje": 10.722,
+   "modificados": [
+    295
+   ],
+   "encabezados": [
+    "TÍTULO IX"
+   ],
+   "motivos": [
+    "cobertura de estructura: empieza TÍTULO IX",
+    "además: artículos modificados que empiezan aquí: 295"
+   ]
+  },
+  {
+   "pagina": 66,
+   "incluida": false,
+   "puntaje": 2.647,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "menor prioridad (puesto 6 de los excluidos): sin encabezado, con 0 artículos modificados y puntaje 2.647"
+   ]
+  },
+  {
+   "pagina": 67,
+   "incluida": true,
+   "puntaje": 25.202,
+   "modificados": [
+    301,
+    307
+   ],
+   "encabezados": [
+    "TÍTULO X"
+   ],
+   "motivos": [
+    "cobertura de estructura: empieza TÍTULO X",
+    "además: artículos modificados que empiezan aquí: 301, 307"
+   ]
+  },
+  {
+   "pagina": 68,
+   "incluida": true,
+   "puntaje": 4.331,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "relevancia para una MYPE (palabras clave)"
+   ]
+  },
+  {
+   "pagina": 69,
+   "incluida": false,
+   "puntaje": 1.694,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "menor prioridad (puesto 16 de los excluidos): sin encabezado, con 0 artículos modificados y puntaje 1.694"
+   ]
+  },
+  {
+   "pagina": 70,
+   "incluida": true,
+   "puntaje": 11.869,
+   "modificados": [
+    318
+   ],
+   "encabezados": [
+    "TÍTULO XI",
+    "CAPITULO 1 REGISTRO DE INSTITUCIONES ARBITRALES Y"
+   ],
+   "motivos": [
+    "cobertura de estructura: empieza TÍTULO XI; CAPITULO 1 REGISTRO DE INSTITUCIONES ARBITRALES Y",
+    "además: artículos modificados que empiezan aquí: 318"
+   ]
+  },
+  {
+   "pagina": 71,
+   "incluida": true,
+   "puntaje": 11.386,
+   "modificados": [
+    320
+   ],
+   "encabezados": [],
+   "motivos": [
+    "artículos modificados por el DS 001-2026-EF que empiezan aquí: 320",
+    "relevancia para una MYPE (palabras clave)"
+   ]
+  },
+  {
+   "pagina": 72,
+   "incluida": false,
+   "puntaje": 2.073,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "menor prioridad (puesto 10 de los excluidos): sin encabezado, con 0 artículos modificados y puntaje 2.073"
+   ]
+  },
+  {
+   "pagina": 73,
+   "incluida": true,
+   "puntaje": 12.439,
+   "modificados": [
+    332
+   ],
+   "encabezados": [
+    "CAPÍTULO ll IMPEDIMENTOS Y REQUISITOS PARA LOS"
+   ],
+   "motivos": [
+    "cobertura de estructura: empieza CAPÍTULO ll IMPEDIMENTOS Y REQUISITOS PARA LOS",
+    "además: artículos modificados que empiezan aquí: 332"
+   ]
+  },
+  {
+   "pagina": 74,
+   "incluida": true,
+   "puntaje": 15.787,
+   "modificados": [
+    338
+   ],
+   "encabezados": [],
+   "motivos": [
+    "artículos modificados por el DS 001-2026-EF que empiezan aquí: 338",
+    "relevancia para una MYPE (palabras clave)"
+   ]
+  },
+  {
+   "pagina": 75,
+   "incluida": false,
+   "puntaje": 3.429,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "menor prioridad (puesto 2 de los excluidos): sin encabezado, con 0 artículos modificados y puntaje 3.429"
+   ]
+  },
+  {
+   "pagina": 76,
+   "incluida": true,
+   "puntaje": 11.453,
+   "modificados": [
+    346
+   ],
+   "encabezados": [],
+   "motivos": [
+    "artículos modificados por el DS 001-2026-EF que empiezan aquí: 346",
+    "relevancia para una MYPE (palabras clave)"
+   ]
+  },
+  {
+   "pagina": 77,
+   "incluida": true,
+   "puntaje": 13.026,
+   "modificados": [
+    353
+   ],
+   "encabezados": [],
+   "motivos": [
+    "artículos modificados por el DS 001-2026-EF que empiezan aquí: 353",
+    "relevancia para una MYPE (palabras clave)"
+   ]
+  },
+  {
+   "pagina": 78,
+   "incluida": true,
+   "puntaje": 1.771,
+   "modificados": [],
+   "encabezados": [
+    "TÍTULO XII RÉGIMEN DE INFRACCIONES Y SANCIONES",
+    "CAPITULO 1 PROCEDIMIENTO SANCIONADOR A"
+   ],
+   "motivos": [
+    "cobertura de estructura: empieza TÍTULO XII RÉGIMEN DE INFRACCIONES Y SANCIONES; CAPITULO 1 PROCEDIMIENTO SANCIONADOR A"
+   ]
+  },
+  {
+   "pagina": 79,
+   "incluida": true,
+   "puntaje": 10.521,
+   "modificados": [
+    363
+   ],
+   "encabezados": [],
+   "motivos": [
+    "artículos modificados por el DS 001-2026-EF que empiezan aquí: 363",
+    "relevancia para una MYPE (palabras clave)"
+   ]
+  },
+  {
+   "pagina": 80,
+   "incluida": true,
+   "puntaje": 12.904,
+   "modificados": [
+    366
+   ],
+   "encabezados": [],
+   "motivos": [
+    "artículos modificados por el DS 001-2026-EF que empiezan aquí: 366",
+    "relevancia para una MYPE (palabras clave)"
+   ]
+  },
+  {
+   "pagina": 81,
+   "incluida": true,
+   "puntaje": 10.81,
+   "modificados": [
+    373
+   ],
+   "encabezados": [
+    "CAPÍTULO 1 PROCEDIMIENTO SANCIONADOR A INSTITUCIONES"
+   ],
+   "motivos": [
+    "cobertura de estructura: empieza CAPÍTULO 1 PROCEDIMIENTO SANCIONADOR A INSTITUCIONES",
+    "además: artículos modificados que empiezan aquí: 373"
+   ]
+  },
+  {
+   "pagina": 82,
+   "incluida": true,
+   "puntaje": 22.653,
+   "modificados": [
+    376,
+    381
+   ],
+   "encabezados": [
+    "CAPÍTULO 1 CONDICIONES Y REQUISITOS DE LOS"
+   ],
+   "motivos": [
+    "cobertura de estructura: empieza CAPÍTULO 1 CONDICIONES Y REQUISITOS DE LOS",
+    "además: artículos modificados que empiezan aquí: 376, 381"
+   ]
+  },
+  {
+   "pagina": 83,
+   "incluida": false,
+   "puntaje": 3.857,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "menor prioridad (puesto 1 de los excluidos): sin encabezado, con 0 artículos modificados y puntaje 3.857"
+   ]
+  },
+  {
+   "pagina": 84,
+   "incluida": false,
+   "puntaje": 2.721,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "menor prioridad (puesto 4 de los excluidos): sin encabezado, con 0 artículos modificados y puntaje 2.721"
+   ]
+  },
+  {
+   "pagina": 85,
+   "incluida": false,
+   "puntaje": 2.417,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "menor prioridad (puesto 7 de los excluidos): sin encabezado, con 0 artículos modificados y puntaje 2.417"
+   ]
+  },
+  {
+   "pagina": 86,
+   "incluida": false,
+   "puntaje": 2.292,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "menor prioridad (puesto 8 de los excluidos): sin encabezado, con 0 artículos modificados y puntaje 2.292"
+   ]
+  },
+  {
+   "pagina": 87,
+   "incluida": false,
+   "puntaje": 1.946,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "menor prioridad (puesto 15 de los excluidos): sin encabezado, con 0 artículos modificados y puntaje 1.946"
+   ]
+  },
+  {
+   "pagina": 88,
+   "incluida": false,
+   "puntaje": 2.236,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "menor prioridad (puesto 9 de los excluidos): sin encabezado, con 0 artículos modificados y puntaje 2.236"
+   ]
+  },
+  {
+   "pagina": 89,
+   "incluida": false,
+   "puntaje": 1.341,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "menor prioridad (puesto 18 de los excluidos): sin encabezado, con 0 artículos modificados y puntaje 1.341"
+   ]
+  },
+  {
+   "pagina": 90,
+   "incluida": false,
+   "puntaje": 1.158,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "menor prioridad (puesto 19 de los excluidos): sin encabezado, con 0 artículos modificados y puntaje 1.158"
+   ]
+  },
+  {
+   "pagina": 91,
+   "incluida": true,
+   "puntaje": 21.234,
+   "modificados": [
+    382,
+    383
+   ],
+   "encabezados": [],
+   "motivos": [
+    "artículos modificados por el DS 001-2026-EF que empiezan aquí: 382, 383",
+    "relevancia para una MYPE (palabras clave)"
+   ]
+  },
+  {
+   "pagina": 92,
+   "incluida": true,
+   "puntaje": 10.806,
+   "modificados": [
+    384
+   ],
+   "encabezados": [],
+   "motivos": [
+    "artículos modificados por el DS 001-2026-EF que empiezan aquí: 384",
+    "relevancia para una MYPE (palabras clave)"
+   ]
+  },
+  {
+   "pagina": 93,
+   "incluida": true,
+   "puntaje": 11.497,
+   "modificados": [
+    385
+   ],
+   "encabezados": [],
+   "motivos": [
+    "artículos modificados por el DS 001-2026-EF que empiezan aquí: 385",
+    "relevancia para una MYPE (palabras clave)"
+   ]
+  },
+  {
+   "pagina": 94,
+   "incluida": true,
+   "puntaje": 11.732,
+   "modificados": [
+    389
+   ],
+   "encabezados": [
+    "CAPÍTULO 11 REQUISITOS DE LOS SERVICIOS PRESTADOS EN"
+   ],
+   "motivos": [
+    "cobertura de estructura: empieza CAPÍTULO 11 REQUISITOS DE LOS SERVICIOS PRESTADOS EN",
+    "además: artículos modificados que empiezan aquí: 389"
+   ]
+  },
+  {
+   "pagina": 95,
+   "incluida": false,
+   "puntaje": 1.994,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "menor prioridad (puesto 13 de los excluidos): sin encabezado, con 0 artículos modificados y puntaje 1.994"
+   ]
+  },
+  {
+   "pagina": 96,
+   "incluida": true,
+   "puntaje": 1.811,
+   "modificados": [],
+   "encabezados": [
+    "DISPOSICIÓN COMPLEMENTARIA FINAL"
+   ],
+   "motivos": [
+    "cobertura de estructura: empieza DISPOSICIÓN COMPLEMENTARIA FINAL"
+   ]
+  },
+  {
+   "pagina": 97,
+   "incluida": true,
+   "puntaje": 1.958,
+   "modificados": [],
+   "encabezados": [
+    "DISPOSICIÓN COMPLEMENTARIA TRANSITORIA",
+    "DISPOSICIÓN COMPLEMENTARIA TRANSITORIA"
+   ],
+   "motivos": [
+    "cobertura de estructura: empieza DISPOSICIÓN COMPLEMENTARIA TRANSITORIA; DISPOSICIÓN COMPLEMENTARIA TRANSITORIA"
+   ]
+  },
+  {
+   "pagina": 98,
+   "incluida": true,
+   "puntaje": 3.894,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "relevancia para una MYPE (palabras clave)"
+   ]
+  },
+  {
+   "pagina": 99,
+   "incluida": false,
+   "puntaje": 2.68,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "menor prioridad (puesto 5 de los excluidos): sin encabezado, con 0 artículos modificados y puntaje 2.68"
+   ]
+  },
+  {
+   "pagina": 100,
+   "incluida": true,
+   "puntaje": 3.367,
+   "modificados": [],
+   "encabezados": [
+    "ANEXO"
+   ],
+   "motivos": [
+    "cobertura de estructura: empieza ANEXO"
+   ]
+  },
+  {
+   "pagina": 101,
+   "incluida": false,
+   "puntaje": 2.037,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "menor prioridad (puesto 12 de los excluidos): sin encabezado, con 0 artículos modificados y puntaje 2.037"
+   ]
+  },
+  {
+   "pagina": 102,
+   "incluida": false,
+   "puntaje": 1.093,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "menor prioridad (puesto 20 de los excluidos): sin encabezado, con 0 artículos modificados y puntaje 1.093"
+   ]
+  },
+  {
+   "pagina": 103,
+   "incluida": false,
+   "puntaje": 1.964,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "menor prioridad (puesto 14 de los excluidos): sin encabezado, con 0 artículos modificados y puntaje 1.964"
+   ]
+  },
+  {
+   "pagina": 104,
+   "incluida": false,
+   "puntaje": 0.573,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "menor prioridad (puesto 23 de los excluidos): sin encabezado, con 0 artículos modificados y puntaje 0.573"
+   ]
+  },
+  {
+   "pagina": 105,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (2786 car., confianza 52.1); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 106,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (2617 car., confianza 54.7); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 107,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (1389 car., confianza 41.9); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 108,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (4342 car., confianza 52.7); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 109,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (2702 car., confianza 55.3); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 110,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (2530 car., confianza 58.6); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 111,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (709 car., confianza 58.9); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 112,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (4204 car., confianza 41.7); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 113,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (2371 car., confianza 56.9); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 114,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (2363 car., confianza 53.0); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 115,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (4700 car., confianza 53.5); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 116,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (1151 car., confianza 57.1); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 117,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (4256 car., confianza 55.9); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 118,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (1088 car., confianza 49.6); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 119,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (4134 car., confianza 53.3); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 120,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (1023 car., confianza 45.7); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 121,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (864 car., confianza 44.8); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 122,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (821 car., confianza 41.7); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 123,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (4551 car., confianza 42.1); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 124,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (992 car., confianza 54.7); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 125,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (1470 car., confianza 45.0); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 126,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (4751 car., confianza 54.7); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 127,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (1526 car., confianza 49.1); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 128,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (1924 car., confianza 31.7); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 129,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (3978 car., confianza 31.8); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 130,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (1217 car., confianza 38.4); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 131,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (502 car., confianza 25.5); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 132,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (1833 car., confianza 27.1); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 133,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (4684 car., confianza 42.1); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 134,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (925 car., confianza 45.5); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 135,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (1417 car., confianza 44.6); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 136,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (1194 car., confianza 41.2); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 137,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (4744 car., confianza 52.6); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 138,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (1041 car., confianza 51.3); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 139,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (1017 car., confianza 25.8); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 140,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (695 car., confianza 43.6); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 141,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (4843 car., confianza 54.6); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 142,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (1107 car., confianza 42.8); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 143,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (2585 car., confianza 50.9); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 144,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (2370 car., confianza 56.2); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 145,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (1213 car., confianza 48.0); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 146,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (4051 car., confianza 52.8); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 147,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (690 car., confianza 55.4); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 148,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (5053 car., confianza 51.4); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 149,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (901 car., confianza 36.8); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 150,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (454 car., confianza 28.4); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 151,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (5061 car., confianza 53.3); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 152,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (752 car., confianza 42.7); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 153,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (2668 car., confianza 35.0); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 154,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (1901 car., confianza 32.4); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 155,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (909 car., confianza 52.6); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 156,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (3061 car., confianza 47.2); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 157,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (2501 car., confianza 54.7); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 158,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (242 car., confianza 74.5); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 159,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (360 car., confianza 40.2); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 160,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (375 car., confianza 24.7); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 161,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (3282 car., confianza 42.7); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 162,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (277 car., confianza 82.4); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 163,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (4145 car., confianza 55.3); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 164,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (983 car., confianza 77.9); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 165,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (2693 car., confianza 68.7); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 166,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (1943 car., confianza 72.9); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 167,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (2476 car., confianza 75.7); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 168,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (3493 car., confianza 75.3); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 169,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (3517 car., confianza 75.1); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 170,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (2326 car., confianza 71.9); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 171,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (2209 car., confianza 79.3); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 172,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (3909 car., confianza 76.1); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 173,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (3858 car., confianza 77.5); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 174,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (1341 car., confianza 65.6); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 175,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (2166 car., confianza 78.0); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 176,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (3951 car., confianza 73.0); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 177,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (4035 car., confianza 77.1); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 178,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (1659 car., confianza 70.6); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 179,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (2049 car., confianza 82.0); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 180,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (3786 car., confianza 71.2); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 181,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (1440 car., confianza 74.1); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 182,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (2478 car., confianza 79.8); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 183,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (3104 car., confianza 76.5); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 184,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (3530 car., confianza 78.0); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 185,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (2156 car., confianza 75.7); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 186,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (3546 car., confianza 74.8); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 187,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (3778 car., confianza 75.5); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 188,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (2123 car., confianza 78.1); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 189,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (3778 car., confianza 74.9); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 190,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (4000 car., confianza 77.3); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 191,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (1930 car., confianza 75.9); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 192,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (3871 car., confianza 78.0); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 193,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (1185 car., confianza 80.2); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 194,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (1456 car., confianza 72.9); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 195,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (1634 car., confianza 62.4); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  },
+  {
+   "pagina": 196,
+   "incluida": false,
+   "puntaje": 0.0,
+   "modificados": [],
+   "encabezados": [],
+   "motivos": [
+    "escasa_lectura: portada, formulario o tabla (1454 car., confianza 78.1); el OCR la lee mal a 96 DPI y no es normativa consultable"
+   ]
+  }
+ ]
+}
