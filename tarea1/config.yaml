@@ -226,6 +226,11 @@ mensajes:
 # ── Evaluación (Fases 3, 4, 6, 9) ────────────────────────────────────────────
 eval:
   ks: [1, 3, 5]
+  requisitos_set:                  # mínimos que exige el issue para el set de evaluación (validate_eval_set.py)
+    in_domain: 15
+    out_of_domain: 5
+    modificadas_2026: 3            # preguntas sobre artículos afectados por el DS 001-2026-EF
+    coloquiales: 5                 # redactadas como las haría el dueño de una MYPE
   min_recall_at_3: 0.0             # PROVISIONAL (Fase 9): se fija con los resultados reales y margen
   codigo_salida_fallo: 1           # exit code de run_eval.py si Recall@3 < mínimo (usa el CI)
 

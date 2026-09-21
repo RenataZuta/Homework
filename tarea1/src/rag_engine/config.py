@@ -45,7 +45,7 @@ CLAVES_REQUERIDAS = (
     "mensajes.abstencion", "mensajes.error_generico", "mensajes.error_config",
     "mensajes.indice_faltante", "mensajes.aviso_version",
     "mensajes.limite_sesion", "mensajes.limite_global",
-    "eval.ks", "eval.min_recall_at_3", "eval.codigo_salida_fallo",
+    "eval.ks", "eval.requisitos_set.in_domain", "eval.requisitos_set.out_of_domain", "eval.requisitos_set.modificadas_2026", "eval.requisitos_set.coloquiales", "eval.min_recall_at_3", "eval.codigo_salida_fallo",
     "bot.modo", "bot.limite_consultas_por_usuario_dia", "bot.zona_horaria_limite",
     "deploy.topes.consultas_por_sesion", "deploy.topes.consultas_globales_por_dia",
 )
