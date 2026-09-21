@@ -6,7 +6,7 @@
 
 ## Fases
 
-- [ ] **Fase 0** — Preparación: estructura, `.gitignore`, `.env.example`, `config.yaml`, `config.py`, `check_secrets.py`
+- [x] **Fase 0** — Preparación: estructura, `.gitignore`, `.env.example`, `config.yaml`, `config.py`, `check_secrets.py`
 - [ ] **Fase 1** — Descarga de PDFs oficiales + `MANIFEST.json`
 - [ ] **Fase 2** — Extracción por página, OCR (≥ 60 págs del DS 009-2025-EF), limpieza, reporte de calidad `[MANUAL]`
 - [ ] **Fase 3** — Set de evaluación (`eval/preguntas.csv`) `[MANUAL: validar páginas contra el PDF]`
