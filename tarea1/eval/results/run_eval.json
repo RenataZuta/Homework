@@ -1,0 +1,341 @@
+{
+ "recuperacion": {
+  "recall@1": 0.7619047619047619,
+  "recall@3": 0.9047619047619048,
+  "recall@5": 0.9047619047619048,
+  "mrr": 0.8253968253968254,
+  "recall@1_coloquial": 0.7272727272727273,
+  "recall@3_coloquial": 0.8181818181818182,
+  "recall@5_coloquial": 0.8181818181818182,
+  "recall@1_juridico": 0.8,
+  "recall@3_juridico": 1.0,
+  "recall@5_juridico": 1.0,
+  "recall@1_modificatoria": 0.2,
+  "recall@3_modificatoria": 0.8,
+  "recall@5_modificatoria": 0.8
+ },
+ "abstencion": {
+  "umbral": 0.865,
+  "in_domain": 21,
+  "in_domain_respondidas": 16,
+  "abstenciones_incorrectas": 5,
+  "tasa_abstencion_incorrecta": 0.2381,
+  "out_of_domain": 6,
+  "abstenciones_correctas": 5,
+  "respuestas_indebidas": 1,
+  "tasa_abstencion_correcta": 0.8333,
+  "tasa_abstencion_global": 0.3704
+ },
+ "por_pregunta": [
+  {
+   "id": "q01",
+   "tipo": "in_domain",
+   "estilo": "coloquial",
+   "modificada_2026": false,
+   "rango_acierto": 1,
+   "rango_modificatoria": null,
+   "mejor_similitud": 0.8429,
+   "se_abstiene": true,
+   "primero": "ley_32069 p.17"
+  },
+  {
+   "id": "q02",
+   "tipo": "in_domain",
+   "estilo": "coloquial",
+   "modificada_2026": false,
+   "rango_acierto": 1,
+   "rango_modificatoria": null,
+   "mejor_similitud": 0.8738,
+   "se_abstiene": false,
+   "primero": "ley_32069 p.32"
+  },
+  {
+   "id": "q03",
+   "tipo": "in_domain",
+   "estilo": "coloquial",
+   "modificada_2026": false,
+   "rango_acierto": 1,
+   "rango_modificatoria": null,
+   "mejor_similitud": 0.88,
+   "se_abstiene": false,
+   "primero": "ley_32069 p.32"
+  },
+  {
+   "id": "q04",
+   "tipo": "in_domain",
+   "estilo": "coloquial",
+   "modificada_2026": false,
+   "rango_acierto": null,
+   "rango_modificatoria": null,
+   "mejor_similitud": 0.8564,
+   "se_abstiene": true,
+   "primero": "ds_009_2025_ef p.58"
+  },
+  {
+   "id": "q05",
+   "tipo": "in_domain",
+   "estilo": "coloquial",
+   "modificada_2026": true,
+   "rango_acierto": 1,
+   "rango_modificatoria": null,
+   "mejor_similitud": 0.8855,
+   "se_abstiene": false,
+   "primero": "ley_32069 p.29"
+  },
+  {
+   "id": "q06",
+   "tipo": "in_domain",
+   "estilo": "coloquial",
+   "modificada_2026": false,
+   "rango_acierto": 1,
+   "rango_modificatoria": null,
+   "mejor_similitud": 0.872,
+   "se_abstiene": false,
+   "primero": "ley_32069 p.32"
+  },
+  {
+   "id": "q07",
+   "tipo": "in_domain",
+   "estilo": "coloquial",
+   "modificada_2026": false,
+   "rango_acierto": null,
+   "rango_modificatoria": null,
+   "mejor_similitud": 0.8643,
+   "se_abstiene": true,
+   "primero": "ds_009_2025_ef p.40"
+  },
+  {
+   "id": "q08",
+   "tipo": "in_domain",
+   "estilo": "coloquial",
+   "modificada_2026": false,
+   "rango_acierto": 1,
+   "rango_modificatoria": null,
+   "mejor_similitud": 0.86,
+   "se_abstiene": true,
+   "primero": "ds_009_2025_ef p.68"
+  },
+  {
+   "id": "q09",
+   "tipo": "in_domain",
+   "estilo": "coloquial",
+   "modificada_2026": false,
+   "rango_acierto": 1,
+   "rango_modificatoria": null,
+   "mejor_similitud": 0.901,
+   "se_abstiene": false,
+   "primero": "ley_32069 p.45"
+  },
+  {
+   "id": "q10",
+   "tipo": "in_domain",
+   "estilo": "coloquial",
+   "modificada_2026": false,
+   "rango_acierto": 3,
+   "rango_modificatoria": null,
+   "mejor_similitud": 0.8365,
+   "se_abstiene": true,
+   "primero": "ley_32069 p.32"
+  },
+  {
+   "id": "q11",
+   "tipo": "in_domain",
+   "estilo": "coloquial",
+   "modificada_2026": true,
+   "rango_acierto": 1,
+   "rango_modificatoria": 3,
+   "mejor_similitud": 0.8691,
+   "se_abstiene": false,
+   "primero": "ds_009_2025_ef p.18"
+  },
+  {
+   "id": "q12",
+   "tipo": "in_domain",
+   "estilo": "juridico",
+   "modificada_2026": false,
+   "rango_acierto": 1,
+   "rango_modificatoria": null,
+   "mejor_similitud": 0.911,
+   "se_abstiene": false,
+   "primero": "ley_32069 p.30"
+  },
+  {
+   "id": "q13",
+   "tipo": "in_domain",
+   "estilo": "juridico",
+   "modificada_2026": false,
+   "rango_acierto": 1,
+   "rango_modificatoria": null,
+   "mejor_similitud": 0.9251,
+   "se_abstiene": false,
+   "primero": "ds_009_2025_ef p.67"
+  },
+  {
+   "id": "q14",
+   "tipo": "in_domain",
+   "estilo": "juridico",
+   "modificada_2026": false,
+   "rango_acierto": 1,
+   "rango_modificatoria": null,
+   "mejor_similitud": 0.9088,
+   "se_abstiene": false,
+   "primero": "ley_32069 p.47"
+  },
+  {
+   "id": "q15",
+   "tipo": "in_domain",
+   "estilo": "juridico",
+   "modificada_2026": false,
+   "rango_acierto": 1,
+   "rango_modificatoria": null,
+   "mejor_similitud": 0.8725,
+   "se_abstiene": false,
+   "primero": "ley_32069 p.45"
+  },
+  {
+   "id": "q16",
+   "tipo": "in_domain",
+   "estilo": "juridico",
+   "modificada_2026": false,
+   "rango_acierto": 1,
+   "rango_modificatoria": null,
+   "mejor_similitud": 0.9313,
+   "se_abstiene": false,
+   "primero": "ds_009_2025_ef p.26"
+  },
+  {
+   "id": "q17",
+   "tipo": "in_domain",
+   "estilo": "juridico",
+   "modificada_2026": false,
+   "rango_acierto": 2,
+   "rango_modificatoria": null,
+   "mejor_similitud": 0.903,
+   "se_abstiene": false,
+   "primero": "ley_32069 p.21"
+  },
+  {
+   "id": "q18",
+   "tipo": "in_domain",
+   "estilo": "juridico",
+   "modificada_2026": true,
+   "rango_acierto": 1,
+   "rango_modificatoria": 1,
+   "mejor_similitud": 0.9132,
+   "se_abstiene": false,
+   "primero": "ds_001_2026_ef p.4"
+  },
+  {
+   "id": "q19",
+   "tipo": "in_domain",
+   "estilo": "juridico",
+   "modificada_2026": true,
+   "rango_acierto": 2,
+   "rango_modificatoria": 3,
+   "mejor_similitud": 0.9002,
+   "se_abstiene": false,
+   "primero": "ley_32069 p.31"
+  },
+  {
+   "id": "q20",
+   "tipo": "in_domain",
+   "estilo": "juridico",
+   "modificada_2026": true,
+   "rango_acierto": 1,
+   "rango_modificatoria": 2,
+   "mejor_similitud": 0.885,
+   "se_abstiene": false,
+   "primero": "ley_32069 p.35"
+  },
+  {
+   "id": "q21",
+   "tipo": "in_domain",
+   "estilo": "juridico",
+   "modificada_2026": false,
+   "rango_acierto": 1,
+   "rango_modificatoria": null,
+   "mejor_similitud": 0.9103,
+   "se_abstiene": false,
+   "primero": "ley_32069 p.39"
+  },
+  {
+   "id": "o01",
+   "tipo": "out_of_domain",
+   "estilo": "coloquial",
+   "modificada_2026": false,
+   "rango_acierto": null,
+   "rango_modificatoria": null,
+   "mejor_similitud": 0.8391,
+   "se_abstiene": true,
+   "primero": "ds_009_2025_ef p.98"
+  },
+  {
+   "id": "o02",
+   "tipo": "out_of_domain",
+   "estilo": "coloquial",
+   "modificada_2026": false,
+   "rango_acierto": null,
+   "rango_modificatoria": null,
+   "mejor_similitud": 0.8556,
+   "se_abstiene": true,
+   "primero": "ds_009_2025_ef p.10"
+  },
+  {
+   "id": "o03",
+   "tipo": "out_of_domain",
+   "estilo": "juridico",
+   "modificada_2026": false,
+   "rango_acierto": null,
+   "rango_modificatoria": null,
+   "mejor_similitud": 0.8541,
+   "se_abstiene": true,
+   "primero": "ds_009_2025_ef p.67"
+  },
+  {
+   "id": "o04",
+   "tipo": "out_of_domain",
+   "estilo": "coloquial",
+   "modificada_2026": false,
+   "rango_acierto": null,
+   "rango_modificatoria": null,
+   "mejor_similitud": 0.7949,
+   "se_abstiene": true,
+   "primero": "ds_009_2025_ef p.98"
+  },
+  {
+   "id": "o05",
+   "tipo": "out_of_domain",
+   "estilo": "juridico",
+   "modificada_2026": false,
+   "rango_acierto": null,
+   "rango_modificatoria": null,
+   "mejor_similitud": 0.8934,
+   "se_abstiene": false,
+   "primero": "ds_009_2025_ef p.97"
+  },
+  {
+   "id": "o06",
+   "tipo": "out_of_domain",
+   "estilo": "coloquial",
+   "modificada_2026": false,
+   "rango_acierto": null,
+   "rango_modificatoria": null,
+   "mejor_similitud": 0.8298,
+   "se_abstiene": true,
+   "primero": "ley_32069 p.8"
+  }
+ ],
+ "configuracion": {
+  "modelo": "intfloat/multilingual-e5-small",
+  "troceado": "c750_o100",
+  "modo": "semantico",
+  "top_k": 5,
+  "set_validado": false,
+  "fragmentos_en_indice": 1674
+ },
+ "veredicto": {
+  "minimo_recall_3": 0.99,
+  "codigo_de_salida": 1,
+  "mensaje": "FALLA: Recall@3 = 0.905 es menor que el mínimo exigido 0.99"
+ }
+}

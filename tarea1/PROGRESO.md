@@ -12,7 +12,7 @@
 - [~] **Fase 3** — Set de evaluación (`eval/preguntas.csv`) `[MANUAL pendiente: validar CADA paginas_esperadas con docs/eval_revision_manual.md; no empezar la Fase 4 hasta confirmarlo]`
 - [x] **Fase 4** — Chunking, embeddings, índice idempotente y reanudable (técnica completa; las **métricas de Recall son PROVISIONALES** hasta que se valide el set de la Fase 3)
 - [~] **Fase 5** — Motor RAG: umbral, versiones, costo `[MANUAL pendiente: poner ANTHROPIC_API_KEY en tarea1/.env para las llamadas reales]` (todo lo demás está hecho y probado con un LLM simulado)
-- [ ] **Fase 6** — Evaluación y comparación de embeddings local vs API `[MANUAL: OPENAI_API_KEY]`
+- [~] **Fase 6** — Evaluación y comparación de embeddings local vs API `[MANUAL pendiente: poner OPENAI_API_KEY en tarea1/.env y ejecutar `PYTHONPATH=src python -m evaluation.compare_embeddings`]` (`run_eval` y la fila local ya están medidos)
 - [ ] **Fase 7** — Interfaz Streamlit
 - [ ] **Fase 8** — Innovación A: BM25 vs semántica
 - [ ] **Fase 9** — Innovación B: GitHub Actions con umbral de Recall@3
@@ -87,6 +87,16 @@ Tarea 2 (`tarea2/`): pendiente, se hará después; importará `rag_engine`.
 | Versiones | en las dos direcciones, con datos reales (`docs/ejemplo_versiones.md`): las 5 preguntas de versiones producen aviso; `q05` fuerza el texto original de la p. 29 enlazado por título aunque el OCR leyó `143` por `113` |
 | Precios | Haiku 4.5: USD 1 / 5 por millón (verificado 2026-09-21, precio único a todas horas); estructura por ventanas probada con tabla ficticia pico/valle |
 | Tests | 367 pasan (las mutaciones de umbral, abstención, errores y hora de facturación rompen tests) |
+
+## Resultados de la Fase 6 hasta el punto manual (medidos el 2026-09-21; PROVISIONALES hasta validar el set)
+
+| Ítem | Resultado |
+|---|---|
+| `evaluation/run_eval.py` | Sin LLM ni costo. Recall@1/3/5 = **0,762 / 0,905 / 0,905**; R@3 de la modificatoria 0,80; abstenciones correctas 5/6, incorrectas 5/21. Código de salida 0 con `--min-recall-3 0` y **1** con `--min-recall-3 0.99` (verificado en proceso real); es la base del gate de la Fase 9 |
+| Local (`multilingual-e5-small`) | 384 dim, 2,45 MB de vectores, 52,6 s para indexar 1674 fragmentos, 17,2 ms/consulta, USD 0 |
+| API (`text-embedding-3-small`) | **PENDIENTE** (falta `OPENAI_API_KEY`). Precio verificado: USD 0,02 / M tokens; estimación previa con tiktoken: 282 884 tokens → **USD 0,0057** por indexar todo el corpus (estimación, no medición) |
+| Documentación | `docs/metricas_evaluacion.md`: qué mide cada métrica, qué no dice y por qué la evaluación a USD 0 permite correrla en cada cambio |
+| Tests | 380 pasan |
 
 ## Decisiones registradas
 
