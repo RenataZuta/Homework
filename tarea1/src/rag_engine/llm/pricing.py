@@ -107,3 +107,13 @@ def cargar_tabla(ruta: Path, proveedor: str = "anthropic") -> TablaPrecios:
     if proveedor not in datos:
         raise ErrorPrecio(f"{Path(ruta).name} no tiene el bloque '{proveedor}'")
     return TablaPrecios.desde_dict(datos[proveedor])
+
+
+def cargar_precio_embedding(ruta: Path, modelo: str) -> float:
+    """USD por millón de tokens de entrada de un modelo de embeddings por API (bloque ``openai_embeddings`` de pricing.yaml).
+    Un precio ausente o null es un ERROR: nunca se inventa."""
+    datos = yaml.safe_load(Path(ruta).read_text(encoding="utf-8")).get("openai_embeddings") or {}
+    precio = ((datos.get("modelos") or {}).get(modelo) or {}).get("usd_por_millon_tokens")
+    if precio is None:
+        raise ErrorPrecio(f"No hay un precio verificado para el modelo de embeddings '{modelo}' en {Path(ruta).name}")
+    return float(precio)

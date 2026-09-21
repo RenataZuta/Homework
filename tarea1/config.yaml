@@ -169,7 +169,7 @@ embeddings:
     modelo: text-embedding-3-small
     prefijo_consulta: ""
     prefijo_pasaje: ""
-    max_tokens: 8191                         # PROVISIONAL (Fase 6): verificar en la documentación de OpenAI
+    max_tokens: 8192                         # verificado el 2026-09-21 en la guía oficial de embeddings; el precio está en pricing.yaml
 
 # ── Recuperación (Fases 5 y 8) ───────────────────────────────────────────────
 retrieval:

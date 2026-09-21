@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from rag_engine.config import Config
 from rag_engine.embeddings.base import Embedder, ErrorEmbeddings
+from rag_engine.llm.pricing import cargar_precio_embedding
 
 PROVEEDORES = ("local", "openai")
 
@@ -23,5 +24,5 @@ def crear_embedder(cfg: Config, proveedor: str | None = None, sobreescribir: dic
     from rag_engine.embeddings.openai_api import OpenAIEmbeddings
     return OpenAIEmbeddings(
         modelo=ajustes["modelo"], api_key=cfg.requerir_env("OPENAI_API_KEY", para="embeddings por API"),
-        precio_usd_por_millon=ajustes.get("precio_usd_por_millon"), dimensiones=ajustes.get("dimensiones"),
+        precio_usd_por_millon=cargar_precio_embedding(cfg.ruta("pricing"), ajustes["modelo"]), dimensiones=ajustes.get("dimensiones"),
         max_tokens=ajustes.get("max_tokens", 8191), **prefijos, **comunes)

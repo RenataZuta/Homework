@@ -112,6 +112,20 @@ def test_la_tabla_real_de_anthropic_carga_y_tiene_precio_unico_verificado():
     assert t.costo("claude-haiku-4-5-20251001", 2000, 300, lima(15)) == pytest.approx((2000 * 1 + 300 * 5) / 1e6)
 
 
-def test_el_bloque_de_embeddings_sin_precio_verificado_no_se_puede_usar():
+def test_el_precio_de_embeddings_por_api_esta_verificado_con_fuente_y_fecha():
+    from rag_engine.llm.pricing import cargar_precio_embedding
+    ruta = Path(__file__).resolve().parents[1] / "pricing.yaml"
+    assert cargar_precio_embedding(ruta, "text-embedding-3-small") == 0.02
+    import yaml
+    b = yaml.safe_load(ruta.read_text(encoding="utf-8"))["openai_embeddings"]
+    assert str(b["fecha_verificacion"]) == "2026-09-21" and "platform.openai.com" in b["fuente"] and b["modelos"]["text-embedding-3-small"]["dimensiones"] == 1536
+
+
+def test_un_modelo_de_embeddings_sin_precio_es_error(tmp_path):
+    from rag_engine.llm.pricing import cargar_precio_embedding
+    ruta = tmp_path / "p.yaml"
+    ruta.write_text("openai_embeddings:\n  modelos:\n    m:\n      usd_por_millon_tokens: null\n", encoding="utf-8")
+    with pytest.raises(ErrorPrecio, match="No hay un precio verificado"):
+        cargar_precio_embedding(ruta, "m")
     with pytest.raises(ErrorPrecio):
-        cargar_tabla(Path(__file__).resolve().parents[1] / "pricing.yaml", proveedor="openai_embeddings")
+        cargar_precio_embedding(ruta, "otro")

@@ -33,13 +33,18 @@ anthropic:
           usd_por_millon_entrada: 1.00
           usd_por_millon_salida: 5.00
 
-# Embeddings por API (solo para la comparación de la Fase 6).
-# PENDIENTE: verificar en la página oficial de precios de OpenAI antes de calcular costos.
+# Embeddings por API (comparación de la Fase 6).
 openai_embeddings:
-  fuente: null
-  fecha_verificacion: null
+  fuente: https://platform.openai.com/docs/pricing            # tabla «Prices per 1M tokens», grupo Embedding
+  fuente_modelo: https://platform.openai.com/docs/guides/embeddings
+  fecha_verificacion: 2026-09-21
   moneda: USD
-  unidad: por millón de tokens
+  unidad: por millón de tokens de ENTRADA (los embeddings no tienen tokens de salida)
+  verificacion_cruzada: >
+    La guía oficial de embeddings indica 62 500 páginas por dólar a ~800 tokens por página = 50 M de tokens por dólar = USD 0,02 por millón,
+    que coincide con la tabla de precios. La misma guía da 1536 dimensiones por defecto y 8192 tokens de entrada máxima.
   modelos:
     text-embedding-3-small:
-      usd_por_millon_tokens: null
+      usd_por_millon_tokens: 0.02
+      dimensiones: 1536
+      max_tokens_entrada: 8192
