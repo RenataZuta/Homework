@@ -7,7 +7,9 @@ Regla de costo: NO se carga crédito. Cada candidato termina en uno de estos est
   * ``medido``                        — se ejecutó de verdad.
   * ``pendiente: falta X en .env``     — no hay clave; basta agregarla y volver a ejecutar.
   * ``no ejecutada por costo: …``      — la API respondió ``insufficient_quota`` (cuenta sin crédito): no se paga, la fila queda preparada.
-  * ``no completada: cuota agotada``   — se agotó la cuota gratuita a medio camino; se puede repetir más tarde.
+  * ``no completada: cuota agotada``   — se agotó la cuota gratuita a medio camino. El índice de los modelos por API se CONSERVA entre ejecuciones y la
+                                         indexación es idempotente: al repetir (p. ej. al día siguiente, cuando se renueva la cuota diaria) continúa donde quedó
+                                         y no vuelve a gastar cuota en lo ya indexado. Los tiempos de indexación de una fila reanudada son solo de la última parte.
   * ``error: …``                       — otro fallo (clave inválida, red…).
 Uso (desde tarea1/):  PYTHONPATH=src python -m evaluation.compare_embeddings
 Escribe eval/results/embeddings_comparacion.{csv,json,md}; la app Streamlit lee la tabla.
@@ -15,7 +17,6 @@ Escribe eval/results/embeddings_comparacion.{csv,json,md}; la app Streamlit lee 
 from __future__ import annotations
 
 import json
-import shutil
 import statistics
 import sys
 import time
@@ -32,7 +33,7 @@ from indexing.chunking import trocear_documento
 from rag_engine.config import ConfigError, cargar_config
 from rag_engine.embeddings.base import ErrorEmbeddings
 from rag_engine.embeddings.factory import crear_embedder
-from rag_engine.retrieval.indice import abrir_cliente
+from rag_engine.retrieval.indice import abrir_cliente, nombre_coleccion
 from rag_engine.retrieval.semantic import buscar
 
 ETIQUETAS = {"local": "local", "openai": "API (OpenAI)", "gemini": "API (Gemini)"}
@@ -53,13 +54,15 @@ def estimar_tokens_openai(textos: list[str], modelo: str) -> int | None:
         return None
 
 
-def estado_por_error(exc: ErrorEmbeddings, proveedor: str) -> str:
-    """Traduce un error del proveedor al estado de la fila. Sin crédito NO se paga: la fila queda 'no ejecutada por costo'."""
+def estado_por_error(exc: ErrorEmbeddings, proveedor: str, progreso: tuple[int, int] | None = None) -> str:
+    """Traduce un error del proveedor al estado de la fila. Sin crédito NO se paga: la fila queda 'no ejecutada por costo'.
+    ``progreso`` = (fragmentos ya indexados, total): se informa para que se vea cuánto falta al reanudar."""
     if exc.tipo == "cuota_insuficiente":
         return (f"no ejecutada por costo: {ETIQUETAS.get(proveedor, proveedor)} respondió insufficient_quota (la cuenta no tiene crédito) "
                 "y no se cargó crédito; la fila queda preparada")
     if exc.tipo in ("cuota_agotada", "limite_de_tasa"):
-        return f"no completada: cuota agotada del proveedor ({exc.mensaje[:110]}); repetir más tarde"
+        avance = f" {progreso[0]}/{progreso[1]} fragmentos indexados;" if progreso else ""
+        return f"no completada: cuota agotada del proveedor ({exc.mensaje[:110]});{avance} repetir más tarde para reanudar"
     if exc.tipo == "autenticacion":
         return f"error: clave inválida o sin permisos ({exc.mensaje[:90]})"
     return f"error: {exc.mensaje[:120]}"
@@ -77,6 +80,12 @@ def medir(cfg, proveedor: str, preguntas, docs, chunk, dir_cmp: Path, fragmentos
     except ErrorEmbeddings as exc:
         return {**base, "estado": estado_por_error(exc, proveedor)}
     ks = tuple(cfg.get("eval.ks"))
+    nombre_col = nombre_coleccion(cfg.get("indexacion.coleccion"), chunk.nombre, emb.name)
+    if proveedor == "local":                                     # el local se reconstruye siempre (es gratis y así se mide el tiempo completo)
+        try:
+            abrir_cliente(dir_cmp).delete_collection(nombre_col)
+        except Exception:
+            pass                                                 # no existía
     try:
         res = construir_indice(emb, chunk, docs, dir_cmp, cfg.get("indexacion.coleccion"), dict(cfg.get("chunking.articulo_maximo")),
                                cfg.get("indexacion.lote_upsert"), mostrar=lambda *_: None)
@@ -90,7 +99,11 @@ def medir(cfg, proveedor: str, preguntas, docs, chunk, dir_cmp: Path, fragmentos
             lat.append((time.perf_counter() - t0) * 1000)
         ev = evaluar_recuperacion(preguntas, lambda t, k: buscar(col, emb, t, k), ks)
     except ErrorEmbeddings as exc:
-        return {**base, "estado": estado_por_error(exc, proveedor)}
+        try:
+            hecho = abrir_cliente(dir_cmp).get_collection(nombre_col).count()
+        except Exception:
+            hecho = 0
+        return {**base, "estado": estado_por_error(exc, proveedor, (hecho, len(fragmentos_ids))), "fragmentos_indexados": hecho}
     c = emb.contabilidad
     tokens_ok = getattr(emb, "tokens_reportados", True)
     return {**base, "modelo": emb.name, "estado": "medido", "dim": emb.dim, "fragmentos": col.count(),
@@ -134,8 +147,7 @@ def main() -> int:
     maximo = dict(cfg.get("chunking.articulo_maximo"))
     fragmentos = [f for d, ps in docs.values() for f in trocear_documento(d, ps, chunk, maximo)]
     ids_esperados = {f.id: f.hash_texto for f in fragmentos}
-    dir_cmp = cfg.ruta("index_cmp") / "embeddings"
-    shutil.rmtree(dir_cmp, ignore_errors=True)
+    dir_cmp = cfg.ruta("index_cmp") / "embeddings"                # se CONSERVA entre ejecuciones (ver arriba): los modelos por API se reanudan
     filas = []
     for proveedor in cfg.get("embeddings.comparar"):
         print(f"== {proveedor} ==", flush=True)

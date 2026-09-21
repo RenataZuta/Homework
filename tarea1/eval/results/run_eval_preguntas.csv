@@ -20,7 +20,7 @@ q18,in_domain,juridico,True,1,1,0.9132,False,ds_001_2026_ef p.4
 q19,in_domain,juridico,True,2,3,0.9002,False,ley_32069 p.31
 q20,in_domain,juridico,True,1,2,0.885,False,ley_32069 p.35
 q21,in_domain,juridico,False,1,,0.9103,False,ley_32069 p.39
-o01,out_of_domain,coloquial,False,,,0.8391,True,ds_009_2025_ef p.98
+o01,out_of_domain,coloquial,False,,,0.8405,True,ds_009_2025_ef p.96
 o02,out_of_domain,coloquial,False,,,0.8556,True,ds_009_2025_ef p.10
 o03,out_of_domain,juridico,False,,,0.8541,True,ds_009_2025_ef p.67
 o04,out_of_domain,coloquial,False,,,0.7949,True,ds_009_2025_ef p.98

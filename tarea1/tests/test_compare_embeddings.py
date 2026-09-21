@@ -54,3 +54,9 @@ def test_la_cuota_gratuita_agotada_es_no_completada_no_error_ni_costo(tipo):
 def test_clave_invalida_y_otros_errores_tienen_su_propio_estado():
     assert estado_por_error(ErrorEmbeddings("API key not valid", tipo="autenticacion"), "gemini").startswith("error: clave inválida")
     assert estado_por_error(ErrorEmbeddings("caído", tipo="servidor"), "gemini") == "error: caído"
+
+
+def test_la_cuota_agotada_informa_el_progreso_para_poder_reanudar():
+    e = estado_por_error(ErrorEmbeddings("Se agotó la cuota DIARIA", tipo="cuota_agotada"), "gemini", (768, 1674))
+    assert e.startswith("no completada") and "768/1674 fragmentos indexados" in e and "reanudar" in e
+    assert "/" not in estado_por_error(ErrorEmbeddings("x", tipo="cuota_agotada"), "gemini").split(";")[1]        # sin progreso no inventa cifras

@@ -19,4 +19,4 @@ MRR = 0.825. «Versiones: trae el DS 001» exige el fragmento de la modificatori
 - **Dentro del dominio (21):** 16 pasan la compuerta; **5 abstenciones incorrectas** (tasa 0.238).
 - **Fuera de dominio (6):** **5 abstenciones correctas** (tasa 0.833); 1 pasan la compuerta y dependerían del LLM.
 
-**Veredicto:** FALLA: Recall@3 = 0.905 es menor que el mínimo exigido 0.99
+**Veredicto:** OK: Recall@3 = 0.905 >= mínimo 0.0

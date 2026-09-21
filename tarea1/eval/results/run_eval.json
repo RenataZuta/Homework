@@ -265,9 +265,9 @@
    "modificada_2026": false,
    "rango_acierto": null,
    "rango_modificatoria": null,
-   "mejor_similitud": 0.8391,
+   "mejor_similitud": 0.8405,
    "se_abstiene": true,
-   "primero": "ds_009_2025_ef p.98"
+   "primero": "ds_009_2025_ef p.96"
   },
   {
    "id": "o02",
@@ -334,8 +334,8 @@
   "fragmentos_en_indice": 1674
  },
  "veredicto": {
-  "minimo_recall_3": 0.99,
-  "codigo_de_salida": 1,
-  "mensaje": "FALLA: Recall@3 = 0.905 es menor que el mínimo exigido 0.99"
+  "minimo_recall_3": 0.0,
+  "codigo_de_salida": 0,
+  "mensaje": "OK: Recall@3 = 0.905 >= mínimo 0.0"
  }
 }

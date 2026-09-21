@@ -11,12 +11,12 @@
    "tokens_indexados": 246483,
    "tokens_nota": "",
    "nivel": "local",
-   "indexacion_s": 53.8,
+   "indexacion_s": 56.0,
    "costo_usd": 0.0,
-   "consulta_ms_media": 16.8,
-   "consulta_ms_p95": 18.9,
+   "consulta_ms_media": 20.2,
+   "consulta_ms_p95": 17.5,
    "almacenamiento_vectores_mb": 2.45,
-   "almacenamiento_indice_mb": 12.68,
+   "almacenamiento_indice_mb": 24.15,
    "recall@1": 0.762,
    "recall@3": 0.905,
    "recall@5": 0.905,
@@ -33,7 +33,8 @@
    "proveedor": "gemini",
    "tipo": "API (Gemini)",
    "modelo": "gemini-embedding-2",
-   "estado": "pendiente: falta GEMINI_API_KEY en .env"
+   "estado": "no completada: cuota agotada del proveedor (Se agotó la cuota DIARIA de la capa gratuita de Google. Vuelve a intentarlo mañana o cambia de modelo. (You ex); 960/1674 fragmentos indexados; repetir más tarde para reanudar",
+   "fragmentos_indexados": 960
   }
  ],
  "fragmentos": 1674,

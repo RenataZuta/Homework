@@ -11,8 +11,8 @@
 - [x] **Fase 2** — Extracción por página, OCR (75 págs del DS 009-2025-EF), limpieza, reporte de calidad (revisión manual confirmada por la persona el 2026-09-21)
 - [~] **Fase 3** — Set de evaluación (`eval/preguntas.csv`) `[MANUAL pendiente: validar CADA paginas_esperadas con docs/eval_revision_manual.md; no empezar la Fase 4 hasta confirmarlo]`
 - [x] **Fase 4** — Chunking, embeddings, índice idempotente y reanudable (técnica completa; las **métricas de Recall son PROVISIONALES** hasta que se valide el set de la Fase 3)
-- [~] **Fase 5** — Motor RAG: umbral, versiones, costo `[MANUAL pendiente: GEMINI_API_KEY (gratis, Google AI Studio) en tarea1/.env para las llamadas reales]` (todo lo demás está hecho y probado con un LLM simulado; proveedor cambiado a Gemini el 2026-09-21, ver más abajo)
-- [~] **Fase 6** — Evaluación y comparación de embeddings local vs API `[MANUAL pendiente: claves gratuitas en tarea1/.env (GEMINI_API_KEY; OPENAI_API_KEY opcional, sin crédito) y ejecutar `PYTHONPATH=src python -m evaluation.compare_embeddings`]` (`run_eval` y la fila local ya están medidos; las filas de API quedan «pendiente»)
+- [x] **Fase 5** — Motor RAG: umbral, versiones, costo (llamadas reales con `gemini-3.5-flash-lite` verificadas el 2026-09-21; las métricas son **PROVISIONALES** hasta validar el set de la Fase 3)
+- [~] **Fase 6** — Evaluación y comparación de embeddings local vs API `[pendiente: repetir mañana `PYTHONPATH=src python -m evaluation.compare_embeddings` (Gemini: 960/1674 fragmentos indexados, la cuota gratuita es de 1000 textos/día); OPENAI_API_KEY opcional]` (`run_eval` y la fila local están medidos)
 - [ ] **Fase 7** — Interfaz Streamlit
 - [ ] **Fase 8** — Innovación A: BM25 vs semántica
 - [ ] **Fase 9** — Innovación B: GitHub Actions con umbral de Recall@3
@@ -81,12 +81,28 @@ Tarea 2 (`tarea2/`): pendiente, se hará después; importará `rag_engine`.
 | Ítem | Resultado |
 |---|---|
 | Contrato | `responder(pregunta) -> ResultadoRAG` con todos los campos pedidos; errores en `error` (respuesta `None`), abstención en `abstuvo` + `motivo_abstencion` |
-| Umbral | **0,865** (máximo F-β con β = 0,5): 16 respuestas correctas, 1 indebida, 5 abstenciones incorrectas, F-β 0,899. Similitudes: in_domain 0,837–0,931 vs fuera de dominio 0,795–0,893 (se solapan casi por completo) |
+| Umbral (primera versión, solo recuperación) | 0,865 (máximo F-β con β = 0,5): 16 respuestas correctas, 1 indebida, 5 abstenciones incorrectas, F-β 0,899. **Reemplazado por 0,835** tras la evaluación real de punta a punta (ver la sección siguiente). Similitudes: in_domain 0,837–0,931 vs fuera de dominio 0,795–0,893 (se solapan casi por completo) |
 | Abstención por umbral (proceso real) | «¿Cómo se prepara un buen ceviche?» → `abstuvo=True`, motivo `umbral`, costo 0, **ninguna** línea en `llm_calls.jsonl` |
 | Error como error (proceso real) | pregunta del dominio sin `ANTHROPIC_API_KEY` → `error` con instrucciones, `respuesta=None`; tampoco se registra como llamada |
 | Versiones | en las dos direcciones, con datos reales (`docs/ejemplo_versiones.md`): las 5 preguntas de versiones producen aviso; `q05` fuerza el texto original de la p. 29 enlazado por título aunque el OCR leyó `143` por `113` |
 | Precios | Haiku 4.5: USD 1 / 5 por millón (verificado 2026-09-21, precio único a todas horas); estructura por ventanas probada con tabla ficticia pico/valle |
 | Tests | 367 pasan (las mutaciones de umbral, abstención, errores y hora de facturación rompen tests) |
+
+## Resultados de la Fase 5 con llamadas reales (medidos el 2026-09-21; PROVISIONALES hasta validar el set)
+
+Modelo `gemini-3.5-flash-lite`, capa gratuita, `retrieval.busqueda: exacta`, umbral **0,835**.
+
+| Ítem | Resultado |
+|---|---|
+| Clave | `GEMINI_API_KEY` definida (verificada con una llamada real; nunca se muestra) |
+| Primera llamada real | Con `gemini-2.5-flash-lite` la API respondió que **«ya no está disponible para usuarios nuevos»** (la documentación lo listaba como estable): se cambió a `gemini-3.5-flash-lite`. El fallo quedó como primera línea de `logs/llm_calls.jsonl` (es una llamada real) |
+| Evaluación de punta a punta (27 preguntas, umbral 0, todas pasan por el LLM) | **In_domain: 18 de 21 respondidas y las 18 citan una página esperada**; 3 abstenciones del LLM (q04, q07, q10). **Fuera de dominio: 5 de 6 rechazadas por el propio LLM**, 1 respuesta parcial fundamentada en la Ley p. 17 (`o05`). 0 errores |
+| Umbral | **0,835** (antes 0,865). Con el LLM real, 0,865 daba 16 correctas y 5 abstenciones incorrectas; 0,835 da 18 correctas y 3 abstenciones incorrectas, y ahorra 2 llamadas (o04, o06). Ver `eval/results/umbral_e2e_resumen.md` |
+| Costo | Real **USD 0**. De referencia (precio de pago): USD 0,000745 por consulta (USD 0,0216 por 29 llamadas exitosas; 38 343 tokens de entrada y 4 045 de salida) → proyección de referencia ≈ USD 0,75 por cada 1000 consultas |
+| Latencia | Mediana de la llamada al LLM **1,95 s** (log real) |
+| Log | `logs/llm_calls.jsonl`: 30 líneas reales (29 éxitos, 1 rechazo de modelo), cero reintentos |
+| Determinismo | La búsqueda exacta da el mismo resultado en 4 procesos distintos (con HNSW, `o01` cambiaba en 2 de 3) |
+| Tests | **553 pasan** |
 
 ## Resultados de la Fase 6 hasta el punto manual (medidos el 2026-09-21; PROVISIONALES hasta validar el set)
 
@@ -152,6 +168,11 @@ Petición de la persona: **no pagar nada adicional a su suscripción**; ninguna 
 | 5 | Caché **solo** en la evaluación de punta a punta, no en el motor | El motor debe registrar cada llamada real; la caché reutiliza respuestas idénticas sin ensuciar el log de costos y sin exigir clave si todo está cacheado | 2026-09-21 |
 | 6 | Embeddings por API: OpenAI sin crédito → si `insufficient_quota`, «no ejecutada por costo»; segunda implementación `gemini-embedding-2` de 768 dimensiones | «Free of charge» en la página de precios; el preview `gemini-embedding-2-preview` se retiró el 2026-08-10, por eso se usa el ID estable; la guía recomienda 768/1536/3072 y este modelo no usa `task_type` (plantillas en el texto) | 2026-09-21 |
 | 6 | Cada texto en su propia petición dentro de `batchEmbedContents` | La guía advierte que varias `parts` en un mismo `content` producen UN solo vector agregado | 2026-09-21 |
+| 5 | **Modelo corregido a `gemini-3.5-flash-lite`** (sustituye a `gemini-2.5-flash-lite`) | La API rechazó el 2.5 en esta cuenta («no longer available to new users»). El 3.5 Flash-Lite: «Free of charge», estable, sin retiro anunciado, *structured outputs*; referencia USD 0,30 / 2,50 por millón (salida incluye tokens de razonamiento). Razona por defecto en nivel «minimal» | 2026-09-21 |
+| 5 | `temperatura: null` para Gemini (se anula `llm.temperatura`) | La guía de Gemini 3 recomienda dejar 1.0 y advierte que bajarla puede causar bucles o degradación. La reproducibilidad de la evaluación la da la caché de respuestas, no la temperatura | 2026-09-21 |
+| 5 | **Búsqueda exacta** (`retrieval.busqueda: exacta`) en lugar de la aproximada HNSW de Chroma | Con HNSW, la pregunta `o01` devolvía un top-5 distinto al exacto en 2 de 3 procesos (faltaba el fragmento p. 96, el más parecido). Con ~1 700 vectores la exacta cuesta <1 ms y es determinista. Recall no cambia (0,762 / 0,905 / 0,905). Test de equivalencia con fuerza bruta y mutaciones | 2026-09-21 |
+| 5 | **Umbral 0,835** calibrado con el LLM real (antes 0,865) | Con el LLM como segunda defensa, F-β es plano hasta 0,840; se toma el tope de la meseta menos un margen de 0,005. El 0,865 descartaba 2 respuestas buenas (q01, q08) sin evitar ninguna mala. La compuerta se conserva por costo y latencia | 2026-09-21 |
+| 6 | La comparación de embeddings por API **reanuda** en vez de reiniciar | La cuota gratuita de embeddings es de **1000 solicitudes por día y por modelo** (cuenta cada texto; medido con el cuerpo del 429), y el corpus tiene 1674 fragmentos: se completa en 2 días conservando lo ya indexado | 2026-09-21 |
 | 0 | README completo en `tarea1/README.md`; el README de la raíz solo recibe una sección con enlace | El repo aloja varias tareas; no se sobrescribe lo existente | 2026-09-21 |
 | 0 | Los módulos se crean en la fase que los necesita (sin archivos vacíos de relleno) | Historial de commits refleja el trabajo real | 2026-09-21 |
 
@@ -186,3 +207,9 @@ Petición de la persona: **no pagar nada adicional a su suscripción**; ninguna 
 24. **Los precios de Gemini 3.6/3.7/3.8 Flash cambian por fecha** (31-dic-2026 → 1-ene-2027). La estructura de `pricing.yaml` es por hora del día, no por fecha: si se pasara a esos modelos habría que ampliarla. No afecta a `gemini-2.5-flash-lite`.
 25. **Un test dependiente de red se colgó una vez** (`tiktoken` descarga su vocabulario): ahora usa un doble sin red. La suite completa corre en ~40 s sin conexión.
 26. **En la capa gratuita Google puede usar lo enviado para mejorar sus productos.** Mitigación: solo se envían pregunta y normas públicas, hay aviso al usuario y los embeddings del índice son locales.
+27. **La documentación de Google no es una fuente fiable de disponibilidad por cuenta:** la ficha decía «estable, sin retiro» para `gemini-2.5-flash-lite` y la API lo rechazó. Regla: **verificar con una llamada real** antes de fijar un modelo.
+28. **La búsqueda aproximada de Chroma (HNSW) no era determinista con este corpus:** ver decisión de la búsqueda exacta. Las métricas de Recall ya publicadas no cambian, pero las respuestas podían variar entre ejecuciones.
+29. **El 0,865 de la Fase 5 estaba mal calibrado para uso real:** se calibró viendo solo similitudes; con el LLM real descartaba respuestas correctas. Lección: calibrar umbrales con el pipeline completo.
+30. **`o05` (etiquetada fuera de dominio) recibe una respuesta parcial y fundamentada** (Ley p. 17 y Reglamento p. 97 hablan de la capacidad máxima de contratación). No es una invención; es un problema de etiquetado del set. **Conviene que la persona revise `o05` en la validación de la Fase 3** (¿realmente está fuera del corpus indexado?).
+31. **Cuota gratuita de embeddings de Gemini: 1000 solicitudes/día por modelo, cada texto cuenta** (cuerpo del 429: `EmbedContentRequestsPerDayPerProjectPerModel-FreeTier`, `quotaValue: 1000`). Indexar 1674 fragmentos + 21 consultas no cabe en un día: la comparación reanuda (960/1674 hoy). El 429 diario incluye un `retryDelay` de ~23 s pero no basta esperar segundos.
+32. **El repo dentro de `~/Documents` (iCloud) vuelve a «desmaterializar» archivos** aunque haya 9,9 GB libres (303 archivos, incluidos objetos de `.git`), y entonces `check_secrets.py` y `git commit` se cuelgan. Se re-materializan con `find … -flags +dataless | xargs cat`. **Recomendación: mover el repo fuera de iCloud.** Se liberaron 6,17 GB borrando los blobs de modelos candidatos de Hugging Face (se conservó `multilingual-e5-small`, comprobado offline).
