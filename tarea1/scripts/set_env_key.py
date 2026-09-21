@@ -1,8 +1,8 @@
 """Guarda una credencial en tarea1/.env pidiéndola por teclado SIN mostrarla.
 
 Uso (desde tarea1/):
-    python scripts/set_env_key.py ANTHROPIC_API_KEY
-    python scripts/set_env_key.py OPENAI_API_KEY
+    python scripts/set_env_key.py GEMINI_API_KEY      # generación y embeddings (clave gratuita de Google AI Studio)
+    python scripts/set_env_key.py OPENAI_API_KEY      # opcional
     python scripts/set_env_key.py --estado        # qué variables están definidas (sí/no, nunca el valor)
 
 El valor no se imprime, no queda en el historial del terminal ni pasa por el chat.
@@ -23,7 +23,7 @@ RUTA_ENV = DIRECTORIO / ".env"
 RUTA_EJEMPLO = DIRECTORIO / ".env.example"
 
 # Prefijos habituales, solo para AVISAR si parece un valor equivocado (no bloquea).
-PREFIJOS = {"ANTHROPIC_API_KEY": "sk-ant-", "OPENAI_API_KEY": "sk-"}
+PREFIJOS = {"ANTHROPIC_API_KEY": "sk-ant-", "OPENAI_API_KEY": "sk-", "GEMINI_API_KEY": "AIza"}
 
 
 def nombres_permitidos(ruta_ejemplo: Path = RUTA_EJEMPLO) -> list[str]:
@@ -63,7 +63,7 @@ def _escribir_atomico(ruta: Path, texto: str) -> None:
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("nombre", nargs="?", help="Nombre de la variable (p. ej. ANTHROPIC_API_KEY)")
+    ap.add_argument("nombre", nargs="?", help="Nombre de la variable (p. ej. GEMINI_API_KEY)")
     ap.add_argument("--estado", action="store_true", help="Muestra qué variables están definidas, sin valores")
     args = ap.parse_args(argv)
 

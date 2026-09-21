@@ -17,6 +17,7 @@ spec.loader.exec_module(cs)
 # ── secretos falsos (con la forma real, sin serlo) ──
 FALSA_ANTHROPIC = "sk-" + "ant-" + "a1" * 20
 FALSA_OPENAI = "sk-" + "proj-" + "b2" * 20
+FALSA_GOOGLE = "AI" + "za" + "Sy" + "Ab1" * 11        # 39 caracteres (AIza + 35), como una clave de Google
 FALSO_TELEGRAM = "123456789" + ":" + "AAH" + "x" * 32
 FALSO_GITHUB = "ghp_" + "c3" * 20
 FALSO_HF = "hf_" + "d4" * 20
@@ -32,6 +33,7 @@ def _nombres(linea: str) -> list[str]:
 @pytest.mark.parametrize("linea, esperado", [
     (f"clave = '{FALSA_ANTHROPIC}'", "anthropic_api_key"),
     (f"clave = '{FALSA_OPENAI}'", "openai_api_key"),
+    (f"clave = '{FALSA_GOOGLE}'", "google_api_key"),
     (f"bot: {FALSO_TELEGRAM}", "telegram_bot_token"),
     (f"token {FALSO_GITHUB}", "github_token"),
     (f"HF {FALSO_HF}", "huggingface_token"),

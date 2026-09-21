@@ -4,10 +4,12 @@ from types import SimpleNamespace
 import pytest
 
 from rag_engine.llm.anthropic_client import ClienteAnthropic, ErrorLLM, clasificar_error
+from rag_engine.llm.base import EsquemaSalida
 
 AJUSTES = {"modelo": "claude-haiku-4-5-20251001", "max_tokens": 1024, "temperatura": 0.0, "timeout_segundos": 60, "reintentos": 2}
 CAMPOS = {"respuesta": "r", "citas": "c", "contexto_suficiente": "s"}
-HERR = ClienteAnthropic.herramienta("responder_con_citas", "desc", CAMPOS)
+ESQUEMA = EsquemaSalida("responder_con_citas", "desc", CAMPOS)
+HERR = ClienteAnthropic.herramienta(ESQUEMA)
 
 
 def bloque(**entrada):
@@ -38,14 +40,14 @@ def cliente(sdk, **aj):
 # ── camino feliz ──
 
 def test_devuelve_respuesta_estructurada_con_tokens_y_latencia():
-    r = cliente(SDKFalso(ok())).generar("sistema", "usuario", HERR)
+    r = cliente(SDKFalso(ok())).generar("sistema", "usuario", ESQUEMA)
     assert r.respuesta.startswith("Son 10 días") and r.citas == [{"documento": "Ley 32069", "pagina": 32}] and r.contexto_suficiente is True
     assert (r.tokens_in, r.tokens_out) == (2100, 310) and r.latencia_ms >= 0 and r.modelo == AJUSTES["modelo"] and r.momento.tzinfo is not None
 
 
 def test_fuerza_el_uso_de_la_herramienta_y_envia_el_modelo_y_los_limites_de_la_config():
     sdk = SDKFalso(ok())
-    cliente(sdk).generar("SISTEMA", "USUARIO", HERR)
+    cliente(sdk).generar("SISTEMA", "USUARIO", ESQUEMA)
     kw = sdk.llamadas[0]
     assert kw["model"] == AJUSTES["modelo"] and kw["max_tokens"] == 1024 and kw["system"] == "SISTEMA"
     assert kw["messages"] == [{"role": "user", "content": "USUARIO"}]
@@ -54,13 +56,13 @@ def test_fuerza_el_uso_de_la_herramienta_y_envia_el_modelo_y_los_limites_de_la_c
 
 def test_la_temperatura_solo_se_envia_si_esta_definida():
     sdk = SDKFalso(ok())
-    cliente(sdk, temperatura=0.0).generar("s", "u", HERR)
-    cliente(sdk, temperatura=None).generar("s", "u", HERR)
+    cliente(sdk, temperatura=0.0).generar("s", "u", ESQUEMA)
+    cliente(sdk, temperatura=None).generar("s", "u", ESQUEMA)
     assert sdk.llamadas[0]["extra_body"] == {"temperature": 0.0} and "extra_body" not in sdk.llamadas[1]
 
 
 def test_contexto_insuficiente_es_un_campo_no_un_texto():
-    r = cliente(SDKFalso(ok(contexto_suficiente=False, respuesta="No lo sé"))).generar("s", "u", HERR)
+    r = cliente(SDKFalso(ok(contexto_suficiente=False, respuesta="No lo sé"))).generar("s", "u", ESQUEMA)
     assert r.contexto_suficiente is False
 
 
@@ -79,7 +81,7 @@ def test_el_esquema_de_la_herramienta_exige_los_tres_campos():
 ])
 def test_una_respuesta_malformada_es_un_error(respuesta):
     with pytest.raises(ErrorLLM) as e:
-        cliente(SDKFalso(respuesta)).generar("s", "u", HERR)
+        cliente(SDKFalso(respuesta)).generar("s", "u", ESQUEMA)
     assert e.value.tipo == "respuesta_malformada"
 
 
@@ -98,7 +100,7 @@ def _exc(nombre, codigo=None, texto="falló"):
 ])
 def test_cada_error_del_proveedor_se_clasifica(nombre, codigo, tipo):
     with pytest.raises(ErrorLLM) as e:
-        cliente(SDKFalso(error=_exc(nombre, codigo))).generar("s", "u", HERR)
+        cliente(SDKFalso(error=_exc(nombre, codigo))).generar("s", "u", ESQUEMA)
     assert e.value.tipo == tipo and e.value.mensaje
 
 
@@ -112,7 +114,7 @@ def test_los_mensajes_de_error_no_filtran_claves():
     tipo, msg = clasificar_error(_exc("Exception", None, f"fallo con {clave}"))
     assert clave not in msg
     with pytest.raises(ErrorLLM) as e:
-        cliente(SDKFalso(error=_exc("APIConnectionError", None, f"x-api-key: {clave}"))).generar("s", "u", HERR)
+        cliente(SDKFalso(error=_exc("APIConnectionError", None, f"x-api-key: {clave}"))).generar("s", "u", ESQUEMA)
     assert clave not in e.value.mensaje
 
 

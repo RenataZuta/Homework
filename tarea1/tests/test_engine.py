@@ -9,7 +9,7 @@ from indexing.chunking import ConfigChunk
 from rag_engine import engine as motor_mod
 from rag_engine.config import cargar_config
 from rag_engine.engine import MOTIVO_LLM, MOTIVO_UMBRAL, Fuente, MotorRAG, ResultadoRAG, responder
-from rag_engine.llm.anthropic_client import ErrorLLM
+from rag_engine.llm.base import ErrorLLM
 from rag_engine.llm.cost_log import leer_registros
 from rag_engine.llm.pricing import cargar_tabla
 from rag_engine.retrieval.indice import abrir_cliente, nombre_coleccion
@@ -36,15 +36,15 @@ def entorno(tmp_path):
 
 def motor(env, llm=None, **cfg_cambios):
     cfg = cfg_con(BASE, **{"retrieval.umbral_similitud": 0.3, "retrieval.top_k": 3, **cfg_cambios})
-    return MotorRAG(cfg, env["embedder"], env["col"], env["mods"], cargar_tabla(BASE.ruta("pricing")), cliente_llm=llm, ruta_log=env["log"])
+    return MotorRAG(cfg, env["embedder"], env["col"], env["mods"], cargar_tabla(BASE.ruta("pricing"), BASE.get("llm.provider")), cliente_llm=llm, ruta_log=env["log"])
 
 
 # ── contrato ──
 
 def test_el_resultado_tiene_todos_los_campos_del_contrato(entorno):
     r = motor(entorno, LLMFalso()).responder(P_PAGO)
-    campos = {"respuesta", "fuentes", "abstuvo", "motivo_abstencion", "mejor_similitud", "tokens_entrada", "tokens_salida", "costo_usd", "latencia_ms",
-              "modelo", "advertencias_version", "error", "timestamp"}
+    campos = {"respuesta", "fuentes", "abstuvo", "motivo_abstencion", "mejor_similitud", "tokens_entrada", "tokens_salida", "costo_usd_real", "costo_usd_referencia",
+              "latencia_ms", "modelo", "proveedor", "advertencias_version", "error", "error_tipo", "desde_cache", "timestamp"}
     assert set(r.como_dict()) == campos and isinstance(r, ResultadoRAG)
     assert isinstance(r.fuentes[0], Fuente) and set(r.fuentes[0].__dict__) >= {"documento", "version", "pagina", "similitud", "fragmento_id", "texto"}
     assert isinstance(r.abstuvo, bool) and r.timestamp.endswith("-05:00") or "T" in r.timestamp
@@ -57,10 +57,41 @@ def test_pregunta_del_dominio_se_responde_con_fuentes_costo_y_log(entorno):
     r = motor(entorno, llm).responder(P_PAGO)
     assert r.error is None and r.abstuvo is False and r.motivo_abstencion is None and r.respuesta.startswith("Respuesta")
     assert (r.documento if False else r.fuentes[0].documento, r.fuentes[0].pagina) == ("ley_32069", 32)
-    assert r.tokens_entrada == 2000 and r.tokens_salida == 300 and r.modelo == "claude-haiku-4-5-20251001"
-    assert r.costo_usd == pytest.approx((2000 * 1.0 + 300 * 5.0) / 1e6) and r.mejor_similitud >= 0.3 and len(llm.llamadas) == 1
+    assert r.tokens_entrada == 2000 and r.tokens_salida == 300 and r.modelo == "gemini-2.5-flash-lite" and r.proveedor == "gemini"
+    assert r.mejor_similitud >= 0.3 and len(llm.llamadas) == 1
+    # capa gratuita: costo REAL 0; costo de REFERENCIA con el precio de pago de pricing.yaml (0,10 / 0,40 USD por millón)
+    assert r.costo_usd_real == 0.0 and r.costo_usd_referencia == pytest.approx((2000 * 0.10 + 300 * 0.40) / 1e6)
     regs = leer_registros(entorno["log"])
-    assert len(regs) == 1 and regs[0]["exito"] is True and regs[0]["tokens_in"] == 2000 and regs[0]["costo_usd"] == pytest.approx(r.costo_usd)
+    assert len(regs) == 1 and regs[0]["exito"] is True and regs[0]["tokens_in"] == 2000 and regs[0]["nivel"] == "gratuito" and regs[0]["proveedor"] == "gemini"
+    assert regs[0]["costo_usd_real"] == 0.0 and regs[0]["costo_usd_referencia"] == pytest.approx(r.costo_usd_referencia) and regs[0]["intentos"] == 1
+
+
+def test_con_nivel_de_pago_el_costo_real_es_el_de_referencia(entorno):
+    r = motor(entorno, LLMFalso(tokens=(2000, 300)), **{"llm.nivel": "pago"}).responder(P_PAGO)
+    assert r.costo_usd_real == pytest.approx(r.costo_usd_referencia) and r.costo_usd_real > 0
+    assert leer_registros(entorno["log"])[0]["costo_usd_real"] == pytest.approx(r.costo_usd_real)
+
+
+def test_una_respuesta_de_la_cache_no_es_una_llamada_no_se_registra_ni_se_cobra(entorno):
+    r = motor(entorno, LLMFalso(desde_cache=True)).responder(P_PAGO)
+    assert r.desde_cache is True and r.error is None and r.respuesta and r.costo_usd_referencia > 0 and r.costo_usd_real == 0.0
+    assert not entorno["log"].exists()
+
+
+def test_los_reintentos_quedan_en_el_log(entorno):
+    motor(entorno, LLMFalso(intentos=3)).responder(P_PAGO)
+    assert leer_registros(entorno["log"])[0]["intentos"] == 3
+
+
+def test_al_proveedor_solo_llegan_la_pregunta_y_fragmentos_de_normas(entorno, monkeypatch):
+    """Privacidad: el prompt es la plantilla de config + fragmentos indexados + la pregunta; ningún secreto ni variable de entorno viaja."""
+    secreto = "AI" + "za" + "SyD-clave-que-jamas-debe-salir-0123456789"
+    monkeypatch.setenv("GEMINI_API_KEY", secreto)
+    llm = LLMFalso()
+    motor(entorno, llm).responder(P_PAGO)
+    enviado = llm.llamadas[0]["sistema"] + llm.llamadas[0]["usuario"]
+    assert secreto not in enviado and "GEMINI_API_KEY" not in enviado and str(entorno["tmp"]) not in enviado
+    assert P_PAGO in llm.llamadas[0]["usuario"] and "diez días hábiles" in llm.llamadas[0]["usuario"]      # sí: pregunta y norma
 
 
 def test_las_fuentes_citadas_se_marcan_por_nombre_o_id_de_documento(entorno):
@@ -84,13 +115,13 @@ def test_pregunta_fuera_de_dominio_se_abstiene_sin_llamar_al_llm_y_sin_log(entor
     llm = LLMFalso()
     r = motor(entorno, llm).responder(P_AJENA)
     assert r.abstuvo is True and r.motivo_abstencion == MOTIVO_UMBRAL and r.error is None
-    assert r.costo_usd == 0.0 and r.tokens_entrada == 0 and r.tokens_salida == 0 and r.modelo is None
+    assert r.costo_usd_real == 0.0 and r.costo_usd_referencia == 0.0 and r.tokens_entrada == 0 and r.tokens_salida == 0 and r.modelo is None
     assert llm.llamadas == [] and leer_registros(entorno["log"]) == [] and not entorno["log"].exists()
     assert r.respuesta == " ".join(BASE.get("mensajes.abstencion").split()) and r.mejor_similitud < 0.3
 
 
 def test_la_abstencion_por_umbral_no_necesita_clave_de_api(entorno, monkeypatch):
-    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    monkeypatch.delenv("GEMINI_API_KEY", raising=False)
     r = motor(entorno, llm=None).responder(P_AJENA)
     assert r.abstuvo and r.motivo_abstencion == MOTIVO_UMBRAL and r.error is None
 
@@ -116,7 +147,7 @@ def test_el_llm_declara_contexto_insuficiente_es_un_campo_no_un_texto(entorno):
     llm = LLMFalso(respuesta="No lo sé", suficiente=False)
     r = motor(entorno, llm).responder(P_PAGO)
     assert r.abstuvo is True and r.motivo_abstencion == MOTIVO_LLM and r.error is None
-    assert r.costo_usd > 0 and len(llm.llamadas) == 1 and len(leer_registros(entorno["log"])) == 1          # SÍ se llamó y se pagó
+    assert r.costo_usd_referencia > 0 and len(llm.llamadas) == 1 and len(leer_registros(entorno["log"])) == 1          # SÍ se llamó (y consumió cuota)
 
 
 def test_una_respuesta_que_dice_no_se_pero_marca_suficiente_no_es_abstencion(entorno):
@@ -129,15 +160,26 @@ def test_una_respuesta_que_dice_no_se_pero_marca_suficiente_no_es_abstencion(ent
 @pytest.mark.parametrize("tipo", ["limite_de_tasa", "red", "autenticacion", "solicitud", "servidor", "respuesta_malformada"])
 def test_un_error_del_llm_se_devuelve_como_error_no_como_respuesta(entorno, tipo):
     r = motor(entorno, LLMFalso(error=ErrorLLM(tipo, f"falló por {tipo}"))).responder(P_PAGO)
-    assert r.error == f"falló por {tipo}" and r.respuesta is None and r.abstuvo is False and r.motivo_abstencion is None and r.costo_usd == 0.0
+    assert r.error == f"falló por {tipo}" and r.error_tipo == tipo and r.respuesta is None and r.abstuvo is False and r.motivo_abstencion is None
+    assert r.costo_usd_real == 0.0 and r.costo_usd_referencia == 0.0
     regs = leer_registros(entorno["log"])
-    assert len(regs) == 1 and regs[0]["exito"] is False and tipo in regs[0]["error"] and regs[0]["costo_usd"] == 0.0
+    assert len(regs) == 1 and regs[0]["exito"] is False and tipo in regs[0]["error"] and regs[0]["costo_usd_real"] == 0.0
+
+
+def test_la_cuota_agotada_es_un_error_estructurado_y_registra_los_intentos(entorno):
+    exc = ErrorLLM("cuota_agotada", "Se agotó la cuota diaria")
+    exc.intentos = 5
+    r = motor(entorno, LLMFalso(error=exc)).responder(P_PAGO)
+    assert r.error == "Se agotó la cuota diaria" and r.error_tipo == "cuota_agotada" and r.respuesta is None and r.abstuvo is False and r.fuentes
+    reg = leer_registros(entorno["log"])[0]
+    assert reg["exito"] is False and reg["intentos"] == 5 and reg["proveedor"] == "gemini" and "cuota_agotada" in reg["error"]
 
 
 def test_sin_clave_de_api_el_error_lo_dice_y_no_se_disfraza_de_respuesta(entorno, monkeypatch):
-    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    monkeypatch.delenv("GEMINI_API_KEY", raising=False)
     r = motor(entorno, llm=None).responder(P_PAGO)
-    assert r.error and "ANTHROPIC_API_KEY" in r.error and r.respuesta is None and r.abstuvo is False
+    assert r.error and "GEMINI_API_KEY" in r.error and "aistudio.google.com" in r.error and r.respuesta is None and r.abstuvo is False
+    assert r.error_tipo == "autenticacion"
     assert not entorno["log"].exists()          # no hubo llamada: el log de costos no se ensucia con un evento que no ocurrió
 
 
@@ -232,7 +274,7 @@ def test_el_costo_usa_la_hora_de_la_llamada(entorno):
     from datetime import datetime
     de_dia = motor(entorno, LLMFalso(momento=datetime(2026, 9, 21, 12, 0, tzinfo=__import__("fakes").LIMA))).responder(P_PAGO)
     de_noche = motor(entorno, LLMFalso(momento=datetime(2026, 9, 21, 3, 0, tzinfo=__import__("fakes").LIMA))).responder(P_PAGO)
-    assert de_dia.costo_usd == de_noche.costo_usd          # Anthropic publica un único precio por modelo: mismo costo a todas horas
+    assert de_dia.costo_usd_referencia == de_noche.costo_usd_referencia > 0      # Gemini publica un único precio por modelo: mismo costo a todas horas
 
 
 # ── arquitectura ──

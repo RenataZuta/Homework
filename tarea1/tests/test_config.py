@@ -36,7 +36,8 @@ def test_config_real_carga_sin_env():
     cfg = cargar_config(cargar_env=False)
     assert [d["id"] for d in cfg.documentos] == ["ley_32069", "ds_009_2025_ef", "ds_001_2026_ef"]
     assert cfg.get("retrieval.top_k") >= 1
-    assert cfg["llm.modelo"].startswith("claude-")
+    assert cfg["llm.provider"] == "gemini" and cfg["llm.nivel"] == "gratuito"
+    assert cfg["llm.proveedores.gemini.modelo"].startswith("gemini-") and cfg["llm.proveedores.anthropic.modelo"].startswith("claude-")
 
 
 def test_rutas_se_resuelven_absolutas_dentro_de_tarea1():
@@ -73,7 +74,7 @@ def test_chunking_activo_es_una_de_las_configuraciones():
 # ── errores claros ──
 
 @pytest.mark.parametrize("ruta", [
-    "retrieval.top_k", "llm.modelo", "mensajes.abstencion",
+    "retrieval.top_k", "llm.provider", "llm.limites.rpm", "mensajes.abstencion",
     "eval.min_recall_at_3", "deploy.topes.consultas_por_sesion", "paths.llm_calls_log",
 ])
 def test_falta_una_clave_y_el_mensaje_la_nombra(tmp_path, ruta):
@@ -85,17 +86,17 @@ def test_falta_una_clave_y_el_mensaje_la_nombra(tmp_path, ruta):
 
 def test_reporta_todos_los_problemas_juntos(tmp_path):
     def mutar(d):
-        _borrar(d, "llm.modelo")
+        _borrar(d, "llm.provider")
         _borrar(d, "retrieval.top_k")
     archivo = _escribir_variante(tmp_path, mutar)
     with pytest.raises(ConfigError) as exc:
         cargar_config(archivo, cargar_env=False)
-    assert "llm.modelo" in str(exc.value) and "retrieval.top_k" in str(exc.value)
+    assert "llm.provider" in str(exc.value) and "retrieval.top_k" in str(exc.value)
 
 
 def test_valor_nulo_en_clave_requerida_falla(tmp_path):
-    archivo = _escribir_variante(tmp_path, lambda d: _asignar(d, "llm.modelo", None))
-    with pytest.raises(ConfigError, match="llm.modelo.*vacía"):
+    archivo = _escribir_variante(tmp_path, lambda d: _asignar(d, "llm.provider", None))
+    with pytest.raises(ConfigError, match="llm.provider.*vacía"):
         cargar_config(archivo, cargar_env=False)
 
 
@@ -175,3 +176,66 @@ def test_dotenv_de_la_carpeta_de_config_se_carga(tmp_path, monkeypatch):
     cfg = cargar_config(archivo, cargar_env=True)
     assert cfg.requerir_env("BACKEND_INTERNAL_KEY") == "valor-de-prueba"
     monkeypatch.delenv("BACKEND_INTERNAL_KEY", raising=False)  # no contaminar otros tests
+
+
+# ── proveedor de LLM y límites (cambio a Gemini, 2026-09-21) ──
+
+def test_el_proveedor_de_llm_debe_ser_uno_conocido(tmp_path):
+    archivo = _escribir_variante(tmp_path, lambda d: _asignar(d, "llm.provider", "openai"))
+    with pytest.raises(ConfigError, match="llm.provider"):
+        cargar_config(archivo, cargar_env=False)
+
+
+def test_anthropic_no_admite_nivel_gratuito(tmp_path):
+    def mutar(d):
+        _asignar(d, "llm.provider", "anthropic")
+        _asignar(d, "llm.nivel", "gratuito")
+    with pytest.raises(ConfigError, match="Anthropic no ofrece capa gratuita"):
+        cargar_config(_escribir_variante(tmp_path, mutar), cargar_env=False)
+
+
+def test_anthropic_con_nivel_de_pago_es_valido_para_poder_volver_a_usarlo(tmp_path):
+    def mutar(d):
+        _asignar(d, "llm.provider", "anthropic")
+        _asignar(d, "llm.nivel", "pago")
+    assert cargar_config(_escribir_variante(tmp_path, mutar), cargar_env=False)["llm.provider"] == "anthropic"
+
+
+def test_el_proveedor_activo_necesita_modelo_y_variable_de_clave(tmp_path):
+    with pytest.raises(ConfigError, match="llm.proveedores.gemini.modelo"):
+        cargar_config(_escribir_variante(tmp_path, lambda d: _borrar(d, "llm.proveedores.gemini.modelo")), cargar_env=False)
+    with pytest.raises(ConfigError, match="llm.proveedores.gemini.env_clave"):
+        cargar_config(_escribir_variante(tmp_path, lambda d: _borrar(d, "llm.proveedores.gemini.env_clave")), cargar_env=False)
+
+
+def test_un_nivel_desconocido_es_un_error(tmp_path):
+    with pytest.raises(ConfigError, match="llm.nivel"):
+        cargar_config(_escribir_variante(tmp_path, lambda d: _asignar(d, "llm.nivel", "gratis-total")), cargar_env=False)
+
+
+@pytest.mark.parametrize("ruta, valor", [
+    ("llm.limites.rpm", 0), ("llm.limites.rpm", -1), ("llm.limites.reintentos", -1), ("llm.limites.reintentos", 1.5), ("llm.limites.espera_inicial_s", 0),
+    ("llm.limites.factor_espera", 0.5), ("llm.limites.jitter", 1.5), ("embeddings.limites.rpm", 0), ("embeddings.limites.jitter", -0.1),
+])
+def test_los_limites_de_uso_se_validan(tmp_path, ruta, valor):
+    with pytest.raises(ConfigError, match=ruta.replace(".", r"\.")):
+        cargar_config(_escribir_variante(tmp_path, lambda d: _asignar(d, ruta, valor)), cargar_env=False)
+
+
+def test_los_limites_son_obligatorios(tmp_path):
+    with pytest.raises(ConfigError, match="llm.limites.rpm"):
+        cargar_config(_escribir_variante(tmp_path, lambda d: _borrar(d, "llm.limites.rpm")), cargar_env=False)
+
+
+def test_el_proveedor_de_embeddings_gemini_es_valido_y_necesita_su_modelo(tmp_path):
+    assert cargar_config(_escribir_variante(tmp_path, lambda d: _asignar(d, "embeddings.proveedor", "gemini")), cargar_env=False)["embeddings.proveedor"] == "gemini"
+    def mutar(d):
+        _asignar(d, "embeddings.proveedor", "gemini")
+        _borrar(d, "embeddings.gemini.modelo")
+    with pytest.raises(ConfigError, match="embeddings.gemini.modelo"):
+        cargar_config(_escribir_variante(tmp_path, mutar), cargar_env=False)
+
+
+def test_el_aviso_de_privacidad_esta_en_la_config_y_dice_lo_esencial():
+    msg = " ".join(cargar_config(cargar_env=False)["mensajes.aviso_privacidad"].split())
+    assert "Google" in msg and "mejorar sus productos" in msg and "normas públicas" in msg

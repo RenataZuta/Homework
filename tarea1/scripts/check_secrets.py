@@ -30,6 +30,7 @@ from typing import Iterator
 
 PATRONES: tuple[tuple[str, re.Pattern[str]], ...] = (
     ("anthropic_api_key", re.compile(r"sk-ant-[A-Za-z0-9_\-]{20,}")),
+    ("google_api_key", re.compile(r"(?<![A-Za-z0-9_\-])AIza[0-9A-Za-z_\-]{35}(?![0-9A-Za-z_\-])")),
     ("openai_api_key", re.compile(r"(?<![A-Za-z0-9_])sk-(?!ant-)(?:proj-|svcacct-)?[A-Za-z0-9_\-]{20,}")),
     ("telegram_bot_token", re.compile(r"(?<![0-9])[0-9]{8,10}:[A-Za-z0-9_\-]{35}(?![A-Za-z0-9_\-])")),
     ("github_token", re.compile(r"gh[pousr]_[A-Za-z0-9]{36,}|github_pat_[A-Za-z0-9_]{50,}")),

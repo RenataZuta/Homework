@@ -112,6 +112,39 @@ def test_la_tabla_real_de_anthropic_carga_y_tiene_precio_unico_verificado():
     assert t.costo("claude-haiku-4-5-20251001", 2000, 300, lima(15)) == pytest.approx((2000 * 1 + 300 * 5) / 1e6)
 
 
+def test_la_tabla_real_de_gemini_tiene_precio_de_referencia_con_fuente_y_fecha():
+    import yaml
+    ruta = Path(__file__).resolve().parents[1] / "pricing.yaml"
+    t = cargar_tabla(ruta, "gemini")
+    assert t.fecha_verificacion == "2026-09-21" and "ai.google.dev" in t.fuente
+    precios = {t.precio_en(lima(h), "gemini-2.5-flash-lite") for h in (0, 6, 12, 18, 23)}
+    assert precios == {(0.10, 0.40)}                                # precio de PAGO (referencia); la capa gratuita cobra 0 (llm.nivel)
+    assert t.costo("gemini-2.5-flash-lite", 2000, 300, lima(15)) == pytest.approx((2000 * 0.10 + 300 * 0.40) / 1e6)
+    b = yaml.safe_load(ruta.read_text(encoding="utf-8"))["gemini"]
+    assert "Free of charge" in b["nota_nivel_gratuito"] and "Used to improve" in b["nota_nivel_gratuito"]
+
+
+def test_gemini_tambien_cumple_la_estructura_de_ventanas_horarias():
+    """La estructura por hora se conserva para Gemini: una tabla ficticia pico/valle da costos distintos según la hora de la llamada."""
+    d = {"modelos": {"gemini-2.5-flash-lite": {"ventanas": [
+        {"zona_horaria": "America/Lima", "hora_inicio": "08:00", "hora_fin": "20:00", "usd_por_millon_entrada": 0.20, "usd_por_millon_salida": 0.80},
+        {"zona_horaria": "America/Lima", "hora_inicio": "20:00", "hora_fin": "08:00", "usd_por_millon_entrada": 0.10, "usd_por_millon_salida": 0.40}]}}}
+    t = TablaPrecios.desde_dict(d)
+    pico, valle = t.costo("gemini-2.5-flash-lite", 1_000_000, 0, lima(12)), t.costo("gemini-2.5-flash-lite", 1_000_000, 0, lima(23))
+    assert (pico, valle) == (pytest.approx(0.20), pytest.approx(0.10))
+
+
+def test_el_precio_de_embeddings_de_gemini_esta_verificado_con_fuente_y_fecha():
+    import yaml
+    from rag_engine.llm.pricing import cargar_precio_embedding
+    ruta = Path(__file__).resolve().parents[1] / "pricing.yaml"
+    assert cargar_precio_embedding(ruta, "gemini-embedding-2", "gemini_embeddings") == 0.20
+    b = yaml.safe_load(ruta.read_text(encoding="utf-8"))["gemini_embeddings"]
+    assert str(b["fecha_verificacion"]) == "2026-09-21" and "ai.google.dev" in b["fuente"] and b["modelos"]["gemini-embedding-2"]["max_tokens_entrada"] == 8192
+    with pytest.raises(ErrorPrecio):
+        cargar_precio_embedding(ruta, "gemini-embedding-2")          # el bloque por defecto es el de OpenAI: no lo confunde
+
+
 def test_el_precio_de_embeddings_por_api_esta_verificado_con_fuente_y_fecha():
     from rag_engine.llm.pricing import cargar_precio_embedding
     ruta = Path(__file__).resolve().parents[1] / "pricing.yaml"

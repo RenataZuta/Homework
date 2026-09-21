@@ -36,3 +36,5 @@ tarea1/data/index/*
 !tarea1/data/index/.gitkeep
 # La base del bot guarda IDs de usuarios de Telegram (dato personal).
 *.db
+# Caché de respuestas del LLM para la evaluación de punta a punta (regenerable; se invalida sola si cambia el prompt, el contexto o el modelo).
+tarea1/eval/cache_llm/

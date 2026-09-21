@@ -6,7 +6,7 @@ medianoche (p. ej. 20:00-08:00). Reglas que evitan costos falsos:
   * un modelo sin tabla, una hora sin ventana o un precio ``null`` es un ERROR: nunca se inventa un precio;
   * las ventanas de un modelo deben cubrir las 24 horas sin huecos ni solapes (se valida al cargar);
   * el momento debe traer zona horaria (un ``datetime`` ingenuo es ambiguo).
-La documentación oficial de Anthropic publica un precio único por modelo (ver pricing.yaml); la estructura por ventanas existe y está
+La documentación oficial de Anthropic y la de Gemini publican un precio único por modelo (ver pricing.yaml); la estructura por ventanas existe y está
 probada con una tabla ficticia de horas pico y valle para demostrar que el cálculo respeta la hora de cada llamada.
 No se mezclan descuentos de caché ni de batch con el horario.
 """
@@ -109,10 +109,10 @@ def cargar_tabla(ruta: Path, proveedor: str = "anthropic") -> TablaPrecios:
     return TablaPrecios.desde_dict(datos[proveedor])
 
 
-def cargar_precio_embedding(ruta: Path, modelo: str) -> float:
-    """USD por millón de tokens de entrada de un modelo de embeddings por API (bloque ``openai_embeddings`` de pricing.yaml).
+def cargar_precio_embedding(ruta: Path, modelo: str, bloque: str = "openai_embeddings") -> float:
+    """USD por millón de tokens de entrada de un modelo de embeddings por API (bloque ``openai_embeddings`` o ``gemini_embeddings`` de pricing.yaml).
     Un precio ausente o null es un ERROR: nunca se inventa."""
-    datos = yaml.safe_load(Path(ruta).read_text(encoding="utf-8")).get("openai_embeddings") or {}
+    datos = yaml.safe_load(Path(ruta).read_text(encoding="utf-8")).get(bloque) or {}
     precio = ((datos.get("modelos") or {}).get(modelo) or {}).get("usd_por_millon_tokens")
     if precio is None:
         raise ErrorPrecio(f"No hay un precio verificado para el modelo de embeddings '{modelo}' en {Path(ruta).name}")

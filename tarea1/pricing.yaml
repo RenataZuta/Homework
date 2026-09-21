@@ -48,3 +48,46 @@ openai_embeddings:
       usd_por_millon_tokens: 0.02
       dimensiones: 1536
       max_tokens_entrada: 8192
+
+# ── Google Gemini (proveedor de generación activo desde 2026-09-21) ──────────────────────────────────────────
+# En la CAPA GRATUITA el costo real es 0. Estos son los precios del nivel de PAGO estándar: se usan solo como costo de REFERENCIA
+# (cuánto costaría el mismo tráfico si algún día se pasara a un plan de pago). llm.nivel en config.yaml decide cuál se cobra de verdad.
+gemini:
+  fuente: https://ai.google.dev/gemini-api/docs/pricing
+  fuente_modelos: https://ai.google.dev/gemini-api/docs/models
+  fecha_verificacion: 2026-09-21
+  moneda: USD
+  unidad: por millón de tokens (MTok), texto, nivel de pago estándar
+  nota_nivel_gratuito: >
+    La página de precios marca «Free of charge» para gemini-2.5-flash-lite y, en esa columna, «Used to improve our products: Yes»: en la capa
+    gratuita Google puede usar el contenido enviado para mejorar sus productos (ver README, sección Privacidad). Los límites de uso
+    (RPM/TPM/RPD) NO figuran en la documentación pública: se consultan en https://aistudio.google.com/rate-limit.
+  nota_horarios: >
+    La página publica UN precio por modelo, sin tarifas por hora; por eso hay una sola ventana 00:00-24:00. La estructura por ventanas se
+    conserva y está probada con una tabla ficticia de horas pico y valle. No se aplican descuentos de Batch ni de caché de contexto.
+  nota_tokens: >
+    Los tokens de razonamiento (thoughtsTokenCount) se suman a los de salida. La entrada de audio tiene otro precio; este proyecto solo envía texto.
+  modelos:
+    gemini-2.5-flash-lite:
+      ventanas:
+        - zona_horaria: America/Lima
+          hora_inicio: "00:00"
+          hora_fin: "24:00"
+          usd_por_millon_entrada: 0.10
+          usd_por_millon_salida: 0.40
+
+# Embeddings por API de Gemini (alternativa gratuita a OpenAI en la comparación de la Fase 6).
+gemini_embeddings:
+  fuente: https://ai.google.dev/gemini-api/docs/pricing            # sección «Gemini Embedding 2»
+  fuente_modelo: https://ai.google.dev/gemini-api/docs/embeddings
+  fecha_verificacion: 2026-09-21
+  moneda: USD
+  unidad: por millón de tokens de ENTRADA de texto (nivel de pago)
+  nota_nivel_gratuito: >
+    La página marca «Free of charge» para Gemini Embedding 2 (con «Used to improve our products: Yes» en el nivel gratuito). La respuesta de
+    embeddings NO informa el número de tokens, por eso el costo de referencia de esta fila no se calcula (no se inventa un conteo).
+  modelos:
+    gemini-embedding-2:
+      usd_por_millon_tokens: 0.20
+      dimensiones: 3072              # por defecto; se admite 128-3072 (outputDimensionality); la guía recomienda 768, 1536 o 3072
+      max_tokens_entrada: 8192

@@ -42,7 +42,7 @@ import json
 from datetime import datetime, timedelta, timezone
 
 from rag_engine.config import Config
-from rag_engine.llm.anthropic_client import ErrorLLM, RespuestaLLM
+from rag_engine.llm.base import ErrorLLM, RespuestaLLM
 
 LIMA = timezone(timedelta(hours=-5))
 
@@ -60,21 +60,23 @@ def cfg_con(base: Config, **cambios) -> Config:
 
 
 class LLMFalso:
-    """Imita a ClienteAnthropic.generar: registra lo que recibe y devuelve lo configurado (o lanza un ErrorLLM)."""
+    """Imita a un ClienteLLM: registra lo que recibe y devuelve lo configurado (o lanza un ErrorLLM)."""
 
     def __init__(self, respuesta="Respuesta [Ley 32069, p. 32].", citas=None, suficiente=True, tokens=(2000, 300), error: ErrorLLM | None = None,
-                 momento: datetime | None = None):
+                 momento: datetime | None = None, modelo="gemini-2.5-flash-lite", desde_cache=False, intentos=1):
         self.llamadas: list[dict] = []
         self._r = dict(respuesta=respuesta, citas=citas if citas is not None else [{"documento": "Ley 32069", "pagina": 32}], suficiente=suficiente)
         self.tokens, self.error = tokens, error
         self.momento = momento or datetime(2026, 9, 21, 12, 0, tzinfo=LIMA)
+        self.modelo, self.desde_cache, self.intentos = modelo, desde_cache, intentos
 
-    def generar(self, sistema, usuario, herramienta):
-        self.llamadas.append({"sistema": sistema, "usuario": usuario, "herramienta": herramienta})
+    def generar(self, sistema, usuario, esquema):
+        self.llamadas.append({"sistema": sistema, "usuario": usuario, "esquema": esquema})
         if self.error:
             raise self.error
         return RespuestaLLM(respuesta=self._r["respuesta"], citas=self._r["citas"], contexto_suficiente=self._r["suficiente"], tokens_in=self.tokens[0],
-                            tokens_out=self.tokens[1], latencia_ms=420.0, modelo="claude-haiku-4-5-20251001", momento=self.momento)
+                            tokens_out=self.tokens[1], latencia_ms=420.0, modelo=self.modelo, momento=self.momento,
+                            proveedor="gemini", intentos=self.intentos, desde_cache=self.desde_cache)
 
 
 def paginas_sinteticas():

@@ -21,6 +21,7 @@ paths:
   eval_results: eval/results
   logs: logs
   llm_calls_log: logs/llm_calls.jsonl            # una línea por llamada al LLM
+  cache_llm: eval/cache_llm                      # respuestas del LLM reutilizables SOLO en la evaluación de punta a punta (ignorada por git)
   pricing: pricing.yaml
   bot_db: data/bot.db                            # SQLite del bot (ignorada por git)
   docs: docs
@@ -151,8 +152,16 @@ indexacion:
 
 # ── Embeddings (Fases 4 y 6): cambiar de modelo = editar solo esta sección ───
 embeddings:
-  proveedor: local                 # local | openai
+  proveedor: local                 # local | openai | gemini
   batch: 32
+  comparar: [local, openai, gemini]   # candidatos de evaluation/compare_embeddings.py (el motor usa solo 'proveedor')
+  limites:                         # throttle y reintentos de los embeddings por API (mismo formato que llm.limites)
+    rpm: 20                        # valor de diseño conservador; los límites reales se ven en https://aistudio.google.com/rate-limit
+    reintentos: 4
+    espera_inicial_s: 4
+    factor_espera: 2
+    espera_max_s: 60
+    jitter: 0.25
   normalizar: true                 # vectores unitarios -> similitud coseno
   candidatos_locales:              # se comparan en evaluation/select_local_model.py (tarjetas verificadas el 2026-09-21)
     - {modelo: intfloat/multilingual-e5-small, prefijo_consulta: "query: ", prefijo_pasaje: "passage: "}
@@ -170,6 +179,16 @@ embeddings:
     prefijo_consulta: ""
     prefijo_pasaje: ""
     max_tokens: 8192                         # verificado el 2026-09-21 en la guía oficial de embeddings; el precio está en pricing.yaml
+  gemini:                                    # alternativa gratuita a OpenAI (verificada el 2026-09-21; ver PROGRESO.md)
+    modelo: gemini-embedding-2               # el preview 'gemini-embedding-2-preview' se retiró el 2026-08-10
+    env_clave: GEMINI_API_KEY
+    url_base: https://generativelanguage.googleapis.com/v1beta
+    nivel: gratuito                          # gratuito | pago (define el costo real; el precio de pago está en pricing.yaml)
+    dimensiones: 768                         # la guía recomienda 768, 1536 o 3072 (3072 por defecto); 768 reduce el almacenamiento
+    prefijo_consulta: "task: search result | query: "   # plantillas de la guía oficial (este modelo no usa task_type)
+    prefijo_pasaje: "title: none | text: "
+    max_tokens: 8192
+    timeout_segundos: 60
 
 # ── Recuperación (Fases 5 y 8) ───────────────────────────────────────────────
 retrieval:
@@ -184,12 +203,28 @@ retrieval:
 
 # ── Generación (Fase 5) ──────────────────────────────────────────────────────
 llm:
-  proveedor: anthropic
-  modelo: claude-haiku-4-5-20251001     # ID verificado en la doc oficial el 2026-09-21
+  provider: gemini                 # gemini | anthropic. CAMBIO 2026-09-21: sin pagos adicionales -> capa gratuita de Google Gemini (Anthropic se conserva, sin usar)
+  nivel: gratuito                  # gratuito | pago. Define el costo REAL (0 en la capa gratuita); el costo de REFERENCIA siempre usa el precio de pago
   max_tokens: 1024
-  temperatura: 0.0                 # null = no enviarla. Los modelos posteriores a Opus 4.6 la rechazan (solo admiten 1.0); Haiku 4.5 sí la admite
+  temperatura: 0.0                 # null = no enviarla
   timeout_segundos: 60
-  reintentos: 2
+  limites:                         # throttle y reintentos (rag_engine/limites.py). rpm es un valor de DISEÑO conservador, NO el límite de Google:
+    rpm: 10                        #   los límites reales de tu proyecto se ven en https://aistudio.google.com/rate-limit (no son públicos en la doc)
+    reintentos: 4                  # reintentos ante 429 por tasa, 5xx o red (no ante clave inválida, formato o cuota DIARIA)
+    espera_inicial_s: 4            # backoff exponencial: 4, 8, 16, 32 s (tope espera_max_s) + jitter; respeta el retryDelay que sugiera Google
+    factor_espera: 2
+    espera_max_s: 60
+    jitter: 0.25                   # hasta +25 % de espera aleatoria para no sincronizar reintentos
+  proveedores:
+    gemini:
+      modelo: gemini-2.5-flash-lite   # ver PROGRESO.md (decisión 2026-09-21): capa gratuita vigente, estable, sin fecha de retiro anunciada
+      env_clave: GEMINI_API_KEY
+      url_base: https://generativelanguage.googleapis.com/v1beta
+      campo_esquema: responseJsonSchema   # alternativa documentada: responseSchema
+      thinking_budget: null               # null = no enviarlo (2.5 Flash-Lite no razona por defecto)
+    anthropic:                        # CONSERVADO, sin usar: Anthropic no tiene capa gratuita (nivel debe ser 'pago')
+      modelo: claude-haiku-4-5-20251001
+      env_clave: ANTHROPIC_API_KEY
 
 # ── Precios: el detalle (con fuente y fecha) está en pricing.yaml ────────────
 pricing:
@@ -239,6 +274,10 @@ mensajes:
     con seguridad. Puede que la respuesta esté en una parte del Reglamento que no
     forma parte del índice, o que la pregunta esté fuera de la normativa de
     contrataciones públicas. Reformula la pregunta o consulta la norma oficial.
+  error_cuota: "Se agotó la cuota gratuita del modelo de lenguaje. Intenta de nuevo en unos minutos (o mañana, si es la cuota diaria)."
+  aviso_privacidad: >
+    Privacidad: esta aplicación usa la capa gratuita de Google Gemini, y Google puede usar el contenido enviado para mejorar sus productos.
+    Solo se envían tu pregunta y fragmentos de normas públicas. No escribas datos personales ni información confidencial.
   error_generico: "No se pudo generar la respuesta por un error del servicio. Intenta de nuevo en unos minutos."
   error_config: "Falta configuración necesaria. Revisa el README y tu archivo .env."
   indice_faltante: "No se encontró el índice en {ruta}. Constrúyelo antes de usar la app: python scripts/build_index.py"
@@ -265,6 +304,7 @@ eval:
     hasta: 1.0
     paso: 0.005
     beta: 0.5                      # F-beta con beta < 1: la precisión pesa más que la cobertura (responder mal es peor que no responder)
+  cache_llm: true                  # la evaluación de punta a punta reutiliza respuestas idénticas (no repite llamadas ni gasta cuota)
   set_validado: false              # pasa a true cuando la persona valida cada paginas_esperadas (Fase 3 [MANUAL]); mientras sea false, toda métrica se marca PROVISIONAL
   requisitos_set:                  # mínimos que exige el issue para el set de evaluación (validate_eval_set.py)
     in_domain: 15

@@ -22,7 +22,9 @@ DIRECTORIO_PROYECTO = Path(__file__).resolve().parents[2]
 RUTA_CONFIG_POR_DEFECTO = DIRECTORIO_PROYECTO / "config.yaml"
 
 MODOS_RETRIEVAL = ("semantico", "bm25", "hibrido")
-PROVEEDORES_EMBEDDINGS = ("local", "openai")
+PROVEEDORES_EMBEDDINGS = ("local", "openai", "gemini")
+PROVEEDORES_LLM = ("gemini", "anthropic")
+NIVELES = ("gratuito", "pago")
 
 # Claves que deben existir y no ser nulas. (Es estructura, no valores: los valores viven en config.yaml.)
 CLAVES_REQUERIDAS = (
@@ -38,8 +40,10 @@ CLAVES_REQUERIDAS = (
     "chunking.articulo_maximo.ley", "chunking.articulo_maximo.reglamento", "indexacion.coleccion", "indexacion.lote_upsert",
     "embeddings.proveedor", "embeddings.batch", "embeddings.normalizar",
     "retrieval.modo", "retrieval.top_k", "retrieval.umbral_similitud", "retrieval.umbral_calibrado", "retrieval.versiones.activo", "retrieval.versiones.max_fragmentos_forzados", "retrieval.versiones.max_originales_forzados",
-    "llm.proveedor", "llm.modelo", "llm.max_tokens",
-    "llm.timeout_segundos", "llm.reintentos",
+    "llm.provider", "llm.nivel", "llm.max_tokens", "llm.timeout_segundos",
+    "llm.limites.rpm", "llm.limites.reintentos", "llm.limites.espera_inicial_s", "llm.limites.factor_espera", "llm.limites.espera_max_s", "llm.limites.jitter",
+    "embeddings.limites.rpm", "embeddings.limites.reintentos", "embeddings.limites.espera_inicial_s", "embeddings.limites.factor_espera",
+    "embeddings.limites.espera_max_s", "embeddings.limites.jitter", "paths.cache_llm", "eval.cache_llm", "mensajes.aviso_privacidad", "mensajes.error_cuota",
     "pricing.archivo",
     "prompts.sistema", "prompts.usuario", "prompts.herramienta_nombre",
     "prompts.herramienta_descripcion", "prompts.etiqueta_fragmento",
@@ -141,6 +145,35 @@ def _validar(datos: dict[str, Any]) -> list[str]:
             errores.append(f"'embeddings.proveedor' debe ser uno de {PROVEEDORES_EMBEDDINGS}, no '{proveedor}'")
         elif not _buscar(datos, f"embeddings.{proveedor}.modelo") or _buscar(datos, f"embeddings.{proveedor}.modelo") is _FALTA:
             errores.append(f"falta 'embeddings.{proveedor}.modelo' (es el proveedor activo)")
+
+    # ── proveedor de LLM: el activo debe tener modelo y nombre de variable; Anthropic no tiene capa gratuita ──
+    prov_llm, nivel_llm = _buscar(datos, "llm.provider"), _buscar(datos, "llm.nivel")
+    if prov_llm not in (_FALTA, None):
+        if prov_llm not in PROVEEDORES_LLM:
+            errores.append(f"'llm.provider' debe ser uno de {PROVEEDORES_LLM}, no '{prov_llm}'")
+        else:
+            for campo in ("modelo", "env_clave"):
+                if not _buscar(datos, f"llm.proveedores.{prov_llm}.{campo}") or _buscar(datos, f"llm.proveedores.{prov_llm}.{campo}") is _FALTA:
+                    errores.append(f"falta 'llm.proveedores.{prov_llm}.{campo}' (es el proveedor activo)")
+    if nivel_llm not in (_FALTA, None):
+        if nivel_llm not in NIVELES:
+            errores.append(f"'llm.nivel' debe ser uno de {NIVELES}, no '{nivel_llm}'")
+        elif nivel_llm == "gratuito" and prov_llm == "anthropic":
+            errores.append("'llm.nivel: gratuito' no es válido con 'llm.provider: anthropic': Anthropic no ofrece capa gratuita (usa nivel: pago)")
+    for grupo in ("llm.limites", "embeddings.limites"):
+        for campo, minimo in (("rpm", 0), ("espera_inicial_s", 0), ("espera_max_s", 0)):
+            v = _buscar(datos, f"{grupo}.{campo}")
+            if v not in (_FALTA, None) and not (_es_numero(v) and v > minimo):
+                errores.append(f"'{grupo}.{campo}' debe ser un número > {minimo}, no {v!r}")
+        v = _buscar(datos, f"{grupo}.reintentos")
+        if v not in (_FALTA, None) and not (isinstance(v, int) and not isinstance(v, bool) and v >= 0):
+            errores.append(f"'{grupo}.reintentos' debe ser un entero >= 0, no {v!r}")
+        v = _buscar(datos, f"{grupo}.factor_espera")
+        if v not in (_FALTA, None) and not (_es_numero(v) and v >= 1):
+            errores.append(f"'{grupo}.factor_espera' debe ser un número >= 1, no {v!r}")
+        v = _buscar(datos, f"{grupo}.jitter")
+        if v not in (_FALTA, None) and not (_es_numero(v) and 0 <= v <= 1):
+            errores.append(f"'{grupo}.jitter' debe ser un número entre 0 y 1, no {v!r}")
 
     for ruta, minimo, maximo in (
         ("retrieval.umbral_similitud", 0.0, 1.0),

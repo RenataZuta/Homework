@@ -2,7 +2,7 @@
 """preguntar.py — hace una pregunta al motor desde la terminal y muestra el ResultadoRAG completo.
 
 Uso (desde tarea1/):  python scripts/preguntar.py "¿Puedo pedir un adelanto para empezar a trabajar?"
-Sirve para probar el motor sin ninguna interfaz. Las abstenciones por umbral NO necesitan ANTHROPIC_API_KEY; responder sí.
+Sirve para probar el motor sin ninguna interfaz. Las abstenciones por umbral NO necesitan GEMINI_API_KEY; responder sí (clave gratuita de Google AI Studio).
 """
 from __future__ import annotations
 
@@ -22,7 +22,7 @@ def main(argv: list[str] | None = None) -> int:
         return 2
     r = responder(" ".join(args))
     if r.error:
-        print(f"ERROR: {r.error}")
+        print(f"ERROR ({r.error_tipo}): {r.error}")
         print(f"(mejor similitud {r.mejor_similitud:.3f}; latencia {r.latencia_ms:.0f} ms)")
         return 1
     estado = f"ABSTENCIÓN ({r.motivo_abstencion})" if r.abstuvo else "RESPUESTA"
@@ -35,7 +35,8 @@ def main(argv: list[str] | None = None) -> int:
         marca = "★" if f.citada else " "
         print(f" {marca} {f.documento} p.{f.pagina} · {f.version} · sim {f.similitud:.3f} · {f.origen}")
     if r.modelo:
-        print(f"\nModelo {r.modelo} · {r.tokens_entrada} tokens de entrada, {r.tokens_salida} de salida · costo USD {r.costo_usd:.6f}")
+        print(f"\n{r.proveedor} / {r.modelo} · {r.tokens_entrada} tokens de entrada, {r.tokens_salida} de salida · "
+              f"costo REAL USD {r.costo_usd_real:.6f} · costo de REFERENCIA (precio de pago) USD {r.costo_usd_referencia:.6f}")
     else:
         print("\nSin llamada al modelo (costo USD 0).")
     return 0
