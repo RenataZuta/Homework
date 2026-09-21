@@ -1,0 +1,28 @@
+id,tipo,estilo,mejor_similitud,acierto_top_k,pregunta
+o04,out_of_domain,coloquial,0.7949,,¿Cómo se prepara un buen ceviche?
+o06,out_of_domain,coloquial,0.8298,,¿A cuántos soles equivalen 8 UIT este año?
+q10,in_domain,coloquial,0.8365,True,¿Cuánto me pueden cobrar por cada día que entrego tarde?
+o01,out_of_domain,coloquial,0.8391,,¿Cómo declaro en la SUNAT el IGV de las facturas que le emito al Estado?
+q01,in_domain,coloquial,0.8429,True,¿Puedo venderle al Estado si mi empresa recién abrió?
+o03,out_of_domain,juridico,0.8541,,¿Cuál es el plazo para impugnar una licitación pública en Colombia?
+o02,out_of_domain,coloquial,0.8556,,¿Qué penalidad puedo cobrarle a un proveedor privado que le entrega tarde un pedido a mi empresa?
+q04,in_domain,coloquial,0.8564,False,¿Hasta qué monto me pueden comprar sin hacer una licitación o un concurso?
+q08,in_domain,coloquial,0.86,True,"Me descalificaron y quiero reclamar: siendo microempresa, ¿me cobran algo por presentar el recurso?"
+q07,in_domain,coloquial,0.8643,False,"Si dos empresas presentan ofertas con el mismo puntaje, ¿quién se lleva el contrato?"
+q11,in_domain,coloquial,0.8691,True,¿Qué tanto pesa el precio al calificar las ofertas? ¿Cuántos puntos puede valer como máximo?
+q06,in_domain,coloquial,0.872,True,¿Puedo pedir un adelanto para empezar a trabajar y de cuánto?
+q15,in_domain,juridico,0.8725,True,¿Cuánto puede durar la inhabilitación temporal para contratar con el Estado?
+q02,in_domain,coloquial,0.8738,True,"Si la entidad se demora en pagarme, ¿en cuánto tiempo debe pagar y qué me tiene que reconocer por el atraso?"
+q03,in_domain,coloquial,0.88,True,Soy microempresa: ¿puedo cobrar con una factura negociable a plazo cuando le vendo al Estado?
+q20,in_domain,juridico,0.885,True,¿Les son aplicables a los contratos menores las causales de nulidad del contrato previstas en la Ley?
+q05,in_domain,coloquial,0.8855,True,"No tengo carta fianza: siendo pequeña empresa, ¿cómo puedo garantizar el cumplimiento del contrato y cómo se aplica esa garantía?"
+o05,out_of_domain,juridico,0.8934,,¿Cómo se calcula la capacidad máxima de contratación de un ejecutor de obras?
+q19,in_domain,juridico,0.9002,True,¿Se pueden aprobar prestaciones adicionales de obra en vía de regularización?
+q09,in_domain,coloquial,0.901,True,"Si cometo una infracción, ¿la multa es menor por ser micro o pequeña empresa?"
+q17,in_domain,juridico,0.903,True,¿Qué valor legal tienen los actos y procedimientos que se realizan a través de la Pladicop?
+q14,in_domain,juridico,0.9088,True,¿A los cuántos años prescriben las infracciones administrativas previstas en la Ley?
+q21,in_domain,juridico,0.9103,True,¿Qué funciones tiene la junta de prevención y resolución de disputas?
+q12,in_domain,juridico,0.911,True,¿Hasta qué porcentaje del monto del contrato original pueden aprobarse prestaciones adicionales en bienes y servicios?
+q18,in_domain,juridico,0.9132,True,¿Quién revisa los requisitos de calificación cuando la evaluación de ofertas la hace un jurado?
+q13,in_domain,juridico,0.9251,True,¿Dentro de qué plazo debe interponerse el recurso de apelación contra el otorgamiento de la buena pro en un procedimiento de selección competitivo?
+q16,in_domain,juridico,0.9313,True,¿Se realiza evaluación técnica de las ofertas en la subasta inversa electrónica?

@@ -11,7 +11,7 @@
 - [x] **Fase 2** — Extracción por página, OCR (75 págs del DS 009-2025-EF), limpieza, reporte de calidad (revisión manual confirmada por la persona el 2026-09-21)
 - [~] **Fase 3** — Set de evaluación (`eval/preguntas.csv`) `[MANUAL pendiente: validar CADA paginas_esperadas con docs/eval_revision_manual.md; no empezar la Fase 4 hasta confirmarlo]`
 - [x] **Fase 4** — Chunking, embeddings, índice idempotente y reanudable (técnica completa; las **métricas de Recall son PROVISIONALES** hasta que se valide el set de la Fase 3)
-- [ ] **Fase 5** — Motor RAG: umbral, versiones, costo `[MANUAL: ANTHROPIC_API_KEY]`
+- [~] **Fase 5** — Motor RAG: umbral, versiones, costo `[MANUAL pendiente: poner ANTHROPIC_API_KEY en tarea1/.env para las llamadas reales]` (todo lo demás está hecho y probado con un LLM simulado)
 - [ ] **Fase 6** — Evaluación y comparación de embeddings local vs API `[MANUAL: OPENAI_API_KEY]`
 - [ ] **Fase 7** — Interfaz Streamlit
 - [ ] **Fase 8** — Innovación A: BM25 vs semántica
@@ -76,6 +76,18 @@ Tarea 2 (`tarea2/`): pendiente, se hará después; importará `rag_engine`.
 | Troceado | `c750_o100`: R@1 0,762 · **R@3 0,905** · R@5 0,905 |
 | Tests | 264 pasan (incluye 3 mutaciones que rompen la idempotencia, el aislamiento y la reanudación) |
 
+## Resultados de la Fase 5 hasta el punto manual (medidos el 2026-09-21; PROVISIONALES hasta validar el set)
+
+| Ítem | Resultado |
+|---|---|
+| Contrato | `responder(pregunta) -> ResultadoRAG` con todos los campos pedidos; errores en `error` (respuesta `None`), abstención en `abstuvo` + `motivo_abstencion` |
+| Umbral | **0,865** (máximo F-β con β = 0,5): 16 respuestas correctas, 1 indebida, 5 abstenciones incorrectas, F-β 0,899. Similitudes: in_domain 0,837–0,931 vs fuera de dominio 0,795–0,893 (se solapan casi por completo) |
+| Abstención por umbral (proceso real) | «¿Cómo se prepara un buen ceviche?» → `abstuvo=True`, motivo `umbral`, costo 0, **ninguna** línea en `llm_calls.jsonl` |
+| Error como error (proceso real) | pregunta del dominio sin `ANTHROPIC_API_KEY` → `error` con instrucciones, `respuesta=None`; tampoco se registra como llamada |
+| Versiones | en las dos direcciones, con datos reales (`docs/ejemplo_versiones.md`): las 5 preguntas de versiones producen aviso; `q05` fuerza el texto original de la p. 29 enlazado por título aunque el OCR leyó `143` por `113` |
+| Precios | Haiku 4.5: USD 1 / 5 por millón (verificado 2026-09-21, precio único a todas horas); estructura por ventanas probada con tabla ficticia pico/valle |
+| Tests | 367 pasan (las mutaciones de umbral, abstención, errores y hora de facturación rompen tests) |
+
 ## Decisiones registradas
 
 | Fase | Decisión | Evidencia / fuente | Fecha |
@@ -100,6 +112,10 @@ Tarea 2 (`tarea2/`): pendiente, se hará después; importará `rag_engine`.
 | 4 | ID de fragmento `documento:version:pNNNN:cNNN:hash-de-config`; se omite un ID existente solo si también coincide el hash del contenido | Si una página se reprocesa, sus fragmentos se re-embeben y los obsoletos del mismo documento se borran | 2026-09-21 |
 | 4 | Menciones de artículos guardadas por norma (`articulos_ley` / `articulos_reglamento`), descartando números fuera de rango (Ley ≤ 100, Reglamento ≤ 389) y otras normas | Cierra el riesgo de los hallazgos 6 y 10: 0 fragmentos con el «artículo 399» fantasma | 2026-09-21 |
 | 4 | La carga del modelo intenta primero solo desde el disco (`local_files_only`) | sentence-transformers hacía peticiones a Hugging Face en cada arranque; sin internet esperaba ~30 s de reintentos | 2026-09-21 |
+| 5 | Criterio del umbral: **F-β con β = 0,5** (la precisión pesa el doble que la cobertura) | «Responder mal es peor que no responder»; elige el centro de la meseta de máximo | 2026-09-21 |
+| 5 | Versiones **bidireccionales**: si se recupera el original se fuerza el DS 001; si se recupera el DS 001 se fuerza el texto original (enlace por número o por título) | Con un solo sentido, 4 de las 5 preguntas de versiones quedaban sin aviso y el modelo veía solo los numerales modificados como si fueran la regla completa | 2026-09-21 |
+| 5 | `llm.temperatura` es opcional (`null` = no se envía) | La referencia oficial dice que los modelos posteriores a Opus 4.6 rechazan `temperature` distinto de 1.0; el SDK 1.7 ya no lo tipa (se envía por `extra_body`) | 2026-09-21 |
+| 5 | Una llamada que falla ANTES de salir al proveedor (falta la clave) no se registra en `llm_calls.jsonl` | El log es un entregable: solo debe contener llamadas reales | 2026-09-21 |
 | 0 | README completo en `tarea1/README.md`; el README de la raíz solo recibe una sección con enlace | El repo aloja varias tareas; no se sobrescribe lo existente | 2026-09-21 |
 | 0 | Los módulos se crean en la fase que los necesita (sin archivos vacíos de relleno) | Historial de commits refleja el trabajo real | 2026-09-21 |
 
@@ -122,3 +138,7 @@ Tarea 2 (`tarea2/`): pendiente, se hará después; importará `rag_engine`.
 14. **Los puntajes de E5 están comprimidos:** para esas dos preguntas los 4 primeros vecinos (irrelevantes) tienen similitud 0,854–0,864. El barrido de umbral de la Fase 5 tendrá un margen estrecho; conviene barrer entre 0,70 y 0,95 con paso fino además del barrido 0–1.
 15. **`config.yaml` quedó vacío una vez** al editarlo con un script (causa no determinada; disco al 95 %). Se restauró desde git y desde entonces toda edición de la config usa escritura atómica y comprueba que el resultado no quede vacío. Conviene mantener disco libre.
 16. **El equipo perdió la resolución DNS durante la fase.** Los modelos ya estaban en caché, por eso todo siguió funcionando. La Fase 6 (OpenAI) y la 5 (Anthropic) necesitan red: si vuelve a fallar hay que resolverlo antes.
+
+17. **El umbral por similitud separa poco:** con estas similitudes comprimidas, el criterio F-β 0,5 elige 0,865 y pierde tres respuestas que sí se recuperaron bien (`q01`, `q08`, `q10`, entre 0,836 y 0,860), incluida la pregunta emblemática de la MYPE nueva. Como el LLM es una **segunda línea de defensa** (`contexto_suficiente`), quizá convenga un umbral más permisivo: se decidirá con `evaluation/eval_end_to_end.py` (unos 27 llamadas, ~centavos) cuando exista la clave.
+18. **Los avisos de versión pueden ser varios:** un fragmento del DS 001 que transcribe un solo artículo dispara su aviso, pero varios fragmentos recuperados de la modificatoria disparan varios (hasta 4 en `q18`). Es correcto, pero la interfaz debería agruparlos.
+19. **`tzdata` es necesario en Windows** (Python no trae base de zonas horarias del sistema): añadido a `requirements.txt`.
