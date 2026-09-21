@@ -1,0 +1,167 @@
+NORMAS LEGALES
+
+Miércoses 22 48 enero e 2005 / 85 ElPerano
+
+años, aplicando estándares internacionales de seguridad
+de la información, ciberseguridad y privacidad.
+
+Articulo 257. Obligatoriedad y valor legal del uso
+la Pladicop
+
+257.1 Los actos y procedimientos de los contratos
+menores y aquellos € ondientes a las tres fases
+del proceso de contratación dentro del ambito de la
+aplicación de la Ley y el Reglamento, se llevan a cabo a
+través de la Pladicop y tienen la misma validez y eficacia
+que las actuaciones y actos realizados por medios fisicos
+tradicionales, sustituyéndolos para todos los efectos
+legales.
+2572. Los actores mvolucrados en el proceso de
+contratación pueden hacer uso del documento nacional
+de identidad electrónico (Dile; para la ejecución de los
+procedimientos y actividades comprendidas en éste.
+cuando corresponda.
+2573. El MEF, OECE y Perú Compras notifican los
+actos que emiten en el ejercicio de sus funciones a través
+de la Pladicop, los que poseen la misma validez y eficacia,
+que los realizados por los medios manuales, en tanto se
+ajusien a los parámetros y requisitos establecidos en la
+normativa correspondiente.
+
+Articulo 258. Interoperabilidad de la Pladicop
+El Reniec, la Sunal, la Sunarp, el Indecopi, la SES,
+el Poder Judicial, la PNP, y la CGR, u otras entidades,
+brindan y facilitan la interoperabilidad de la información que:
+requieran los responsables de las herramientas digitales
+que forman parte de la Pladicop para su funcionamiento y
+mejora continua, incluyendo aquella que requiera el RNP
+a efectos que pueda verificar la información declarada
+por los proveedores, salvaguardando las reservas 0
+excepciónes previstas por ley. Las preciadas entidades
+publican y consumen servicios de información por medio
+de la PNI, conforme a la normativa de la materia
+
+CAPÍTULO 1
+ESTANDARIZACIÓN DE REQUERIMIENTOS
+
+Artículo 259. Estandarización de requerimientos
+
+259,1. Elproceso de estandarización de requerimientos
+es realizado por Perú Compras o los Ministerios, el cual
+finaliza con la aprobación de una ficha técnica o una ficha
+de homologación, según corresponda.
+259.2 Perú Compras gestiona y mantiene actualizados
+los listados de fichas técnicas y de fichas de homologación
+vigentes, los mismos que se publican en la Pladicop. enla
+cual que consta la fecha desde que son obligatonias.
+2593. Pen Compras promueve el proceso de
+estandarización de los requerimientos que contrata el
+Estado, priorizando aquellos de uso masivo, frecuente o
+estrategico, así como su impacto en el gasto público.
+2594 Perú Compras mediante directiva emite las
+disposiciones mecesañas que regulan la generación Y
+sostenimiento de los instrumentos para la estandarización
+de requerimientos. debiendo evaluar su actualización
+permanentemente.
+
+Articulo 260. Obligatoriedad de uso de la ficha
+técnica y de la ficha de homologación
+
+260.14 partir del dia hábil siguiente de la publicación en
+la Pladicop de la ficha técnica o ficha de homotogación, las
+entidades contratantes se encuentran obligadas a utilizar
+los citados instrumentos al elaborar sus requerimientos,
+siempre que no se haya convocado el procedimiento de
+selección correspondiente.
+260.2. Las resoluciones de exclusión de las fichas
+técnicas y de homologación surien efectos a parir del
+retiro de la ficha en la Pladicop.
+2603. La DEC es responsable de verificar en la
+Pladicop si el requerimiento o parte de su contenido se
+encuentra estandarizado.
+260.4. El requenmiento cuyo contenido total o parcial
+se encuentre estandarizado no puede ser modificado por
+la entidad contratante. Asimismo, no corresponde utilizar
+
+como factores de evaluación conceptos que impliquen la
+modificación de los aspectos del requerimiento que hayan
+sido estandarizados
+260.5. La ficha técnica y la ficha de homologación
+son de uso obligatorio para las entidades contratantes,
+con independencia del monto de contratación. incluyendo
+aquellas contrataciones que correspondan a supuestos
+excluidos o regimenes especiales de contratación
+260.6. La obligatoriedad del uso de las fichas incluye
+a las contrataciones de servicios de alquiler y a las
+contrataciones por paquete; asÍ como, a la formulación
+de proyectos de inversión y/o elaboración de expedientes
+técnicos, entre otros, y según corresponda, cuando se
+refieran o incluyan requerimientos estandarizados:
+
+Artículo 261. Publicación de proyecto de ficha
+técnica y ficha de homologación
+El proyecto de ficha técnica y ficha de homologación
+se publica en la sede digital de Perú Compras y el
+ministeño que ejecuta la homologación, así como en la
+Pladicop, incluyendo los documentos de información
+complementaria, según corresponda, a fin de recibir
+comentarios, recomendaciones y/u observaciones sobre
+su contenido, por un pertodo mínimo de veinte días hábiles.
+
+Articulo 262. Supuesto de excepción del uso de los
+instrumentos de estandarización
+La entidad contratante se encuentra exceptuada de
+utilizar los instrumentos de estandarización cuando haya
+convocado un procedimiento de selección con anterioridad
+a la publicación de la ficha técnica o la ficha homologación.
+La excepción culmina si el procedimiento se declara
+desierto, en cuyo caso el requerimiento debe adaptarse al
+instrumento de estandarización comespondiente.
+
+Artículo 263. Información y participación en los
+procesos de estandarización de requerimientos
+En el marco de la estandarización de requerimientos,
+Peú Compras o los minisierios pueden solicitar
+información uy opinión técnica a otras enfidades
+contratantes, las que se encuentran obligadas a brindar
+dicha información, comespondiendo a la autoridad de
+la gestión adminisirativa supervisar el cumplimiento de
+dicha obligación, bajo responsabilidad. Asimismo, genera
+espacios de coordinación € intercambio de información
+con el secior privado en el proceso de estandarización
+
+Artículo 264. Ficha técnica
+
+264.1. A través de la ficha lécnica se estandarizan los
+requerimientos de bienes y servicios comunes:
+2642 La ficha técnica es aprobada, modificada o
+excluida por el Jefe de Perú Compras mediante resolución,
+la cual es publicada en la Pladicop:
+2643 Los requerimientos de bienes y servicios
+que cuenten con ficha lécnica se contratan mediante
+el procedimiento de selección de Subasta Inversa
+Electrónica.
+264 4. Perú Compras, al aprobar o modificar una ficha
+técnica, puede disponer que la utilización del procedimiento
+de selección de Subasta Inversa: Electrónica no sea
+obligatoria, en cuyo caso la entidad contratante puede
+utilizar el procedimiento de selección que corresponda
+2645. La autoridad de la gestión administrativa
+puede aprobar que no se utilice la subasta inversa para
+la contratación de un bien o servicio que cuente con
+ficha técnica, cuando de la estrategia de contratación se
+determina que existe el fesgo objetivamente sustentado
+de que mo se presenten suficientes proveedores para
+realizar la puja correspondiente, debiendo remitir a Perú
+Compras la documentación que sustenta dicha aprobación
+en un plazo no mayor de cinco dias. hábiles de su
+aprobación. En este caso, la entidad contratante utiliza el
+procedimiento de selección que comesponda, para lo cual
+utiliza obligatoriamente la ficha técnica respectiva.
+
+Artículo 265. Documentos de
+complementaria de la Ficha Técnica
+Perú Compras genera y aprueba los documentos
+de información complementaria de las fichas técnicas,
+
+información
