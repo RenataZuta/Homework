@@ -142,3 +142,39 @@ def test_la_fabrica_lee_proveedor_y_modelo_de_la_config(monkeypatch):
         crear_embedder(cfg, proveedor="openai")
     with pytest.raises(ErrorEmbeddings, match="desconocido"):
         crear_embedder(cfg, proveedor="magia")
+
+
+# ── carga: primero desde el disco, sin depender de internet ──
+
+def test_la_carga_intenta_primero_solo_desde_el_disco(monkeypatch):
+    import sys, types
+    llamadas = []
+
+    class Falso:
+        max_seq_length = 512
+        def __init__(self, nombre, **kw):
+            llamadas.append(kw)
+        def get_sentence_embedding_dimension(self):
+            return 4
+
+    monkeypatch.setitem(sys.modules, "sentence_transformers", types.SimpleNamespace(SentenceTransformer=Falso))
+    LocalSentenceTransformers("cualquiera/modelo")
+    assert llamadas == [{"device": "cpu", "local_files_only": True}]            # una sola carga, sin red
+
+
+def test_si_no_esta_en_cache_reintenta_permitiendo_la_descarga(monkeypatch):
+    import sys, types
+    llamadas = []
+
+    class Falso:
+        max_seq_length = 512
+        def __init__(self, nombre, **kw):
+            llamadas.append(kw)
+            if kw.get("local_files_only"):
+                raise OSError("no está en la caché")
+        def get_sentence_embedding_dimension(self):
+            return 4
+
+    monkeypatch.setitem(sys.modules, "sentence_transformers", types.SimpleNamespace(SentenceTransformer=Falso))
+    LocalSentenceTransformers("cualquiera/modelo")
+    assert [bool(k.get("local_files_only")) for k in llamadas] == [True, False]

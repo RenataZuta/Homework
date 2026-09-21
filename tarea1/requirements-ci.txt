@@ -1,8 +1,12 @@
 # Dependencias livianas para GitHub Actions (sin OCR real, sin Streamlit, sin bots).
-# Se completa en la Fase 9.
+# PyTorch se instala aparte con el índice de CPU: pip install torch --index-url https://download.pytorch.org/whl/cpu
 pyyaml>=6.0
 python-dotenv>=1.0
 pytest>=8.0
 pymupdf>=1.24
 pillow>=10.0
 pytesseract>=0.3.10
+numpy>=1.26
+sentence-transformers>=3.0
+chromadb>=1.0
+matplotlib>=3.8

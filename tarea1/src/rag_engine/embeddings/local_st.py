@@ -13,15 +13,28 @@ class LocalSentenceTransformers(Embedder):
         self.name = modelo
         self.prefijo_consulta, self.prefijo_pasaje = prefijo_consulta, prefijo_pasaje
         if modelo_cargado is None:
-            try:
-                from sentence_transformers import SentenceTransformer
-                modelo_cargado = SentenceTransformer(modelo, device=dispositivo)
-            except Exception as exc:                                  # descarga, disco, nombre inválido…
-                raise ErrorEmbeddings(f"No se pudo cargar el modelo local '{modelo}': {exc}") from exc
+            modelo_cargado = self._cargar(modelo, dispositivo)
         self._m = modelo_cargado
         self.dim = int(self._m.get_sentence_embedding_dimension())
         # longitud máxima REAL del modelo (la de su sentence_bert_config), no la que diga la config
         self.max_tokens = int(self._m.max_seq_length)
+
+    @staticmethod
+    def _cargar(modelo: str, dispositivo: str):
+        """Primero SOLO desde el disco: así el arranque no depende de internet ni espera reintentos de red. Solo si el modelo no
+        está en la caché local se descarga (la primera vez)."""
+        try:
+            from sentence_transformers import SentenceTransformer
+        except ImportError as exc:
+            raise ErrorEmbeddings("Falta el paquete sentence-transformers (pip install sentence-transformers).") from exc
+        try:
+            return SentenceTransformer(modelo, device=dispositivo, local_files_only=True)
+        except Exception:
+            pass                                                  # no está en caché: se intenta descargar
+        try:
+            return SentenceTransformer(modelo, device=dispositivo)
+        except Exception as exc:                                  # sin red, disco lleno, nombre inválido…
+            raise ErrorEmbeddings(f"No se pudo cargar el modelo local '{modelo}': {exc}") from exc
 
     def _con_prefijo(self, textos: list[str], es_consulta: bool) -> list[str]:
         p = self.prefijo_consulta if es_consulta else self.prefijo_pasaje

@@ -1,6 +1,9 @@
 # Dependencias de tarea1. Se amplía fase por fase, solo con paquetes realmente instalados y probados;
 # al cerrar la Fase 7 se fijan versiones desde un venv limpio.
 # Python 3.12 recomendado (las ruedas de PyTorch/ChromaDB tardan en llegar a versiones muy nuevas).
+#
+# En Windows instala PyTorch para CPU ANTES que el resto (evita descargar la versión con CUDA, ~2 GB):
+#   pip install torch --index-url https://download.pytorch.org/whl/cpu
 
 # Configuración
 pyyaml>=6.0
@@ -11,5 +14,14 @@ pymupdf>=1.24
 pillow>=10.0
 pytesseract>=0.3.10          # requiere el ejecutable de Tesseract (ver README: TESSERACT_CMD)
 
-# Solo para scripts/ocr_benchmark.py (comparación de motores; arrastra PyTorch, ~1 GB). No hace falta para usar el proyecto.
+# Indexación y recuperación
+numpy>=1.26
+sentence-transformers>=3.0   # embeddings locales (multilingual-e5-small)
+chromadb>=1.0                # índice vectorial persistente
+openai>=1.0                  # solo para la comparación de embeddings por API (Fase 6)
+
+# Reportes y gráficos
+matplotlib>=3.8
+
+# Solo para scripts/ocr_benchmark.py (comparación de motores; arrastra PyTorch). No hace falta para usar el proyecto.
 # easyocr>=1.7

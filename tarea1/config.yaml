@@ -16,6 +16,7 @@ paths:
   processed: data/processed                      # texto por página (JSON), versionado
   articulos_modificados: data/processed/articulos_modificados.json
   index: data/index                              # índice persistente (regenerable)
+  index_cmp: data/index_cmp                      # índices temporales de las comparaciones (se borran y rehacen)
   eval_preguntas: eval/preguntas.csv
   eval_results: eval/results
   logs: logs
@@ -128,8 +129,12 @@ chunking:
   unidad: caracteres
   configuraciones:                 # se comparan con evaluation/compare_chunking.py
     - {nombre: c500_o50,   tamano: 500,  solapamiento: 50}
+    - {nombre: c750_o100,  tamano: 750,  solapamiento: 100}
+    - {nombre: c750_o100_sinctx, tamano: 750, solapamiento: 100, contexto_encabezado: false}    # ablación: sin encabezado de contexto
     - {nombre: c1000_o150, tamano: 1000, solapamiento: 150}
-  activa: c1000_o150               # PROVISIONAL (Fase 4): la ganadora según la tabla de Recall
+    - {nombre: c1500_o200, tamano: 1500, solapamiento: 200}
+    - {nombre: c1000_o150_sinctx, tamano: 1000, solapamiento: 150, contexto_encabezado: false}   # ablación: sin encabezado de contexto
+  activa: c750_o100                # DECIDIDO (Fase 4, 2026-09-21; provisional hasta validar el set): mayor Recall@3, ver eval/results/chunking_comparacion.md
   contexto_encabezado: true        # antepone al texto que se EMBEBE el último encabezado de artículo (aunque venga de la página anterior)
   articulo_maximo:                 # las menciones de artículo fuera de rango son errores de OCR ("Artículo 399") y se descartan
     ley: 100
@@ -152,10 +157,10 @@ embeddings:
     - {modelo: sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2, prefijo_consulta: "", prefijo_pasaje: ""}
     - {modelo: BAAI/bge-m3, prefijo_consulta: "", prefijo_pasaje: ""}
   local:
-    modelo: intfloat/multilingual-e5-small   # PROVISIONAL (Fase 4): verificar tarjeta del modelo
-    prefijo_consulta: "query: "              # PROVISIONAL (Fase 4): la familia E5 usa prefijos; se confirma
+    modelo: intfloat/multilingual-e5-small   # DECIDIDO (Fase 4): tarjeta verificada el 2026-09-21, ver docs/modelos_embeddings.md
+    prefijo_consulta: "query: "              # la tarjeta del modelo exige estos prefijos
     prefijo_pasaje: "passage: "
-    max_tokens: 512                          # PROVISIONAL (Fase 4): se mide cuántos fragmentos se truncan
+    max_tokens: 512                          # informativo: la longitud REAL la lee el código del propio modelo; 0 fragmentos truncados
     dispositivo: cpu
   openai:
     modelo: text-embedding-3-small
@@ -241,6 +246,7 @@ mensajes:
 # ── Evaluación (Fases 3, 4, 6, 9) ────────────────────────────────────────────
 eval:
   ks: [1, 3, 5]
+  set_validado: false              # pasa a true cuando la persona valida cada paginas_esperadas (Fase 3 [MANUAL]); mientras sea false, toda métrica se marca PROVISIONAL
   requisitos_set:                  # mínimos que exige el issue para el set de evaluación (validate_eval_set.py)
     in_domain: 15
     out_of_domain: 5

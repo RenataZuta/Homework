@@ -27,7 +27,7 @@ PROVEEDORES_EMBEDDINGS = ("local", "openai")
 # Claves que deben existir y no ser nulas. (Es estructura, no valores: los valores viven en config.yaml.)
 CLAVES_REQUERIDAS = (
     "paths.raw", "paths.manifest", "paths.processed", "paths.articulos_modificados",
-    "paths.index", "paths.eval_preguntas", "paths.eval_results", "paths.logs",
+    "paths.index", "paths.index_cmp", "paths.eval_preguntas", "paths.eval_results", "paths.logs",
     "paths.llm_calls_log", "paths.pricing", "paths.bot_db", "paths.docs",
     "descarga.user_agent", "descarga.timeout_segundos", "descarga.reintentos",
     "descarga.espera_reintento_segundos", "descarga.aviso_tamano_mb",
@@ -46,7 +46,7 @@ CLAVES_REQUERIDAS = (
     "mensajes.abstencion", "mensajes.error_generico", "mensajes.error_config",
     "mensajes.indice_faltante", "mensajes.aviso_version",
     "mensajes.limite_sesion", "mensajes.limite_global",
-    "eval.ks", "eval.requisitos_set.in_domain", "eval.requisitos_set.out_of_domain", "eval.requisitos_set.modificadas_2026", "eval.requisitos_set.coloquiales", "eval.min_recall_at_3", "eval.codigo_salida_fallo",
+    "eval.ks", "eval.set_validado", "eval.requisitos_set.in_domain", "eval.requisitos_set.out_of_domain", "eval.requisitos_set.modificadas_2026", "eval.requisitos_set.coloquiales", "eval.min_recall_at_3", "eval.codigo_salida_fallo",
     "bot.modo", "bot.limite_consultas_por_usuario_dia", "bot.zona_horaria_limite",
     "deploy.topes.consultas_por_sesion", "deploy.topes.consultas_globales_por_dia",
 )
