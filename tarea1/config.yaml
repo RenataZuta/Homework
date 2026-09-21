@@ -193,8 +193,9 @@ embeddings:
 # ── Recuperación (Fases 5 y 8) ───────────────────────────────────────────────
 retrieval:
   modo: semantico                  # semantico | bm25 | hibrido — PROVISIONAL (Fase 8)
+  busqueda: exacta                 # exacta | aproximada. La aproximada (HNSW) dio resultados distintos entre procesos con este corpus: ver retrieval/semantic.py
   top_k: 5
-  umbral_similitud: 0.865   # CALIBRADO (Fase 5, provisional hasta validar el set): ver eval/results/umbral_resumen.md
+  umbral_similitud: 0.835   # CALIBRADO con el LLM real (Fase 5, provisional hasta validar el set): ver eval/results/umbral_e2e_resumen.md
   umbral_calibrado: true          # pasa a true solo cuando existe el barrido en eval/results/
   versiones:
     activo: true                   # marcar fragmentos del Reglamento que mencionan artículos modificados y forzar los del DS 001
@@ -217,11 +218,13 @@ llm:
     jitter: 0.25                   # hasta +25 % de espera aleatoria para no sincronizar reintentos
   proveedores:
     gemini:
-      modelo: gemini-2.5-flash-lite   # ver PROGRESO.md (decisión 2026-09-21): capa gratuita vigente, estable, sin fecha de retiro anunciada
+      modelo: gemini-3.5-flash-lite   # CORREGIDO 2026-09-21: la API respondió que gemini-2.5-flash-lite «ya no está disponible para usuarios nuevos». Ver PROGRESO.md
       env_clave: GEMINI_API_KEY
       url_base: https://generativelanguage.googleapis.com/v1beta
       campo_esquema: responseJsonSchema   # alternativa documentada: responseSchema
-      thinking_budget: null               # null = no enviarlo (2.5 Flash-Lite no razona por defecto)
+      temperatura: null                   # anula llm.temperatura: la guía de Gemini 3 recomienda dejar el valor por defecto (1.0); bajarlo puede degradar el resultado
+      thinking_level: null                # null = no enviarlo (3.5 Flash-Lite razona por defecto en nivel «minimal»); valores documentados: minimal | low | medium | high
+      thinking_budget: null               # solo para la familia 2.5; la 3.x usa thinking_level
     anthropic:                        # CONSERVADO, sin usar: Anthropic no tiene capa gratuita (nivel debe ser 'pago')
       modelo: claude-haiku-4-5-20251001
       env_clave: ANTHROPIC_API_KEY

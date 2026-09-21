@@ -1,7 +1,7 @@
 """Cliente de Google Gemini (API REST ``generateContent``). Salida estructurada por JSON con esquema; devuelve ``RespuestaLLM`` o lanza ``ErrorLLM``.
 
 Campos usados (documentación oficial de la API, verificada el 2026-09-21): ``systemInstruction``, ``contents``, ``generationConfig``
-(``temperature``, ``maxOutputTokens``, ``responseMimeType``, ``responseJsonSchema``/``responseSchema``, ``thinkingConfig.thinkingBudget``),
+(``temperature``, ``maxOutputTokens``, ``responseMimeType``, ``responseJsonSchema``/``responseSchema``, ``thinkingConfig.thinkingLevel``/``thinkingBudget``),
 respuesta ``candidates[].content.parts[].text`` y ``finishReason``, ``promptFeedback.blockReason``, ``usageMetadata`` (``promptTokenCount``,
 ``candidatesTokenCount``, ``thoughtsTokenCount``). Los tokens de razonamiento se suman a los de salida (se facturan como salida).
 La clave viaja en la cabecera ``x-goog-api-key``, nunca en la URL.
@@ -40,8 +40,9 @@ class ClienteGemini(ClienteLLM):
                       self.ajustes.get("campo_esquema", "responseJsonSchema"): esquema.json_schema()}
         if self.ajustes.get("temperatura") is not None:
             generacion["temperature"] = self.ajustes["temperatura"]
-        if self.ajustes.get("thinking_budget") is not None:
-            generacion["thinkingConfig"] = {"thinkingBudget": self.ajustes["thinking_budget"]}
+        pensar = {k: v for k, v in (("thinkingLevel", self.ajustes.get("thinking_level")), ("thinkingBudget", self.ajustes.get("thinking_budget"))) if v is not None}
+        if pensar:                                         # 3.x usa thinkingLevel; 2.5 usa thinkingBudget
+            generacion["thinkingConfig"] = pensar
         return {"systemInstruction": {"parts": [{"text": sistema}]}, "contents": [{"role": "user", "parts": [{"text": usuario}]}],
                 "generationConfig": generacion}
 

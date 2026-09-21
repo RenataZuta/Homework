@@ -11,17 +11,18 @@ from rag_engine.llm.gemini_client import ClienteGemini
 BASE = cargar_config(cargar_env=False)
 
 
-def test_el_proveedor_por_defecto_es_gemini_gratuito_con_flash_lite():
+def test_el_proveedor_por_defecto_es_gemini_gratuito_con_flash_lite_3_5():
     aj = ajustes_llm(BASE)
-    assert (aj["provider"], aj["nivel"], aj["modelo"], aj["env_clave"]) == ("gemini", "gratuito", "gemini-2.5-flash-lite", "GEMINI_API_KEY")
+    assert (aj["provider"], aj["nivel"], aj["modelo"], aj["env_clave"]) == ("gemini", "gratuito", "gemini-3.5-flash-lite", "GEMINI_API_KEY")
     assert aj["max_tokens"] >= 1 and "limites" not in aj and "proveedores" not in aj
+    assert aj["temperatura"] is None                          # Gemini 3 recomienda la temperatura por defecto: el ajuste del proveedor anula el común
 
 
 def test_con_gemini_se_crea_el_cliente_de_gemini_con_throttle_y_reintentos(monkeypatch):
     monkeypatch.setenv("GEMINI_API_KEY", "AI" + "za" + "x" * 35)
     c = crear_cliente_llm(BASE)
     assert isinstance(c, ClienteConPolitica) and isinstance(c._cliente, ClienteGemini)
-    assert (c.proveedor, c.modelo) == ("gemini", "gemini-2.5-flash-lite")
+    assert (c.proveedor, c.modelo) == ("gemini", "gemini-3.5-flash-lite")
     assert c.limitador.rpm == BASE.get("llm.limites.rpm") and c.politica.reintentos == BASE.get("llm.limites.reintentos")
 
 

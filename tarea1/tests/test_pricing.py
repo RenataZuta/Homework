@@ -117,9 +117,10 @@ def test_la_tabla_real_de_gemini_tiene_precio_de_referencia_con_fuente_y_fecha()
     ruta = Path(__file__).resolve().parents[1] / "pricing.yaml"
     t = cargar_tabla(ruta, "gemini")
     assert t.fecha_verificacion == "2026-09-21" and "ai.google.dev" in t.fuente
-    precios = {t.precio_en(lima(h), "gemini-2.5-flash-lite") for h in (0, 6, 12, 18, 23)}
-    assert precios == {(0.10, 0.40)}                                # precio de PAGO (referencia); la capa gratuita cobra 0 (llm.nivel)
-    assert t.costo("gemini-2.5-flash-lite", 2000, 300, lima(15)) == pytest.approx((2000 * 0.10 + 300 * 0.40) / 1e6)
+    precios = {t.precio_en(lima(h), "gemini-3.5-flash-lite") for h in (0, 6, 12, 18, 23)}
+    assert precios == {(0.30, 2.50)}                                # precio de PAGO (referencia); la capa gratuita cobra 0 (llm.nivel)
+    assert t.costo("gemini-3.5-flash-lite", 2000, 300, lima(15)) == pytest.approx((2000 * 0.30 + 300 * 2.50) / 1e6)
+    assert t.precio_en(lima(12), "gemini-2.5-flash-lite") == (0.10, 0.40)       # el modelo anterior sigue tabulado (ya no lo admite la API en cuentas nuevas)
     b = yaml.safe_load(ruta.read_text(encoding="utf-8"))["gemini"]
     assert "Free of charge" in b["nota_nivel_gratuito"] and "Used to improve" in b["nota_nivel_gratuito"]
 

@@ -66,9 +66,11 @@ def test_temperatura_y_thinking_solo_se_envian_si_estan_definidos():
     t = Transporte((200, cuerpo_ok(), {}))
     cliente(t, temperatura=None).generar("s", "u", ESQUEMA)
     cliente(t, temperatura=0.3, thinking_budget=0).generar("s", "u", ESQUEMA)
-    sin, con = t.llamadas[0]["cuerpo"]["generationConfig"], t.llamadas[1]["cuerpo"]["generationConfig"]
+    cliente(t, temperatura=None, thinking_level="low").generar("s", "u", ESQUEMA)
+    sin, con, nivel = (t.llamadas[i]["cuerpo"]["generationConfig"] for i in range(3))
     assert "temperature" not in sin and "thinkingConfig" not in sin
     assert con["temperature"] == 0.3 and con["thinkingConfig"] == {"thinkingBudget": 0}
+    assert nivel["thinkingConfig"] == {"thinkingLevel": "low"} and "temperature" not in nivel          # la familia 3.x usa thinkingLevel
 
 
 def test_el_campo_del_esquema_es_configurable():

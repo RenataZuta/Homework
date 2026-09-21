@@ -18,6 +18,7 @@ from pathlib import Path
 from indexing.chunking import ConfigChunk, Fragmento, trocear_documento
 from rag_engine.embeddings.base import Embedder
 from rag_engine.retrieval.indice import abrir_cliente, crear_o_abrir, nombre_coleccion
+from rag_engine.retrieval.semantic import olvidar_matrices
 
 
 @dataclass
@@ -85,6 +86,7 @@ def construir_indice(embedder: Embedder, chunk: ConfigChunk, docs_paginas: dict[
             mostrar(f"  lote {i // lote_upsert + 1}/{-(-len(pendientes) // lote_upsert)}: {len(lote)} fragmentos guardados")
     except KeyboardInterrupt:
         res.interrumpido = True
+    olvidar_matrices()                       # ninguna consulta posterior debe usar la matriz en memoria de antes de esta indexación
     res.total_en_indice = col.count()
     res.segundos = time.perf_counter() - t0
     res.embeddings = embedder.contabilidad.como_dict()

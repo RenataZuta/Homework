@@ -59,16 +59,23 @@ gemini:
   moneda: USD
   unidad: por millón de tokens (MTok), texto, nivel de pago estándar
   nota_nivel_gratuito: >
-    La página de precios marca «Free of charge» para gemini-2.5-flash-lite y, en esa columna, «Used to improve our products: Yes»: en la capa
+    La página de precios marca «Free of charge» para gemini-3.5-flash-lite (y para gemini-2.5-flash-lite, aunque la API ya no lo admite en cuentas nuevas) y, en esa columna, «Used to improve our products: Yes»: en la capa
     gratuita Google puede usar el contenido enviado para mejorar sus productos (ver README, sección Privacidad). Los límites de uso
     (RPM/TPM/RPD) NO figuran en la documentación pública: se consultan en https://aistudio.google.com/rate-limit.
   nota_horarios: >
     La página publica UN precio por modelo, sin tarifas por hora; por eso hay una sola ventana 00:00-24:00. La estructura por ventanas se
     conserva y está probada con una tabla ficticia de horas pico y valle. No se aplican descuentos de Batch ni de caché de contexto.
   nota_tokens: >
-    Los tokens de razonamiento (thoughtsTokenCount) se suman a los de salida. La entrada de audio tiene otro precio; este proyecto solo envía texto.
+    Los tokens de razonamiento (thoughtsTokenCount) se suman a los de salida («Output price (including thinking tokens)»). gemini-3.5-flash-lite razona por defecto en nivel «minimal». La entrada de audio tiene otro precio; este proyecto solo envía texto.
   modelos:
-    gemini-2.5-flash-lite:
+    gemini-3.5-flash-lite:                 # modelo ACTIVO. Salida: «Output price (including thinking tokens)»
+      ventanas:
+        - zona_horaria: America/Lima
+          hora_inicio: "00:00"
+          hora_fin: "24:00"
+          usd_por_millon_entrada: 0.30
+          usd_por_millon_salida: 2.50
+    gemini-2.5-flash-lite:                 # NO usable con cuentas nuevas (la API lo rechazó el 2026-09-21); se conserva su precio publicado como referencia histórica
       ventanas:
         - zona_horaria: America/Lima
           hora_inicio: "00:00"

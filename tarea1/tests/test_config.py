@@ -239,3 +239,11 @@ def test_el_proveedor_de_embeddings_gemini_es_valido_y_necesita_su_modelo(tmp_pa
 def test_el_aviso_de_privacidad_esta_en_la_config_y_dice_lo_esencial():
     msg = " ".join(cargar_config(cargar_env=False)["mensajes.aviso_privacidad"].split())
     assert "Google" in msg and "mejorar sus productos" in msg and "normas públicas" in msg
+
+
+def test_el_tipo_de_busqueda_debe_ser_exacta_o_aproximada(tmp_path):
+    assert cargar_config(_escribir_variante(tmp_path, lambda d: _asignar(d, "retrieval.busqueda", "aproximada")), cargar_env=False)["retrieval.busqueda"] == "aproximada"
+    with pytest.raises(ConfigError, match="retrieval.busqueda"):
+        cargar_config(_escribir_variante(tmp_path, lambda d: _asignar(d, "retrieval.busqueda", "magica")), cargar_env=False)
+    with pytest.raises(ConfigError, match="retrieval.busqueda"):
+        cargar_config(_escribir_variante(tmp_path, lambda d: _borrar(d, "retrieval.busqueda")), cargar_env=False)

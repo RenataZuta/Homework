@@ -39,7 +39,7 @@ CLAVES_REQUERIDAS = (
     "chunking.unidad", "chunking.configuraciones", "chunking.activa", "chunking.contexto_encabezado",
     "chunking.articulo_maximo.ley", "chunking.articulo_maximo.reglamento", "indexacion.coleccion", "indexacion.lote_upsert",
     "embeddings.proveedor", "embeddings.batch", "embeddings.normalizar",
-    "retrieval.modo", "retrieval.top_k", "retrieval.umbral_similitud", "retrieval.umbral_calibrado", "retrieval.versiones.activo", "retrieval.versiones.max_fragmentos_forzados", "retrieval.versiones.max_originales_forzados",
+    "retrieval.modo", "retrieval.busqueda", "retrieval.top_k", "retrieval.umbral_similitud", "retrieval.umbral_calibrado", "retrieval.versiones.activo", "retrieval.versiones.max_fragmentos_forzados", "retrieval.versiones.max_originales_forzados",
     "llm.provider", "llm.nivel", "llm.max_tokens", "llm.timeout_segundos",
     "llm.limites.rpm", "llm.limites.reintentos", "llm.limites.espera_inicial_s", "llm.limites.factor_espera", "llm.limites.espera_max_s", "llm.limites.jitter",
     "embeddings.limites.rpm", "embeddings.limites.reintentos", "embeddings.limites.espera_inicial_s", "embeddings.limites.factor_espera",
@@ -138,6 +138,10 @@ def _validar(datos: dict[str, Any]) -> list[str]:
     modo = _buscar(datos, "retrieval.modo")
     if modo not in (_FALTA, None) and modo not in MODOS_RETRIEVAL:
         errores.append(f"'retrieval.modo' debe ser uno de {MODOS_RETRIEVAL}, no '{modo}'")
+
+    busqueda = _buscar(datos, "retrieval.busqueda")
+    if busqueda not in (_FALTA, None) and busqueda not in ("exacta", "aproximada"):
+        errores.append(f"'retrieval.busqueda' debe ser 'exacta' o 'aproximada', no '{busqueda}'")
 
     proveedor = _buscar(datos, "embeddings.proveedor")
     if proveedor not in (_FALTA, None):

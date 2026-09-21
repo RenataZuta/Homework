@@ -57,10 +57,10 @@ def test_pregunta_del_dominio_se_responde_con_fuentes_costo_y_log(entorno):
     r = motor(entorno, llm).responder(P_PAGO)
     assert r.error is None and r.abstuvo is False and r.motivo_abstencion is None and r.respuesta.startswith("Respuesta")
     assert (r.documento if False else r.fuentes[0].documento, r.fuentes[0].pagina) == ("ley_32069", 32)
-    assert r.tokens_entrada == 2000 and r.tokens_salida == 300 and r.modelo == "gemini-2.5-flash-lite" and r.proveedor == "gemini"
+    assert r.tokens_entrada == 2000 and r.tokens_salida == 300 and r.modelo == "gemini-3.5-flash-lite" and r.proveedor == "gemini"
     assert r.mejor_similitud >= 0.3 and len(llm.llamadas) == 1
-    # capa gratuita: costo REAL 0; costo de REFERENCIA con el precio de pago de pricing.yaml (0,10 / 0,40 USD por millón)
-    assert r.costo_usd_real == 0.0 and r.costo_usd_referencia == pytest.approx((2000 * 0.10 + 300 * 0.40) / 1e6)
+    # capa gratuita: costo REAL 0; costo de REFERENCIA con el precio de pago de pricing.yaml (0,30 / 2,50 USD por millón)
+    assert r.costo_usd_real == 0.0 and r.costo_usd_referencia == pytest.approx((2000 * 0.30 + 300 * 2.50) / 1e6)
     regs = leer_registros(entorno["log"])
     assert len(regs) == 1 and regs[0]["exito"] is True and regs[0]["tokens_in"] == 2000 and regs[0]["nivel"] == "gratuito" and regs[0]["proveedor"] == "gemini"
     assert regs[0]["costo_usd_real"] == 0.0 and regs[0]["costo_usd_referencia"] == pytest.approx(r.costo_usd_referencia) and regs[0]["intentos"] == 1
@@ -294,3 +294,18 @@ def test_el_motor_se_carga_una_sola_vez_por_proceso(monkeypatch, entorno):
     responder(P_PAGO, cfg)
     assert llamadas == [1]
     motor_mod._MOTORES.clear()
+
+
+# ── tipo de búsqueda (exacta por defecto: la aproximada dio resultados distintos entre procesos) ──
+
+@pytest.mark.parametrize("valor, exacta", [("exacta", True), ("aproximada", False)])
+def test_el_motor_pide_la_busqueda_que_indica_la_config(entorno, monkeypatch, valor, exacta):
+    pedidos = []
+    original = motor_mod.buscar
+    monkeypatch.setattr(motor_mod, "buscar", lambda *a, **k: (pedidos.append(k.get("exacta")), original(*a, **k))[1])
+    motor(entorno, LLMFalso(), **{"retrieval.busqueda": valor}).responder(P_PAGO)
+    assert pedidos == [exacta]
+
+
+def test_la_config_por_defecto_usa_busqueda_exacta():
+    assert BASE.get("retrieval.busqueda") == "exacta"

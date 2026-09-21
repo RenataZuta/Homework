@@ -162,7 +162,7 @@ class MotorRAG:
         if not pregunta or not pregunta.strip():
             return self._resultado_error("La pregunta está vacía.", t0, ts, tipo="pregunta_vacia")
         try:
-            recuperados = buscar(self.coleccion, self.embedder, pregunta, self.cfg.get("retrieval.top_k"))
+            recuperados = buscar(self.coleccion, self.embedder, pregunta, self.cfg.get("retrieval.top_k"), exacta=self.cfg.get("retrieval.busqueda") == "exacta")
         except Exception as exc:
             return self._resultado_error(f"No se pudo consultar el índice: {exc}", t0, ts, tipo="indice")
         mejor = recuperados[0].similitud if recuperados else 0.0

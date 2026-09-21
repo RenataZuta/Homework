@@ -63,7 +63,7 @@ class LLMFalso:
     """Imita a un ClienteLLM: registra lo que recibe y devuelve lo configurado (o lanza un ErrorLLM)."""
 
     def __init__(self, respuesta="Respuesta [Ley 32069, p. 32].", citas=None, suficiente=True, tokens=(2000, 300), error: ErrorLLM | None = None,
-                 momento: datetime | None = None, modelo="gemini-2.5-flash-lite", desde_cache=False, intentos=1):
+                 momento: datetime | None = None, modelo="gemini-3.5-flash-lite", desde_cache=False, intentos=1):
         self.llamadas: list[dict] = []
         self._r = dict(respuesta=respuesta, citas=citas if citas is not None else [{"documento": "Ley 32069", "pagina": 32}], suficiente=suficiente)
         self.tokens, self.error = tokens, error
