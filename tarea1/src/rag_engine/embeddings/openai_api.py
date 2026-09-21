@@ -4,6 +4,21 @@ from __future__ import annotations
 import numpy as np
 
 from rag_engine.embeddings.base import Embedder, ErrorEmbeddings
+from rag_engine.llm.cost_log import sanear
+
+
+def _tipo_error(exc: Exception) -> str:
+    """Clasifica un error del SDK de OpenAI. ``cuota_insuficiente`` = la cuenta no tiene crédito (código ``insufficient_quota``): NO se reintenta ni se cobra."""
+    codigo, nombre, texto = getattr(exc, "code", None), type(exc).__name__, str(exc).lower()
+    if codigo == "insufficient_quota" or "insufficient_quota" in texto or "exceeded your current quota" in texto:
+        return "cuota_insuficiente"
+    if nombre == "RateLimitError" or getattr(exc, "status_code", None) == 429:
+        return "limite_de_tasa"
+    if nombre in ("AuthenticationError", "PermissionDeniedError"):
+        return "autenticacion"
+    if nombre in ("APIConnectionError", "APITimeoutError"):
+        return "red"
+    return "otro"
 
 
 class OpenAIEmbeddings(Embedder):
@@ -18,7 +33,7 @@ class OpenAIEmbeddings(Embedder):
         self.prefijo_consulta, self.prefijo_pasaje = prefijo_consulta, prefijo_pasaje
         if cliente is None:
             if not api_key:
-                raise ErrorEmbeddings("Falta OPENAI_API_KEY para usar embeddings de OpenAI.")
+                raise ErrorEmbeddings("Falta OPENAI_API_KEY para usar embeddings de OpenAI.", tipo="autenticacion", solicitud_enviada=False)
             from openai import OpenAI
             cliente = OpenAI(api_key=api_key)
         self._c = cliente
@@ -36,7 +51,7 @@ class OpenAIEmbeddings(Embedder):
                 args["dimensions"] = self.dimensiones
             r = self._c.embeddings.create(**args)
         except Exception as exc:
-            raise ErrorEmbeddings(f"Falló la llamada a la API de embeddings ({type(exc).__name__}): {exc}") from exc
+            raise ErrorEmbeddings(f"Falló la llamada a la API de embeddings ({type(exc).__name__}): {sanear(str(exc))}", tipo=_tipo_error(exc)) from exc
         matriz = np.array([d.embedding for d in sorted(r.data, key=lambda d: d.index)], dtype=np.float32)
         tokens = int(getattr(r.usage, "total_tokens", 0) or 0)
         costo = None if self.precio is None else tokens * self.precio / 1_000_000

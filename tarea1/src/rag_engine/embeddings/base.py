@@ -17,9 +17,15 @@ from dataclasses import dataclass
 
 import numpy as np
 
+from rag_engine.limites import ErrorProveedor
 
-class ErrorEmbeddings(Exception):
-    """Fallo del proveedor de embeddings (red, clave, cuota…). Se propaga como error, nunca como un vector falso."""
+
+class ErrorEmbeddings(ErrorProveedor):
+    """Fallo del proveedor de embeddings (red, clave, cuota…). Se propaga como error, nunca como un vector falso.
+    ``tipo``: autenticacion | limite_de_tasa | cuota_agotada | cuota_insuficiente (sin crédito en la cuenta) | red | servidor | solicitud | otro."""
+
+    def __init__(self, mensaje: str, tipo: str = "otro", *, solicitud_enviada: bool = True, espera_sugerida_s: float | None = None):
+        super().__init__(tipo, mensaje, solicitud_enviada=solicitud_enviada, espera_sugerida_s=espera_sugerida_s)
 
 
 @dataclass
@@ -52,6 +58,7 @@ class Embedder(ABC):
     name: str
     dim: int
     max_tokens: int
+    tokens_reportados: bool = True      # False si la API no informa los tokens usados (p. ej. Gemini): la contabilidad los deja en 0 y así se declara
 
     def __init__(self, batch: int = 32, normalizar: bool = True):
         self.batch = batch

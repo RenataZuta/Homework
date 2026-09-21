@@ -128,6 +128,33 @@ def test_openai_un_fallo_de_la_api_es_un_error_no_un_vector():
         e.embed_query("hola")
 
 
+@pytest.mark.parametrize("nombre, extra, tipo", [
+    ("RateLimitError", {"code": "insufficient_quota"}, "cuota_insuficiente"),          # sin crédito: NO se reintenta ni se le pide pagar al usuario
+    ("RateLimitError", {"status_code": 429}, "limite_de_tasa"), ("AuthenticationError", {}, "autenticacion"),
+    ("APIConnectionError", {}, "red"), ("Extraño", {}, "otro"),
+])
+def test_openai_clasifica_sus_errores_y_detecta_insufficient_quota(nombre, extra, tipo):
+    exc = type(nombre, (Exception,), {})("You exceeded your current quota" if extra.get("code") else "fallo")
+    for k, v in extra.items():
+        setattr(exc, k, v)
+
+    class Falla:
+        embeddings = SimpleNamespace(create=lambda **kw: (_ for _ in ()).throw(exc))
+    with pytest.raises(ErrorEmbeddings) as e:
+        OpenAIEmbeddings("text-embedding-3-small", cliente=Falla()).embed_query("hola")
+    assert e.value.tipo == tipo
+
+
+def test_openai_reconoce_insufficient_quota_aunque_solo_venga_en_el_texto():
+    exc = RuntimeError("Error code: 429 - {'error': {'code': 'insufficient_quota'}}")
+
+    class Falla:
+        embeddings = SimpleNamespace(create=lambda **kw: (_ for _ in ()).throw(exc))
+    with pytest.raises(ErrorEmbeddings) as e:
+        OpenAIEmbeddings("text-embedding-3-small", cliente=Falla()).embed_query("hola")
+    assert e.value.tipo == "cuota_insuficiente"
+
+
 def test_openai_sin_clave_falla_con_mensaje_claro():
     with pytest.raises(ErrorEmbeddings, match="OPENAI_API_KEY"):
         OpenAIEmbeddings("text-embedding-3-small", api_key=None)
