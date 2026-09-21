@@ -71,13 +71,46 @@ descarga:
 # ── Extracción y OCR (Fase 2) ────────────────────────────────────────────────
 extraccion:
   umbral_caracteres_ocr: 100       # PROVISIONAL (Fase 2): páginas con menos caracteres útiles van a OCR
-  dpi: 300                         # PROVISIONAL (Fase 2): resolución al rasterizar para OCR
+  dpi: 200                         # DECIDIDO (Fase 2, 2026-09-21): más palabras correctas (620) sin omitir texto; ver eval/results/ocr_benchmark.md
   idioma_ocr: spa
-  motor_ocr: tesseract             # PROVISIONAL (Fase 2): lo decide el mini-benchmark
+  motor_ocr: tesseract             # DECIDIDO (Fase 2, 2026-09-21): 6.7x más rápido y ~2x más exacto que EasyOCR
+  ocr:
+    banda_cabecera: 0.10           # PROVISIONAL (Fase 2): fracción superior de la página que es cabecera (R1o)
+  prioridad_ocr:                   # páginas a procesar PRIMERO (representativas por capítulo); el resto sigue en orden
+    ds_009_2025_ef: []
   rangos_paginas:                  # páginas del PDF (base 1) a procesar; null = todas
     ley_32069: null
     ds_001_2026_ef: null
     ds_009_2025_ef: null           # PROVISIONAL (Fase 2): subconjunto OCR (≥ 60 páginas), ver docs/ocr_subset.md
+  codigo_fin_norma:                # el PDF de El Peruano arrastra texto de OTRAS normas tras este código (regla R3)
+    ds_001_2026_ef: "2474920-3"
+  mapeo:                           # paso de exploración de estructura del DS 009 (scripts/map_structure.py)
+    motor: tesseract
+    dpi: 200                       # el mapa a 96 DPI cubrió solo 71 % de los artículos; a 200 DPI se lee mejor
+    min_caracteres_texto: 1500     # por debajo, la página es portada/formulario/tabla ("escasa_lectura")
+    palabras_clave:                # conteos por página, para priorizar contenido útil a una MYPE
+      mype: ["mype", "micro y pequena", "microempresa", "pequena empresa"]
+      contratacion_menor: ["contratacion menor", "hasta ocho", "8 uit", "ocho (8) uit", "contratos menores"]
+      registro_proveedores: ["registro nacional de proveedores", "rnp", "inscripcion", "proveedor"]
+      seleccion: ["procedimiento de seleccion", "subasta inversa", "licitacion publica", "concurso publico", "comparacion de precios"]
+      garantias_penalidades: ["garantia", "penalidad", "adelanto", "pago", "resolucion del contrato"]
+      controversias: ["arbitraje", "conciliacion", "junta de prevencion", "controversia", "recurso de apelacion"]
+      pladicop: ["pladicop", "catalogo electronico", "acuerdo marco", "compra corporativa"]
+  subconjunto:                     # selección de páginas del DS 009 para OCR (scripts/plan_ocr.py)
+    paginas_minimo: 60             # requisito del proyecto
+    paginas_objetivo: 75           # PROVISIONAL (Fase 2): se ajusta con el conteo de páginas obligatorias
+    max_articulo: 400              # las interpolaciones artículo->página no pasan de aquí
+    pesos: {modificados: 10.0, mype: 1.0}   # puntaje = 10 × artículos modificados que empiezan en la página + densidad de palabras clave
+  benchmark:                       # mini-benchmark de OCR (scripts/ocr_benchmark.py)
+    documento: ds_009_2025_ef
+    paginas: [10, 60, 100]         # páginas de TEXTO (inicio, medio y final del Reglamento): se promedian
+    paginas_control: [150]         # formulario/tabla: se reporta aparte, NO entra en las medias
+    variantes:
+      - {motor: tesseract, dpi: 96}     # 96 = resolución nativa del escaneo
+      - {motor: tesseract, dpi: 150}
+      - {motor: tesseract, dpi: 200}
+      - {motor: tesseract, dpi: 300}
+      - {motor: easyocr, dpi: 200}   # 300 DPI se probó antes: no mejoraba y tardaba 47 s/pág
 
 # ── Chunking (Fase 4) ────────────────────────────────────────────────────────
 chunking:
