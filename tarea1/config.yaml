@@ -130,12 +130,27 @@ chunking:
     - {nombre: c500_o50,   tamano: 500,  solapamiento: 50}
     - {nombre: c1000_o150, tamano: 1000, solapamiento: 150}
   activa: c1000_o150               # PROVISIONAL (Fase 4): la ganadora según la tabla de Recall
+  contexto_encabezado: true        # antepone al texto que se EMBEBE el último encabezado de artículo (aunque venga de la página anterior)
+  articulo_maximo:                 # las menciones de artículo fuera de rango son errores de OCR ("Artículo 399") y se descartan
+    ley: 100
+    reglamento: 389
+
+# ── Indexación (Fase 4) ──────────────────────────────────────────────────────
+indexacion:
+  coleccion: normas                # prefijo del nombre de la colección; se le añaden la config de chunking y un hash del modelo
+  lote_upsert: 64                  # fragmentos por commit: una interrupción pierde a lo sumo un lote
+  bins_histograma: 12
 
 # ── Embeddings (Fases 4 y 6): cambiar de modelo = editar solo esta sección ───
 embeddings:
   proveedor: local                 # local | openai
   batch: 32
   normalizar: true                 # vectores unitarios -> similitud coseno
+  candidatos_locales:              # se comparan en evaluation/select_local_model.py (tarjetas verificadas el 2026-09-21)
+    - {modelo: intfloat/multilingual-e5-small, prefijo_consulta: "query: ", prefijo_pasaje: "passage: "}
+    - {modelo: intfloat/multilingual-e5-base, prefijo_consulta: "query: ", prefijo_pasaje: "passage: "}
+    - {modelo: sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2, prefijo_consulta: "", prefijo_pasaje: ""}
+    - {modelo: BAAI/bge-m3, prefijo_consulta: "", prefijo_pasaje: ""}
   local:
     modelo: intfloat/multilingual-e5-small   # PROVISIONAL (Fase 4): verificar tarjeta del modelo
     prefijo_consulta: "query: "              # PROVISIONAL (Fase 4): la familia E5 usa prefijos; se confirma
