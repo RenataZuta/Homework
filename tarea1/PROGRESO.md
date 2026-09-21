@@ -11,8 +11,8 @@
 - [x] **Fase 2** — Extracción por página, OCR (75 págs del DS 009-2025-EF), limpieza, reporte de calidad (revisión manual confirmada por la persona el 2026-09-21)
 - [~] **Fase 3** — Set de evaluación (`eval/preguntas.csv`) `[MANUAL pendiente: validar CADA paginas_esperadas con docs/eval_revision_manual.md; no empezar la Fase 4 hasta confirmarlo]`
 - [x] **Fase 4** — Chunking, embeddings, índice idempotente y reanudable (técnica completa; las **métricas de Recall son PROVISIONALES** hasta que se valide el set de la Fase 3)
-- [~] **Fase 5** — Motor RAG: umbral, versiones, costo `[MANUAL pendiente: poner ANTHROPIC_API_KEY en tarea1/.env para las llamadas reales]` (todo lo demás está hecho y probado con un LLM simulado)
-- [~] **Fase 6** — Evaluación y comparación de embeddings local vs API `[MANUAL pendiente: poner OPENAI_API_KEY en tarea1/.env y ejecutar `PYTHONPATH=src python -m evaluation.compare_embeddings`]` (`run_eval` y la fila local ya están medidos)
+- [~] **Fase 5** — Motor RAG: umbral, versiones, costo `[MANUAL pendiente: GEMINI_API_KEY (gratis, Google AI Studio) en tarea1/.env para las llamadas reales]` (todo lo demás está hecho y probado con un LLM simulado; proveedor cambiado a Gemini el 2026-09-21, ver más abajo)
+- [~] **Fase 6** — Evaluación y comparación de embeddings local vs API `[MANUAL pendiente: claves gratuitas en tarea1/.env (GEMINI_API_KEY; OPENAI_API_KEY opcional, sin crédito) y ejecutar `PYTHONPATH=src python -m evaluation.compare_embeddings`]` (`run_eval` y la fila local ya están medidos; las filas de API quedan «pendiente»)
 - [ ] **Fase 7** — Interfaz Streamlit
 - [ ] **Fase 8** — Innovación A: BM25 vs semántica
 - [ ] **Fase 9** — Innovación B: GitHub Actions con umbral de Recall@3
@@ -98,6 +98,24 @@ Tarea 2 (`tarea2/`): pendiente, se hará después; importará `rag_engine`.
 | Documentación | `docs/metricas_evaluacion.md`: qué mide cada métrica, qué no dice y por qué la evaluación a USD 0 permite correrla en cada cambio |
 | Tests | 380 pasan |
 
+## Cambio de proveedor de generación (2026-09-21): de Anthropic a Google Gemini, capa gratuita
+
+Petición de la persona: **no pagar nada adicional a su suscripción**; ninguna acción que genere cargos sin preguntar. Todo lo siguiente está hecho y probado **sin claves** (la primera llamada real necesita `GEMINI_API_KEY`).
+
+| Ítem | Resultado |
+|---|---|
+| Modelo elegido | **`gemini-2.5-flash-lite`** (Flash-Lite estable). Motivos en la tabla de decisiones |
+| Verificación | Páginas oficiales de Google (precios, modelos, deprecaciones, embeddings, límites) leídas el 2026-09-21; los IDs, los precios de referencia y la existencia de capa gratuita salen de ahí |
+| Abstracción | `llm.provider` en `config.yaml`; interfaz `ClienteLLM` (`llm/base.py`) con un cliente por proveedor (`gemini_client.py`, `anthropic_client.py` conservado sin usar); `factory.py` compone todo con throttle + reintentos |
+| Costo | El log registra `costo_usd_real` (0 en la capa gratuita) y `costo_usd_referencia` (precio de pago de `pricing.yaml`, con fuente y fecha). Ventanas horarias y su test se conservan (también para Gemini) |
+| Límites | Throttle por RPM (ventana deslizante), backoff exponencial con jitter ante 429/5xx/red, respeta `retryDelay`; cuota diaria o límite persistente → `error_tipo="cuota_agotada"` en `ResultadoRAG.error`, jamás una respuesta normal |
+| Caché e2e | `llm/cache.py`, `eval.cache_llm`: hash de todo lo que determina la respuesta; no cachea errores; con todo en caché no pide clave; la cuota agotada corta la evaluación con informe «INCOMPLETA» y se puede reanudar |
+| Privacidad | Solo pregunta + fragmentos de normas públicas (test que lo verifica); aviso en `config.yaml` (`mensajes.aviso_privacidad`) y en el README |
+| Embeddings por API | OpenAI se intenta **sin crédito**: `insufficient_quota` → fila «no ejecutada por costo»; segunda implementación con `gemini-embedding-2` (capa gratuita). Sin claves ambas filas quedan «pendiente» |
+| Sonda real (sin costo) | Llamada a la API real con clave **inválida**: HTTP 400 «API key not valid» → clasificado `autenticacion` en el LLM y en embeddings. Confirma URL, transporte y formato de error |
+| Tests | **531 pasan** (nuevos: límites, cliente Gemini, embeddings Gemini, caché, fábrica, precios, config, secretos) |
+| Mutaciones | 13 mutaciones deliberadas (throttle, backoff, reintento de errores permanentes, conversión a `cuota_agotada`, `retryDelay`, cuota diaria, clave en cabecera, tokens de razonamiento, costo real, log de caché, clave de caché, intentos, prefijos) → **13/13 detectadas** por los tests |
+
 ## Decisiones registradas
 
 | Fase | Decisión | Evidencia / fuente | Fecha |
@@ -126,6 +144,14 @@ Tarea 2 (`tarea2/`): pendiente, se hará después; importará `rag_engine`.
 | 5 | Versiones **bidireccionales**: si se recupera el original se fuerza el DS 001; si se recupera el DS 001 se fuerza el texto original (enlace por número o por título) | Con un solo sentido, 4 de las 5 preguntas de versiones quedaban sin aviso y el modelo veía solo los numerales modificados como si fueran la regla completa | 2026-09-21 |
 | 5 | `llm.temperatura` es opcional (`null` = no se envía) | La referencia oficial dice que los modelos posteriores a Opus 4.6 rechazan `temperature` distinto de 1.0; el SDK 1.7 ya no lo tipa (se envía por `extra_body`) | 2026-09-21 |
 | 5 | Una llamada que falla ANTES de salir al proveedor (falta la clave) no se registra en `llm_calls.jsonl` | El log es un entregable: solo debe contener llamadas reales | 2026-09-21 |
+| 5 | **Cambio de proveedor de LLM: Anthropic → Google Gemini (capa gratuita)** | Restricción de la persona: sin pagos adicionales. Anthropic no tiene capa gratuita; su cliente se conserva sin usar y la config lo valida (`nivel: gratuito` es inválido con Anthropic) | 2026-09-21 |
+| 5 | **Modelo `gemini-2.5-flash-lite`** | En la página de precios figura con «Free of charge»; **estable**, sin fecha de retiro anunciada; su ficha declara *function calling* y *structured outputs*; es el más barato de los que tienen nivel gratuito (referencia USD 0,10 / 0,40 por millón), así que el costo de referencia es una cota baja realista. Descartados: `gemini-3.1-flash-lite` (retiro anunciado el 2027-05-07), `gemini-2.5-flash` (USD 0,30 / 2,50), `gemini-3.5-flash-lite` (más nuevo, USD 0,30 / 2,50; queda como alternativa configurable si la calidad de 2.5 no alcanza). La calidad de generación se medirá con la evaluación e2e; se puede cambiar el modelo editando una línea | 2026-09-21 |
+| 5 | Costo **real** frente a **referencia** en el log y en `ResultadoRAG` | En la capa gratuita el gasto es 0, pero conviene saber cuánto costaría de pago (dimensionar un despliegue público, Tarea 2). La referencia usa el precio de pago verificado; con `nivel: pago`, real = referencia | 2026-09-21 |
+| 5 | Throttle por ventana deslizante de 60 s y `rpm` conservador (10 LLM / 20 embeddings) | Google no publica los límites de la capa gratuita en la documentación (remite a AI Studio); el valor es de diseño, no un dato de Google, y se ajusta en `config.yaml` | 2026-09-21 |
+| 5 | Solo se reintentan 429 «por tasa», 5xx y red; la cuota **diaria** y los demás errores fallan de inmediato | Reintentar una cuota diaria agotada solo pierde tiempo; la recomendación oficial es reintentar 429/408/5xx con backoff exponencial y jitter. Tras agotar los reintentos el error final es `cuota_agotada` | 2026-09-21 |
+| 5 | Caché **solo** en la evaluación de punta a punta, no en el motor | El motor debe registrar cada llamada real; la caché reutiliza respuestas idénticas sin ensuciar el log de costos y sin exigir clave si todo está cacheado | 2026-09-21 |
+| 6 | Embeddings por API: OpenAI sin crédito → si `insufficient_quota`, «no ejecutada por costo»; segunda implementación `gemini-embedding-2` de 768 dimensiones | «Free of charge» en la página de precios; el preview `gemini-embedding-2-preview` se retiró el 2026-08-10, por eso se usa el ID estable; la guía recomienda 768/1536/3072 y este modelo no usa `task_type` (plantillas en el texto) | 2026-09-21 |
+| 6 | Cada texto en su propia petición dentro de `batchEmbedContents` | La guía advierte que varias `parts` en un mismo `content` producen UN solo vector agregado | 2026-09-21 |
 | 0 | README completo en `tarea1/README.md`; el README de la raíz solo recibe una sección con enlace | El repo aloja varias tareas; no se sobrescribe lo existente | 2026-09-21 |
 | 0 | Los módulos se crean en la fase que los necesita (sin archivos vacíos de relleno) | Historial de commits refleja el trabajo real | 2026-09-21 |
 
@@ -152,3 +178,11 @@ Tarea 2 (`tarea2/`): pendiente, se hará después; importará `rag_engine`.
 17. **El umbral por similitud separa poco:** con estas similitudes comprimidas, el criterio F-β 0,5 elige 0,865 y pierde tres respuestas que sí se recuperaron bien (`q01`, `q08`, `q10`, entre 0,836 y 0,860), incluida la pregunta emblemática de la MYPE nueva. Como el LLM es una **segunda línea de defensa** (`contexto_suficiente`), quizá convenga un umbral más permisivo: se decidirá con `evaluation/eval_end_to_end.py` (unos 27 llamadas, ~centavos) cuando exista la clave.
 18. **Los avisos de versión pueden ser varios:** un fragmento del DS 001 que transcribe un solo artículo dispara su aviso, pero varios fragmentos recuperados de la modificatoria disparan varios (hasta 4 en `q18`). Es correcto, pero la interfaz debería agruparlos.
 19. **`tzdata` es necesario en Windows** (Python no trae base de zonas horarias del sistema): añadido a `requirements.txt`.
+
+20. **Los límites de la capa gratuita (RPM/TPM/RPD) no son públicos en la documentación:** la página de límites dice que se ven en Google AI Studio (https://aistudio.google.com/rate-limit) y que «no están garantizados». El `rpm` de `config.yaml` es un valor de diseño; **conviene que la persona lo ajuste a lo que muestre su cuenta**.
+21. **El contrato REST de Gemini se implementó contra la documentación, no contra una respuesta real exitosa:** solo se verificó con clave inválida (400). Riesgo principal: `responseJsonSchema` frente a `responseSchema` (configurable en `llm.proveedores.gemini.campo_esquema`). La primera llamada real lo confirma; un rechazo saldría como `error_tipo="solicitud"` con el mensaje de Google.
+22. **Las páginas de Google se leyeron con una herramienta que resume el contenido** (no con el HTML crudo). Las cifras (USD 0,10 / 0,40; «Free of charge»; «Used to improve our products: Yes/No»; fechas de retiro) coinciden entre varias consultas, pero la persona debería contrastar la capa gratuita y los límites en su propio AI Studio antes de fiarse de ellos.
+23. **La ficha de modelos y la de deprecaciones no coinciden en el ID de embeddings** (`gemini-embedding-2-preview` frente a `gemini-embedding-2`); la de deprecaciones dice que el preview se retiró el 2026-08-10, así que se usa `gemini-embedding-2`.
+24. **Los precios de Gemini 3.6/3.7/3.8 Flash cambian por fecha** (31-dic-2026 → 1-ene-2027). La estructura de `pricing.yaml` es por hora del día, no por fecha: si se pasara a esos modelos habría que ampliarla. No afecta a `gemini-2.5-flash-lite`.
+25. **Un test dependiente de red se colgó una vez** (`tiktoken` descarga su vocabulario): ahora usa un doble sin red. La suite completa corre en ~40 s sin conexión.
+26. **En la capa gratuita Google puede usar lo enviado para mejorar sus productos.** Mitigación: solo se envían pregunta y normas públicas, hay aviso al usuario y los embeddings del índice son locales.

@@ -1,6 +1,7 @@
 {
  "filas": [
   {
+   "proveedor": "local",
    "tipo": "local",
    "modelo": "intfloat/multilingual-e5-small",
    "estado": "medido",
@@ -8,12 +9,14 @@
    "fragmentos": 1674,
    "mismos_fragmentos": true,
    "tokens_indexados": 246483,
-   "indexacion_s": 52.6,
+   "tokens_nota": "",
+   "nivel": "local",
+   "indexacion_s": 53.8,
    "costo_usd": 0.0,
-   "consulta_ms_media": 17.2,
-   "consulta_ms_p95": 17.9,
+   "consulta_ms_media": 16.8,
+   "consulta_ms_p95": 18.9,
    "almacenamiento_vectores_mb": 2.45,
-   "almacenamiento_indice_mb": 12.65,
+   "almacenamiento_indice_mb": 12.68,
    "recall@1": 0.762,
    "recall@3": 0.905,
    "recall@5": 0.905,
@@ -21,15 +24,33 @@
    "mrr": 0.825
   },
   {
-   "tipo": "API",
+   "proveedor": "openai",
+   "tipo": "API (OpenAI)",
    "modelo": "text-embedding-3-small",
    "estado": "pendiente: falta OPENAI_API_KEY en .env"
+  },
+  {
+   "proveedor": "gemini",
+   "tipo": "API (Gemini)",
+   "modelo": "gemini-embedding-2",
+   "estado": "pendiente: falta GEMINI_API_KEY en .env"
   }
  ],
  "fragmentos": 1674,
- "precio_usd_por_millon_tokens": 0.02,
- "precio_fuente": "https://platform.openai.com/docs/pricing",
- "precio_fecha_verificacion": "2026-09-21",
- "tokens_estimados_openai": 282884,
- "costo_estimado_corpus_usd": 0.005658
+ "precios": {
+  "openai": {
+   "modelo": "text-embedding-3-small",
+   "precio_usd_por_millon_tokens": 0.02,
+   "fuente": "https://platform.openai.com/docs/pricing",
+   "fecha_verificacion": "2026-09-21",
+   "tokens_estimados": 282884,
+   "costo_estimado_corpus_usd": 0.005658
+  },
+  "gemini": {
+   "modelo": "gemini-embedding-2",
+   "precio_usd_por_millon_tokens": 0.2,
+   "fuente": "https://ai.google.dev/gemini-api/docs/pricing",
+   "fecha_verificacion": "2026-09-21"
+  }
+ }
 }

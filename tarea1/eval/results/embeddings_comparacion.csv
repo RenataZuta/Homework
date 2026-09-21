@@ -1,3 +1,4 @@
-tipo,modelo,estado,dim,fragmentos,mismos_fragmentos,tokens_indexados,indexacion_s,costo_usd,consulta_ms_media,consulta_ms_p95,almacenamiento_vectores_mb,almacenamiento_indice_mb,recall@1,recall@3,recall@5,recall@3_modificatoria,mrr
-local,intfloat/multilingual-e5-small,medido,384,1674,True,246483,52.6,0.0,17.2,17.9,2.45,12.65,0.762,0.905,0.905,0.8,0.825
-API,text-embedding-3-small,pendiente: falta OPENAI_API_KEY en .env,,,,,,,,,,,,,,,
+tipo,modelo,estado,nivel,dim,fragmentos,mismos_fragmentos,tokens_indexados,tokens_nota,indexacion_s,costo_usd,consulta_ms_media,consulta_ms_p95,almacenamiento_vectores_mb,almacenamiento_indice_mb,recall@1,recall@3,recall@5,recall@3_modificatoria,mrr
+local,intfloat/multilingual-e5-small,medido,local,384,1674,True,246483,,53.8,0.0,16.8,18.9,2.45,12.68,0.762,0.905,0.905,0.8,0.825
+API (OpenAI),text-embedding-3-small,pendiente: falta OPENAI_API_KEY en .env,,,,,,,,,,,,,,,,,
+API (Gemini),gemini-embedding-2,pendiente: falta GEMINI_API_KEY en .env,,,,,,,,,,,,,,,,,
