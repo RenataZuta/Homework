@@ -1,0 +1,840 @@
+{
+ "norma_modificatoria": "ds_001_2026_ef",
+ "norma_modificada": "ds_009_2025_ef",
+ "convencion_pagina": "pagina_ds001 = número de página del PDF del DS 001-2026-EF (1 = primera)",
+ "resumen": {
+  "articulos_distintos": 105,
+  "cambios_modifica": 96,
+  "cambios_incorpora": 15,
+  "otras_disposiciones": 9,
+  "sin_bloque_citado": [],
+  "bloques_citados_no_enumerados": []
+ },
+ "cambios": [
+  {
+   "articulo": 3,
+   "tipo": "incorpora",
+   "detalle": "numeral 3.5",
+   "pagina_ds001": 14,
+   "fuente": "Artículo 3"
+  },
+  {
+   "articulo": 15,
+   "tipo": "modifica",
+   "detalle": "numeral 15.1",
+   "pagina_ds001": 2,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 16,
+   "tipo": "modifica",
+   "detalle": "artículo completo",
+   "pagina_ds001": 2,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 17,
+   "tipo": "modifica",
+   "detalle": "artículo completo",
+   "pagina_ds001": 2,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 25,
+   "tipo": "modifica",
+   "detalle": "numeral 25.7",
+   "pagina_ds001": 2,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 37,
+   "tipo": "modifica",
+   "detalle": "literal b) del numeral 37.3",
+   "pagina_ds001": 2,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 40,
+   "tipo": "modifica",
+   "detalle": "numeral 40.4",
+   "pagina_ds001": 2,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 42,
+   "tipo": "incorpora",
+   "detalle": "numerales 42.4 y 42.5",
+   "pagina_ds001": 14,
+   "fuente": "Artículo 3"
+  },
+  {
+   "articulo": 42,
+   "tipo": "modifica",
+   "detalle": "numerales 42.2 y 42.3",
+   "pagina_ds001": 2,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 43,
+   "tipo": "modifica",
+   "detalle": "artículo completo",
+   "pagina_ds001": 2,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 46,
+   "tipo": "incorpora",
+   "detalle": "literal t) en el numeral 46.1",
+   "pagina_ds001": 14,
+   "fuente": "Artículo 3"
+  },
+  {
+   "articulo": 46,
+   "tipo": "modifica",
+   "detalle": "literal j) del numeral 46.1",
+   "pagina_ds001": 2,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 50,
+   "tipo": "incorpora",
+   "detalle": "numeral 50.3",
+   "pagina_ds001": 14,
+   "fuente": "Artículo 3"
+  },
+  {
+   "articulo": 51,
+   "tipo": "modifica",
+   "detalle": "numerales 51.1 y 51.3",
+   "pagina_ds001": 2,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 52,
+   "tipo": "modifica",
+   "detalle": "literal b) del numeral 52.1",
+   "pagina_ds001": 2,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 53,
+   "tipo": "modifica",
+   "detalle": "numeral 53.3",
+   "pagina_ds001": 3,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 55,
+   "tipo": "modifica",
+   "detalle": "numeral 55.2",
+   "pagina_ds001": 3,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 60,
+   "tipo": "modifica",
+   "detalle": "numeral 60.5",
+   "pagina_ds001": 3,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 64,
+   "tipo": "modifica",
+   "detalle": "numeral 64.3",
+   "pagina_ds001": 3,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 67,
+   "tipo": "modifica",
+   "detalle": "numerales 67.1, 67.2 y 67.3",
+   "pagina_ds001": 3,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 69,
+   "tipo": "modifica",
+   "detalle": "literal d) del numeral 69.1",
+   "pagina_ds001": 3,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 70,
+   "tipo": "modifica",
+   "detalle": "artículo completo",
+   "pagina_ds001": 3,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 72,
+   "tipo": "modifica",
+   "detalle": "numeral 72.2",
+   "pagina_ds001": 4,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 75,
+   "tipo": "modifica",
+   "detalle": "numeral 75.1",
+   "pagina_ds001": 4,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 76,
+   "tipo": "modifica",
+   "detalle": "numeral 76.6",
+   "pagina_ds001": 4,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 78,
+   "tipo": "modifica",
+   "detalle": "numerales 78.1 y 78.2",
+   "pagina_ds001": 4,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 82,
+   "tipo": "modifica",
+   "detalle": "artículo completo",
+   "pagina_ds001": 4,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 85,
+   "tipo": "modifica",
+   "detalle": "numeral 85.1",
+   "pagina_ds001": 4,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 88,
+   "tipo": "modifica",
+   "detalle": "literales e) y f) del numeral 88.1",
+   "pagina_ds001": 4,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 91,
+   "tipo": "modifica",
+   "detalle": "numeral 91.3",
+   "pagina_ds001": 4,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 92,
+   "tipo": "modifica",
+   "detalle": "artículo completo",
+   "pagina_ds001": 4,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 94,
+   "tipo": "modifica",
+   "detalle": "artículo completo",
+   "pagina_ds001": 4,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 96,
+   "tipo": "modifica",
+   "detalle": "numeral 96.5",
+   "pagina_ds001": 4,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 98,
+   "tipo": "modifica",
+   "detalle": "numeral 98.1",
+   "pagina_ds001": 5,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 100,
+   "tipo": "modifica",
+   "detalle": "literales b) y c)",
+   "pagina_ds001": 5,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 101,
+   "tipo": "modifica",
+   "detalle": "numerales 101.1 y 101.2",
+   "pagina_ds001": 5,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 103,
+   "tipo": "modifica",
+   "detalle": "literal b)",
+   "pagina_ds001": 5,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 105,
+   "tipo": "modifica",
+   "detalle": "numeral 105.4",
+   "pagina_ds001": 5,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 106,
+   "tipo": "modifica",
+   "detalle": "numeral 106.1",
+   "pagina_ds001": 5,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 107,
+   "tipo": "modifica",
+   "detalle": "numeral 107.5",
+   "pagina_ds001": 5,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 113,
+   "tipo": "modifica",
+   "detalle": "numerales 113.1 y 113.3",
+   "pagina_ds001": 5,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 114,
+   "tipo": "incorpora",
+   "detalle": "numeral 114.2",
+   "pagina_ds001": 14,
+   "fuente": "Artículo 3"
+  },
+  {
+   "articulo": 122,
+   "tipo": "modifica",
+   "detalle": "literal a) del numeral 122.1",
+   "pagina_ds001": 5,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 123,
+   "tipo": "modifica",
+   "detalle": "numeral 123.1",
+   "pagina_ds001": 6,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 125,
+   "tipo": "modifica",
+   "detalle": "numerales 125.2 y 125.3",
+   "pagina_ds001": 6,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 132,
+   "tipo": "incorpora",
+   "detalle": "numerales 132.5, 132.6 y 132.7",
+   "pagina_ds001": 14,
+   "fuente": "Artículo 3"
+  },
+  {
+   "articulo": 136,
+   "tipo": "modifica",
+   "detalle": "numeral 136.1",
+   "pagina_ds001": 6,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 148,
+   "tipo": "incorpora",
+   "detalle": "numeral 148.4",
+   "pagina_ds001": 14,
+   "fuente": "Artículo 3"
+  },
+  {
+   "articulo": 149,
+   "tipo": "modifica",
+   "detalle": "numerales 149.1, 149.2, 149.3 y 149.4",
+   "pagina_ds001": 6,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 153,
+   "tipo": "modifica",
+   "detalle": "numerales 153.2 y 153.3",
+   "pagina_ds001": 6,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 158,
+   "tipo": "modifica",
+   "detalle": "literales d), e) y f) del numeral 158.1",
+   "pagina_ds001": 6,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 161,
+   "tipo": "modifica",
+   "detalle": "numeral 161.2",
+   "pagina_ds001": 7,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 166,
+   "tipo": "modifica",
+   "detalle": "numerales 166.1, 166.2 y 166.4",
+   "pagina_ds001": 7,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 169,
+   "tipo": "modifica",
+   "detalle": "numeral 169.1",
+   "pagina_ds001": 7,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 170,
+   "tipo": "modifica",
+   "detalle": "numeral 170.4",
+   "pagina_ds001": 7,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 176,
+   "tipo": "modifica",
+   "detalle": "artículo completo",
+   "pagina_ds001": 7,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 179,
+   "tipo": "modifica",
+   "detalle": "numeral 179.3",
+   "pagina_ds001": 7,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 180,
+   "tipo": "modifica",
+   "detalle": "numeral 180.1",
+   "pagina_ds001": 7,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 183,
+   "tipo": "modifica",
+   "detalle": "numeral 183.3",
+   "pagina_ds001": 7,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 185,
+   "tipo": "incorpora",
+   "detalle": "numeral 185.5",
+   "pagina_ds001": 14,
+   "fuente": "Artículo 3"
+  },
+  {
+   "articulo": 186,
+   "tipo": "incorpora",
+   "detalle": "numerales 186.7 y 186.8",
+   "pagina_ds001": 14,
+   "fuente": "Artículo 3"
+  },
+  {
+   "articulo": 186,
+   "tipo": "modifica",
+   "detalle": "numerales 186.4 y 186.5",
+   "pagina_ds001": 8,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 187,
+   "tipo": "modifica",
+   "detalle": "literal b) del numeral 187.3",
+   "pagina_ds001": 8,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 188,
+   "tipo": "modifica",
+   "detalle": "artículo completo",
+   "pagina_ds001": 8,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 189,
+   "tipo": "modifica",
+   "detalle": "numeral 189.3",
+   "pagina_ds001": 8,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 190,
+   "tipo": "modifica",
+   "detalle": "numeral 190.1",
+   "pagina_ds001": 8,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 191,
+   "tipo": "modifica",
+   "detalle": "numeral 191.3",
+   "pagina_ds001": 8,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 193,
+   "tipo": "modifica",
+   "detalle": "numeral 193.1",
+   "pagina_ds001": 8,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 194,
+   "tipo": "modifica",
+   "detalle": "numeral 194.3",
+   "pagina_ds001": 9,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 195,
+   "tipo": "modifica",
+   "detalle": "numerales 195.2 y 195.4",
+   "pagina_ds001": 9,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 198,
+   "tipo": "modifica",
+   "detalle": "literal c) del numeral 198.1",
+   "pagina_ds001": 9,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 207,
+   "tipo": "modifica",
+   "detalle": "artículo completo",
+   "pagina_ds001": 9,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 211,
+   "tipo": "modifica",
+   "detalle": "artículo completo",
+   "pagina_ds001": 9,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 215,
+   "tipo": "modifica",
+   "detalle": "numerales 215.1, 215.2 y 215.7",
+   "pagina_ds001": 9,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 218,
+   "tipo": "incorpora",
+   "detalle": "numeral 218.6",
+   "pagina_ds001": 15,
+   "fuente": "Artículo 3"
+  },
+  {
+   "articulo": 218,
+   "tipo": "modifica",
+   "detalle": "numeral 218.4",
+   "pagina_ds001": 9,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 223,
+   "tipo": "modifica",
+   "detalle": "artículo completo",
+   "pagina_ds001": 9,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 227,
+   "tipo": "modifica",
+   "detalle": "numeral 227.5",
+   "pagina_ds001": 9,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 229,
+   "tipo": "incorpora",
+   "detalle": "numeral 229.5",
+   "pagina_ds001": 15,
+   "fuente": "Artículo 3"
+  },
+  {
+   "articulo": 229,
+   "tipo": "modifica",
+   "detalle": "numerales 229.1 y 229.2",
+   "pagina_ds001": 10,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 230,
+   "tipo": "modifica",
+   "detalle": "numeral 230.1",
+   "pagina_ds001": 10,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 231,
+   "tipo": "modifica",
+   "detalle": "numeral 231.6",
+   "pagina_ds001": 10,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 232,
+   "tipo": "incorpora",
+   "detalle": "numeral 232.5",
+   "pagina_ds001": 15,
+   "fuente": "Artículo 3"
+  },
+  {
+   "articulo": 244,
+   "tipo": "incorpora",
+   "detalle": "numeral 244.3",
+   "pagina_ds001": 15,
+   "fuente": "Artículo 3"
+  },
+  {
+   "articulo": 244,
+   "tipo": "modifica",
+   "detalle": "artículo completo",
+   "pagina_ds001": 10,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 259,
+   "tipo": "modifica",
+   "detalle": "numeral 259.2",
+   "pagina_ds001": 10,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 260,
+   "tipo": "modifica",
+   "detalle": "numeral 260.4",
+   "pagina_ds001": 10,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 277,
+   "tipo": "modifica",
+   "detalle": "numeral 277.2",
+   "pagina_ds001": 10,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 285,
+   "tipo": "modifica",
+   "detalle": "artículo completo",
+   "pagina_ds001": 10,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 286,
+   "tipo": "modifica",
+   "detalle": "literales a) y b)",
+   "pagina_ds001": 10,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 289,
+   "tipo": "modifica",
+   "detalle": "literal b) del numeral 289.4",
+   "pagina_ds001": 11,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 290,
+   "tipo": "modifica",
+   "detalle": "artículo completo",
+   "pagina_ds001": 11,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 295,
+   "tipo": "modifica",
+   "detalle": "numeral 295.3",
+   "pagina_ds001": 11,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 301,
+   "tipo": "modifica",
+   "detalle": "artículo completo",
+   "pagina_ds001": 11,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 307,
+   "tipo": "incorpora",
+   "detalle": "literal h)",
+   "pagina_ds001": 15,
+   "fuente": "Artículo 3"
+  },
+  {
+   "articulo": 318,
+   "tipo": "modifica",
+   "detalle": "literales a), b) y h) del numeral 318.1",
+   "pagina_ds001": 11,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 320,
+   "tipo": "modifica",
+   "detalle": "literal b)",
+   "pagina_ds001": 11,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 332,
+   "tipo": "modifica",
+   "detalle": "numeral 332.2",
+   "pagina_ds001": 11,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 338,
+   "tipo": "modifica",
+   "detalle": "numeral 338.2",
+   "pagina_ds001": 11,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 346,
+   "tipo": "modifica",
+   "detalle": "numeral 346.3",
+   "pagina_ds001": 11,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 353,
+   "tipo": "modifica",
+   "detalle": "numerales 353.1, 353.5 y 353.10",
+   "pagina_ds001": 12,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 363,
+   "tipo": "modifica",
+   "detalle": "numerales 363.1 y 363.2",
+   "pagina_ds001": 12,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 366,
+   "tipo": "modifica",
+   "detalle": "literal b) del numeral 366.2",
+   "pagina_ds001": 12,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 373,
+   "tipo": "incorpora",
+   "detalle": "numeral 373.2",
+   "pagina_ds001": 15,
+   "fuente": "Artículo 3"
+  },
+  {
+   "articulo": 376,
+   "tipo": "modifica",
+   "detalle": "numeral 376.2",
+   "pagina_ds001": 12,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 381,
+   "tipo": "modifica",
+   "detalle": "numeral 381.6",
+   "pagina_ds001": 12,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 382,
+   "tipo": "modifica",
+   "detalle": "numeral 4",
+   "pagina_ds001": 12,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 383,
+   "tipo": "modifica",
+   "detalle": "numeral 4",
+   "pagina_ds001": 12,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 384,
+   "tipo": "modifica",
+   "detalle": "numeral 4",
+   "pagina_ds001": 13,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 385,
+   "tipo": "modifica",
+   "detalle": "numeral 4",
+   "pagina_ds001": 13,
+   "fuente": "Artículo 2"
+  },
+  {
+   "articulo": 389,
+   "tipo": "modifica",
+   "detalle": "literal d)",
+   "pagina_ds001": 13,
+   "fuente": "Artículo 2"
+  }
+ ],
+ "otras_disposiciones": [
+  {
+   "tipo": "modifica",
+   "elemento": "el literal a) del numeral 187.2",
+   "fuente": "Artículo 2",
+   "sin_clasificar": true
+  },
+  {
+   "tipo": "modifica",
+   "elemento": "la Decimocuarta Disposición Complementaria Final",
+   "fuente": "Artículo 2"
+  },
+  {
+   "tipo": "modifica",
+   "elemento": "el epígrafe de la Segunda Disposición Complementaria Transitoria",
+   "fuente": "Artículo 2"
+  },
+  {
+   "tipo": "modifica",
+   "elemento": "el numeral 2 de la Cuarta Disposición Complementaria Transitoria",
+   "fuente": "Artículo 2"
+  },
+  {
+   "tipo": "modifica",
+   "elemento": "los numerales 1 y 2 de la Decimotercera Disposición Complementaria Transitoria",
+   "fuente": "Artículo 2"
+  },
+  {
+   "tipo": "modifica",
+   "elemento": "la Decimonovena Disposición Complementaria Transitoria",
+   "fuente": "Artículo 2"
+  },
+  {
+   "tipo": "modifica",
+   "elemento": "la Vigesimoprimera Disposición Complementaria Transitoria",
+   "fuente": "Artículo 2"
+  },
+  {
+   "tipo": "modifica",
+   "elemento": "los numerales 13, 30 y 67 del Anexo I “Definiciones”",
+   "fuente": "Artículo 2"
+  },
+  {
+   "tipo": "incorpora",
+   "elemento": "los numerales 5, 6, 7 y 8 de la Decimotercera Disposición Complementaria Transitoria",
+   "fuente": "Artículo 3"
+  }
+ ]
+}
