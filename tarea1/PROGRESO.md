@@ -10,7 +10,7 @@
 - [x] **Fase 1** — Descarga de PDFs oficiales + `MANIFEST.json`
 - [x] **Fase 2** — Extracción por página, OCR (75 págs del DS 009-2025-EF), limpieza, reporte de calidad (revisión manual confirmada por la persona el 2026-09-21)
 - [~] **Fase 3** — Set de evaluación (`eval/preguntas.csv`) `[MANUAL pendiente: validar CADA paginas_esperadas con docs/eval_revision_manual.md; no empezar la Fase 4 hasta confirmarlo]`
-- [ ] **Fase 4** — Chunking, embeddings, índice idempotente y reanudable
+- [x] **Fase 4** — Chunking, embeddings, índice idempotente y reanudable (técnica completa; las **métricas de Recall son PROVISIONALES** hasta que se valide el set de la Fase 3)
 - [ ] **Fase 5** — Motor RAG: umbral, versiones, costo `[MANUAL: ANTHROPIC_API_KEY]`
 - [ ] **Fase 6** — Evaluación y comparación de embeddings local vs API `[MANUAL: OPENAI_API_KEY]`
 - [ ] **Fase 7** — Interfaz Streamlit
@@ -64,6 +64,18 @@ Tarea 2 (`tarea2/`): pendiente, se hará después; importará `rag_engine`.
 | Fuera de dominio | tributación (o01), contratación privada (o02), Colombia (o03), ceviche (o04), **fórmula de la capacidad máxima de contratación (o05, art. 28, p. 8 del DS 009, excluida del índice)**, valor de la UIT (o06) |
 | Tests | 192 pasan (17 nuevos del set de evaluación) |
 
+## Resultados de la Fase 4 (medidos el 2026-09-21; Recall provisional)
+
+| Ítem | Resultado |
+|---|---|
+| Índice definitivo | **1 674 fragmentos** (Ley 427, DS 009 1 042, DS 001 205) en 51 s; colección `normas_c750_o100_30b1cd`; 0 fragmentos truncados (el más largo, 236 tokens de 512) |
+| Idempotencia (proceso real) | 2.ª corrida: `existentes=1674 nuevos=0` |
+| Reanudación (Ctrl+C real) | interrumpido tras 6 lotes → 384 guardados, exit 130; al relanzar: 384 reutilizados + 1 290 nuevos = 1 674; 3.ª corrida: 0 nuevos |
+| Agregar un documento | solo la Ley (427) y luego los tres: `existentes=427 nuevos=1247`; el índice final es idéntico al definitivo (mismos IDs y hashes) |
+| Modelo local | `multilingual-e5-small` (118 M): R@3 0,810 · R@5 0,857 · 60 s de indexación · 22 ms/consulta |
+| Troceado | `c750_o100`: R@1 0,762 · **R@3 0,905** · R@5 0,905 |
+| Tests | 264 pasan (incluye 3 mutaciones que rompen la idempotencia, el aislamiento y la reanudación) |
+
 ## Decisiones registradas
 
 | Fase | Decisión | Evidencia / fuente | Fecha |
@@ -81,6 +93,13 @@ Tarea 2 (`tarea2/`): pendiente, se hará después; importará `rag_engine`.
 | 3 | Formato del CSV: varios documentos con `\|` y varias páginas de un documento con `;` (`ds_001_2026_ef\|ds_009_2025_ef` / `8;9\|47`); en las preguntas de versiones el primer documento es siempre el DS 001 | Permite medir aparte si el recuperador trae el texto vigente y no solo el original | 2026-09-21 |
 | 3 | Las evidencias (ancla + dato de cada página) van en `eval/evidencia.yaml`, no en el CSV, para no romper las columnas pedidas | `scripts/eval_evidence.py` recorta la imagen del PDF | 2026-09-21 |
 | 3 | 27 preguntas en lugar de 20: más out_of_domain cercanas (o02, o03, o05, o06) para que el barrido de umbral no se calibre solo con casos fáciles | Limitación: se calibra con el mismo set | 2026-09-21 |
+| 4 | Modelo de embeddings local: **`intfloat/multilingual-e5-small`** (prefijos `query: `/`passage: `, 512 tokens; tarjeta verificada) | Empata con bge-m3 en R@3/R@5 con 5× menos parámetros, 8× menos tiempo de indexación y 6× menos latencia; e5-base recupera peor; MiniLM trunca el 91,6 % de los fragmentos (`docs/modelos_embeddings.md`, `eval/results/modelos_locales.md`) | 2026-09-21 |
+| 4 | Troceado: **750 caracteres con solape de 100** | Mayor Recall@3 de 6 configuraciones (`eval/results/chunking_comparacion.md`); diferencia de 1–2 preguntas sobre 21 → provisional | 2026-09-21 |
+| 4 | **Encabezado de contexto activado sin evidencia de mejora**: ayuda en una pregunta con 750 y perjudica en otra con 1000 (neto ≈ 0). Se mantiene por el diseño (encabezados huérfanos) y se reevaluará con el set validado | Ablación en `chunking_por_pregunta.csv` | 2026-09-21 |
+| 4 | Vector store: **ChromaDB persistente** con distancia coseno | Guarda vector + texto + metadatos (para citar), upsert por ID (base de la idempotencia), filtros por metadatos, sin servidor. FAISS sería más rápido pero no guarda metadatos y el corpus (~1 700 fragmentos) no lo necesita | 2026-09-21 |
+| 4 | ID de fragmento `documento:version:pNNNN:cNNN:hash-de-config`; se omite un ID existente solo si también coincide el hash del contenido | Si una página se reprocesa, sus fragmentos se re-embeben y los obsoletos del mismo documento se borran | 2026-09-21 |
+| 4 | Menciones de artículos guardadas por norma (`articulos_ley` / `articulos_reglamento`), descartando números fuera de rango (Ley ≤ 100, Reglamento ≤ 389) y otras normas | Cierra el riesgo de los hallazgos 6 y 10: 0 fragmentos con el «artículo 399» fantasma | 2026-09-21 |
+| 4 | La carga del modelo intenta primero solo desde el disco (`local_files_only`) | sentence-transformers hacía peticiones a Hugging Face en cada arranque; sin internet esperaba ~30 s de reintentos | 2026-09-21 |
 | 0 | README completo en `tarea1/README.md`; el README de la raíz solo recibe una sección con enlace | El repo aloja varias tareas; no se sobrescribe lo existente | 2026-09-21 |
 | 0 | Los módulos se crean en la fase que los necesita (sin archivos vacíos de relleno) | Historial de commits refleja el trabajo real | 2026-09-21 |
 
@@ -98,3 +117,8 @@ Tarea 2 (`tarea2/`): pendiente, se hará después; importará `rag_engine`.
 10. **Ley y Reglamento numeran sus artículos por separado** (el art. 98 de la Ley es «Retiro temporal del registro»; el 98 del Reglamento es sobre la comparación de precios). Al extraer `articulos_mencionados` hay que registrar a qué norma remite cada mención («artículo 61 **de la Ley**»), y el aviso de versión solo aplica a fragmentos del Reglamento.
 11. **Encabezados huérfanos:** el título de un artículo puede quedar al final de una página y su contenido en la siguiente (arts. 89 y 93 de la Ley). Las páginas esperadas son siempre las del contenido. Idea para la Fase 4: guardar el último encabezado de la página anterior como metadato del primer fragmento.
 12. **El OCR falla en cifras:** el art. 114 original dice «S/ 480 000» y el OCR leyó `430 000` (la imagen y el DS 001, que tiene capa de texto, confirman 480 000). Toda respuesta con cifras del Reglamento original merece cautela. El DS 001 marca en **negrita** lo nuevo de cada numeral, y el art. 25.7 se invierte: el original dice que los ejecutores de obra **no pueden** acreditar experiencia de una reorganización societaria y el DS 001 dice que **pueden** (esa página del original, la 8, está fuera del índice).
+
+13. **Brecha de vocabulario coloquial↔legal:** `q04` («¿hasta qué monto me pueden comprar sin hacer una licitación?» → «contratos menores… ocho UIT») y `q07` («ofertas con el mismo puntaje» → «criterios en caso de empate») fallan en las 6 configuraciones aunque el fragmento correcto SÍ está en el índice. Es el caso que evaluará la Fase 8 (BM25 / híbrido).
+14. **Los puntajes de E5 están comprimidos:** para esas dos preguntas los 4 primeros vecinos (irrelevantes) tienen similitud 0,854–0,864. El barrido de umbral de la Fase 5 tendrá un margen estrecho; conviene barrer entre 0,70 y 0,95 con paso fino además del barrido 0–1.
+15. **`config.yaml` quedó vacío una vez** al editarlo con un script (causa no determinada; disco al 95 %). Se restauró desde git y desde entonces toda edición de la config usa escritura atómica y comprueba que el resultado no quede vacío. Conviene mantener disco libre.
+16. **El equipo perdió la resolución DNS durante la fase.** Los modelos ya estaban en caché, por eso todo siguió funcionando. La Fase 6 (OpenAI) y la 5 (Anthropic) necesitan red: si vuelve a fallar hay que resolverlo antes.

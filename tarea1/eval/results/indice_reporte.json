@@ -1,0 +1,121 @@
+{
+ "troceado": "c750_o100",
+ "modelo": "intfloat/multilingual-e5-small",
+ "max_tokens": 512,
+ "por_documento": [
+  {
+   "documento": "ley_32069",
+   "version": "ley_vigente",
+   "paginas": 63,
+   "fragmentos": 427,
+   "con_ocr": 0,
+   "min_car": 15,
+   "mediana_car": 616,
+   "p95_car": 739,
+   "max_car": 749,
+   "tokens_max": 204,
+   "truncados": 0
+  },
+  {
+   "documento": "ds_009_2025_ef",
+   "version": "reglamento_original_2025",
+   "paginas": 75,
+   "fragmentos": 1042,
+   "con_ocr": 1042,
+   "min_car": 114,
+   "mediana_car": 630,
+   "p95_car": 741,
+   "max_car": 750,
+   "tokens_max": 233,
+   "truncados": 0
+  },
+  {
+   "documento": "ds_001_2026_ef",
+   "version": "modificatoria_2026-01",
+   "paginas": 16,
+   "fragmentos": 205,
+   "con_ocr": 0,
+   "min_car": 103,
+   "mediana_car": 624,
+   "p95_car": 745,
+   "max_car": 750,
+   "tokens_max": 236,
+   "truncados": 0
+  }
+ ],
+ "total": {
+  "documento": "TOTAL",
+  "version": "",
+  "paginas": 154,
+  "fragmentos": 1674,
+  "con_ocr": 1042,
+  "min_car": 15,
+  "mediana_car": 625,
+  "p95_car": 741,
+  "max_car": 750,
+  "tokens_max": 236,
+  "truncados": 0
+ },
+ "histograma": [
+  {
+   "desde": 15,
+   "hasta": 76,
+   "n": 1
+  },
+  {
+   "desde": 77,
+   "hasta": 138,
+   "n": 5
+  },
+  {
+   "desde": 139,
+   "hasta": 200,
+   "n": 14
+  },
+  {
+   "desde": 201,
+   "hasta": 262,
+   "n": 33
+  },
+  {
+   "desde": 263,
+   "hasta": 324,
+   "n": 39
+  },
+  {
+   "desde": 325,
+   "hasta": 386,
+   "n": 83
+  },
+  {
+   "desde": 387,
+   "hasta": 448,
+   "n": 91
+  },
+  {
+   "desde": 449,
+   "hasta": 510,
+   "n": 150
+  },
+  {
+   "desde": 511,
+   "hasta": 572,
+   "n": 210
+  },
+  {
+   "desde": 573,
+   "hasta": 634,
+   "n": 266
+  },
+  {
+   "desde": 635,
+   "hasta": 696,
+   "n": 365
+  },
+  {
+   "desde": 697,
+   "hasta": 758,
+   "n": 417
+  }
+ ]
+}

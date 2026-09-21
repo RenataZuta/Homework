@@ -1,0 +1,5 @@
+documento,version,paginas,fragmentos,con_ocr,min_car,mediana_car,p95_car,max_car,tokens_max,truncados
+ley_32069,ley_vigente,63,427,0,15,616,739,749,204,0
+ds_009_2025_ef,reglamento_original_2025,75,1042,1042,114,630,741,750,233,0
+ds_001_2026_ef,modificatoria_2026-01,16,205,0,103,624,745,750,236,0
+TOTAL,,154,1674,1042,15,625,741,750,236,0

@@ -1,0 +1,5 @@
+modelo,parametros_millones,dim,max_tokens,prefijos,tokens_medianos,tokens_max,fragmentos_truncados,pct_truncados,carga_s,indexacion_s,consulta_ms,recall@1,recall@3,recall@5,recall@3_modificatoria,mrr
+intfloat/multilingual-e5-small,118,384,512,sí,199,313,0,0.0,34.8,59.7,21.9,0.714,0.81,0.857,0.8,0.771
+intfloat/multilingual-e5-base,278,768,512,sí,199,313,0,0.0,51.7,229.1,60.9,0.714,0.762,0.762,0.6,0.738
+sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2,118,384,128,no,197,311,1154,91.6,35.1,24.2,15.7,0.571,0.667,0.667,0.4,0.611
+BAAI/bge-m3,568,1024,8192,no,197,311,0,0.0,105.4,503.4,134.0,0.762,0.81,0.857,0.8,0.79
