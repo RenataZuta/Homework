@@ -20,6 +20,10 @@ sentence-transformers>=3.0   # embeddings locales (multilingual-e5-small)
 chromadb>=1.0                # índice vectorial persistente
 openai>=1.0                  # solo para la comparación de embeddings por API (Fase 6)
 
+# Generación
+anthropic>=1.0               # cliente de la API de Claude (salida estructurada por tool use)
+tzdata>=2024.1               # zonas horarias en Windows (precios por hora)
+
 # Reportes y gráficos
 matplotlib>=3.8
 

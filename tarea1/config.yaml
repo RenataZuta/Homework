@@ -31,6 +31,7 @@ paths:
 documentos:
   - id: ley_32069
     nombre: "Ley N.° 32069, Ley General de Contrataciones Públicas (versión actualizada al 19.07.2026)"
+    nombre_corto: "Ley 32069"
     archivo: ley_32069.pdf
     url: https://www.gob.pe/institucion/osce/colecciones/45029-ley-n-32069-ley-general-de-contrataciones-publicas
     url_pdf: "https://cdn.www.gob.pe/uploads/document/file/9295551/6444155-ley-general-de-contrataciones-publicas-con-modificaciones-posteriores-hasta-el-19-07-2026.pdf?v=1787002595"
@@ -42,6 +43,7 @@ documentos:
       Es lo único que la colección oficial del OECE ofrece para la Ley.
   - id: ds_009_2025_ef
     nombre: "Decreto Supremo N.° 009-2025-EF, Reglamento de la Ley N.° 32069"
+    nombre_corto: "Reglamento (DS 009-2025-EF)"
     archivo: ds_009_2025_ef.pdf
     url: https://www.gob.pe/institucion/mef/normas-legales/6401561-009-2025-ef
     url_pdf: "https://cdn.www.gob.pe/uploads/document/file/7530416/6401561-ds009_2025ef.pdf?v=1737643286"
@@ -53,6 +55,7 @@ documentos:
       que NO se incluye en el corpus; se declara como limitación.
   - id: ds_001_2026_ef
     nombre: "Decreto Supremo N.° 001-2026-EF, modifica el Reglamento de la Ley N.° 32069"
+    nombre_corto: "DS 001-2026-EF (modificatoria)"
     archivo: ds_001_2026_ef.pdf
     url: https://busquedas.elperuano.pe/dispositivo/NL/2474920-3
     url_pdf: "https://busquedas.elperuano.pe/api/archivo/file/4UFSj6jQKdnBeQxKkvTolN/*/2474920-3.PDF"
@@ -172,15 +175,19 @@ embeddings:
 retrieval:
   modo: semantico                  # semantico | bm25 | hibrido — PROVISIONAL (Fase 8)
   top_k: 5
-  umbral_similitud: 0.0            # SIN CALIBRAR (Fase 5): 0.0 = nunca abstiene por umbral
-  umbral_calibrado: false          # pasa a true solo cuando existe el barrido en eval/results/
+  umbral_similitud: 0.865   # CALIBRADO (Fase 5, provisional hasta validar el set): ver eval/results/umbral_resumen.md
+  umbral_calibrado: true          # pasa a true solo cuando existe el barrido en eval/results/
+  versiones:
+    activo: true                   # marcar fragmentos del Reglamento que mencionan artículos modificados y forzar los del DS 001
+    max_fragmentos_forzados: 3        # fragmentos del DS 001 que se fuerzan cuando solo se recuperó el original
+    max_originales_forzados: 2        # fragmentos del texto ORIGINAL que se fuerzan cuando solo se recuperó el DS 001
 
 # ── Generación (Fase 5) ──────────────────────────────────────────────────────
 llm:
   proveedor: anthropic
   modelo: claude-haiku-4-5-20251001     # ID verificado en la doc oficial el 2026-09-21
   max_tokens: 1024
-  temperatura: 0.0
+  temperatura: 0.0                 # null = no enviarla. Los modelos posteriores a Opus 4.6 la rechazan (solo admiten 1.0); Haiku 4.5 sí la admite
   timeout_segundos: 60
   reintentos: 2
 
@@ -204,7 +211,10 @@ prompts:
        Nunca presentes como vigente un texto que el DS 001-2026-EF modificó.
     4. Si el contexto no alcanza para responder con seguridad, indica
        contexto_suficiente = false y NO inventes una respuesta.
-    5. Responde en español claro, apto para el dueño de una micro o pequeña
+    5. En la Ley 32069 algunas páginas traen una nota «(*) … cuyo texto es el
+       siguiente» con el texto modificado o derogado: esa nota PREVALECE sobre el
+       texto en cursiva que la precede.
+    6. Responde en español claro, apto para el dueño de una micro o pequeña
        empresa. Esto es información normativa, no asesoría legal vinculante.
   usuario: |
     CONTEXTO
@@ -217,6 +227,10 @@ prompts:
     Entrega la respuesta a la pregunta usando solo el contexto, con las citas
     (documento y página) que la sustentan, e indica si el contexto fue suficiente.
   etiqueta_fragmento: "[{documento} | versión: {version} | p. {pagina}]"
+  herramienta_campos:
+    respuesta: "Respuesta a la pregunta, basada solo en el contexto, con la cita [documento, p. N] en cada afirmación."
+    citas: "Documento y página de cada fragmento en que se apoya la respuesta."
+    contexto_suficiente: "false si el contexto NO alcanza para responder con seguridad; true en caso contrario."
 
 # ── Mensajes al usuario ──────────────────────────────────────────────────────
 mensajes:
@@ -228,7 +242,7 @@ mensajes:
   error_generico: "No se pudo generar la respuesta por un error del servicio. Intenta de nuevo en unos minutos."
   error_config: "Falta configuración necesaria. Revisa el README y tu archivo .env."
   indice_faltante: "No se encontró el índice en {ruta}. Constrúyelo antes de usar la app: python scripts/build_index.py"
-  aviso_version: "El artículo {articulo} fue modificado por el DS 001-2026-EF; prevalece el texto de la modificatoria."
+  aviso_version: "El artículo {articulo} del Reglamento fue modificado por el DS 001-2026-EF ({detalle}); prevalece el texto de la modificatoria."
   limite_sesion: "Alcanzaste el máximo de consultas de esta sesión. Vuelve más tarde."
   limite_global: "Se alcanzó el tope diario de consultas de la demo pública. Vuelve mañana."
   bot:
@@ -246,6 +260,11 @@ mensajes:
 # ── Evaluación (Fases 3, 4, 6, 9) ────────────────────────────────────────────
 eval:
   ks: [1, 3, 5]
+  barrido_umbral:                  # calibración del umbral (evaluation/sweep_threshold.py)
+    desde: 0.0
+    hasta: 1.0
+    paso: 0.005
+    beta: 0.5                      # F-beta con beta < 1: la precisión pesa más que la cobertura (responder mal es peor que no responder)
   set_validado: false              # pasa a true cuando la persona valida cada paginas_esperadas (Fase 3 [MANUAL]); mientras sea false, toda métrica se marca PROVISIONAL
   requisitos_set:                  # mínimos que exige el issue para el set de evaluación (validate_eval_set.py)
     in_domain: 15

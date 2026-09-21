@@ -15,7 +15,8 @@ class LocalSentenceTransformers(Embedder):
         if modelo_cargado is None:
             modelo_cargado = self._cargar(modelo, dispositivo)
         self._m = modelo_cargado
-        self.dim = int(self._m.get_sentence_embedding_dimension())
+        dimension = getattr(self._m, "get_embedding_dimension", None) or self._m.get_sentence_embedding_dimension     # nombre nuevo, con respaldo
+        self.dim = int(dimension())
         # longitud máxima REAL del modelo (la de su sentence_bert_config), no la que diga la config
         self.max_tokens = int(self._m.max_seq_length)
 
