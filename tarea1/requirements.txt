@@ -3,3 +3,4 @@
 # Python 3.12 recomendado (las ruedas de PyTorch/ChromaDB tardan en llegar a versiones muy nuevas).
 pyyaml>=6.0
 python-dotenv>=1.0
+pymupdf>=1.24

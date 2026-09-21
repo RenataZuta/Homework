@@ -26,29 +26,47 @@ paths:
 
 # ── Fuentes oficiales (solo gob.pe / El Peruano) ─────────────────────────────
 # "version" viaja como metadato de cada fragmento; "rol" alimenta el manejo de versiones.
+# url = página oficial de la norma; url_pdf = enlace directo al PDF (verificado el 2026-09-21).
 documentos:
   - id: ley_32069
-    nombre: "Ley N.° 32069, Ley General de Contrataciones Públicas"
+    nombre: "Ley N.° 32069, Ley General de Contrataciones Públicas (versión actualizada al 19.07.2026)"
     archivo: ley_32069.pdf
     url: https://www.gob.pe/institucion/osce/colecciones/45029-ley-n-32069-ley-general-de-contrataciones-publicas
-    url_pdf: null                                # se fija en la Fase 1 al descubrir el enlace directo
+    url_pdf: "https://cdn.www.gob.pe/uploads/document/file/9295551/6444155-ley-general-de-contrataciones-publicas-con-modificaciones-posteriores-hasta-el-19-07-2026.pdf?v=1787002595"
     version: ley_vigente
     rol: norma_base
+    nota: >
+      Compendio "versión actualizada" elaborado por el OECE (fuente base: SPIJ) e integrado con las
+      modificatorias posteriores hasta el 19.07.2026. NO es el texto original publicado en El Peruano.
+      Es lo único que la colección oficial del OECE ofrece para la Ley.
   - id: ds_009_2025_ef
     nombre: "Decreto Supremo N.° 009-2025-EF, Reglamento de la Ley N.° 32069"
     archivo: ds_009_2025_ef.pdf
     url: https://www.gob.pe/institucion/mef/normas-legales/6401561-009-2025-ef
-    url_pdf: null
+    url_pdf: "https://cdn.www.gob.pe/uploads/document/file/7530416/6401561-ds009_2025ef.pdf?v=1737643286"
     version: reglamento_original_2025
     rol: reglamento
+    nota: >
+      PDF escaneado (sin capa de texto): requiere OCR. La página oficial también publica una fe de erratas
+      (https://cdn.www.gob.pe/uploads/document/file/7577939/6401561-fe-de-erratas-del-ds-n-009-2025-ef.pdf)
+      que NO se incluye en el corpus; se declara como limitación.
   - id: ds_001_2026_ef
     nombre: "Decreto Supremo N.° 001-2026-EF, modifica el Reglamento de la Ley N.° 32069"
     archivo: ds_001_2026_ef.pdf
     url: https://busquedas.elperuano.pe/dispositivo/NL/2474920-3
-    url_pdf: null
+    url_pdf: "https://busquedas.elperuano.pe/api/archivo/file/4UFSj6jQKdnBeQxKkvTolN/*/2474920-3.PDF"
     version: modificatoria_2026-01
     rol: modificatoria
     modifica: ds_009_2025_ef
+    nota: "Publicado en El Peruano el 08/01/2026 (según la ficha oficial de la norma)."
+
+# ── Descarga (Fase 1) ────────────────────────────────────────────────────────
+descarga:
+  user_agent: "Mozilla/5.0 (compatible; tarea1-rag/1.0; +https://github.com/RenataZuta/Homework)"
+  timeout_segundos: 60
+  reintentos: 3                    # solo ante errores de red o 5xx/429; un 401/403 NO se reintenta
+  espera_reintento_segundos: 2
+  aviso_tamano_mb: 90              # GitHub rechaza archivos de más de 100 MB
 
 # ── Extracción y OCR (Fase 2) ────────────────────────────────────────────────
 extraccion:

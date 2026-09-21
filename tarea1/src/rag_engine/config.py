@@ -29,6 +29,8 @@ CLAVES_REQUERIDAS = (
     "paths.raw", "paths.manifest", "paths.processed", "paths.articulos_modificados",
     "paths.index", "paths.eval_preguntas", "paths.eval_results", "paths.logs",
     "paths.llm_calls_log", "paths.pricing", "paths.bot_db", "paths.docs",
+    "descarga.user_agent", "descarga.timeout_segundos", "descarga.reintentos",
+    "descarga.espera_reintento_segundos", "descarga.aviso_tamano_mb",
     "extraccion.umbral_caracteres_ocr", "extraccion.dpi", "extraccion.idioma_ocr",
     "extraccion.motor_ocr", "extraccion.rangos_paginas",
     "chunking.unidad", "chunking.configuraciones", "chunking.activa",
