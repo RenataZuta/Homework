@@ -1,0 +1,181 @@
+# =============================================================================
+# config.yaml — Tarea 1: RAG normativo de contrataciones públicas del Perú
+#
+# TODA la configuración vive aquí: rutas, modelos, tamaños de chunk, umbrales,
+# prompts y mensajes al usuario. Las credenciales NO: van solo en .env.
+#
+# Convenciones
+#   - Las rutas son relativas a la carpeta que contiene este archivo (tarea1/).
+#   - "PROVISIONAL (Fase N)": valor de arranque que se decide CON DATOS en esa
+#     fase; el resultado se anota aquí y en el README con su tabla de evidencia.
+# =============================================================================
+
+paths:
+  raw: data/raw                                  # PDFs originales: NUNCA se modifican
+  manifest: data/raw/MANIFEST.json
+  processed: data/processed                      # texto por página (JSON), versionado
+  articulos_modificados: data/processed/articulos_modificados.json
+  index: data/index                              # índice persistente (regenerable)
+  eval_preguntas: eval/preguntas.csv
+  eval_results: eval/results
+  logs: logs
+  llm_calls_log: logs/llm_calls.jsonl            # una línea por llamada al LLM
+  pricing: pricing.yaml
+  bot_db: data/bot.db                            # SQLite del bot (ignorada por git)
+  docs: docs
+
+# ── Fuentes oficiales (solo gob.pe / El Peruano) ─────────────────────────────
+# "version" viaja como metadato de cada fragmento; "rol" alimenta el manejo de versiones.
+documentos:
+  - id: ley_32069
+    nombre: "Ley N.° 32069, Ley General de Contrataciones Públicas"
+    archivo: ley_32069.pdf
+    url: https://www.gob.pe/institucion/osce/colecciones/45029-ley-n-32069-ley-general-de-contrataciones-publicas
+    url_pdf: null                                # se fija en la Fase 1 al descubrir el enlace directo
+    version: ley_vigente
+    rol: norma_base
+  - id: ds_009_2025_ef
+    nombre: "Decreto Supremo N.° 009-2025-EF, Reglamento de la Ley N.° 32069"
+    archivo: ds_009_2025_ef.pdf
+    url: https://www.gob.pe/institucion/mef/normas-legales/6401561-009-2025-ef
+    url_pdf: null
+    version: reglamento_original_2025
+    rol: reglamento
+  - id: ds_001_2026_ef
+    nombre: "Decreto Supremo N.° 001-2026-EF, modifica el Reglamento de la Ley N.° 32069"
+    archivo: ds_001_2026_ef.pdf
+    url: https://busquedas.elperuano.pe/dispositivo/NL/2474920-3
+    url_pdf: null
+    version: modificatoria_2026-01
+    rol: modificatoria
+    modifica: ds_009_2025_ef
+
+# ── Extracción y OCR (Fase 2) ────────────────────────────────────────────────
+extraccion:
+  umbral_caracteres_ocr: 100       # PROVISIONAL (Fase 2): páginas con menos caracteres útiles van a OCR
+  dpi: 300                         # PROVISIONAL (Fase 2): resolución al rasterizar para OCR
+  idioma_ocr: spa
+  motor_ocr: tesseract             # PROVISIONAL (Fase 2): lo decide el mini-benchmark
+  rangos_paginas:                  # páginas del PDF (base 1) a procesar; null = todas
+    ley_32069: null
+    ds_001_2026_ef: null
+    ds_009_2025_ef: null           # PROVISIONAL (Fase 2): subconjunto OCR (≥ 60 páginas), ver docs/ocr_subset.md
+
+# ── Chunking (Fase 4) ────────────────────────────────────────────────────────
+chunking:
+  unidad: caracteres
+  configuraciones:                 # se comparan con evaluation/compare_chunking.py
+    - {nombre: c500_o50,   tamano: 500,  solapamiento: 50}
+    - {nombre: c1000_o150, tamano: 1000, solapamiento: 150}
+  activa: c1000_o150               # PROVISIONAL (Fase 4): la ganadora según la tabla de Recall
+
+# ── Embeddings (Fases 4 y 6): cambiar de modelo = editar solo esta sección ───
+embeddings:
+  proveedor: local                 # local | openai
+  batch: 32
+  normalizar: true                 # vectores unitarios -> similitud coseno
+  local:
+    modelo: intfloat/multilingual-e5-small   # PROVISIONAL (Fase 4): verificar tarjeta del modelo
+    prefijo_consulta: "query: "              # PROVISIONAL (Fase 4): la familia E5 usa prefijos; se confirma
+    prefijo_pasaje: "passage: "
+    max_tokens: 512                          # PROVISIONAL (Fase 4): se mide cuántos fragmentos se truncan
+    dispositivo: cpu
+  openai:
+    modelo: text-embedding-3-small
+    prefijo_consulta: ""
+    prefijo_pasaje: ""
+    max_tokens: 8191                         # PROVISIONAL (Fase 6): verificar en la documentación de OpenAI
+
+# ── Recuperación (Fases 5 y 8) ───────────────────────────────────────────────
+retrieval:
+  modo: semantico                  # semantico | bm25 | hibrido — PROVISIONAL (Fase 8)
+  top_k: 5
+  umbral_similitud: 0.0            # SIN CALIBRAR (Fase 5): 0.0 = nunca abstiene por umbral
+  umbral_calibrado: false          # pasa a true solo cuando existe el barrido en eval/results/
+
+# ── Generación (Fase 5) ──────────────────────────────────────────────────────
+llm:
+  proveedor: anthropic
+  modelo: claude-haiku-4-5-20251001     # ID verificado en la doc oficial el 2026-09-21
+  max_tokens: 1024
+  temperatura: 0.0
+  timeout_segundos: 60
+  reintentos: 2
+
+# ── Precios: el detalle (con fuente y fecha) está en pricing.yaml ────────────
+pricing:
+  archivo: pricing.yaml
+
+# ── Prompts (borrador; se valida y ajusta en la Fase 5) ──────────────────────
+prompts:
+  sistema: |
+    Eres un asistente que responde preguntas sobre la normativa de contrataciones
+    públicas del Perú, usando únicamente los documentos indexados.
+
+    REGLAS OBLIGATORIAS
+    1. Responde SOLO con el CONTEXTO recuperado. No uses conocimiento externo ni
+       completes con suposiciones.
+    2. Cita documento y página en cada afirmación, con el formato [documento, p. N].
+    3. Cada fragmento del contexto viene etiquetado con su documento, versión y
+       página. Si dos fragmentos se contradicen, PREVALECE el DS 001-2026-EF
+       (versión modificatoria_2026-01) sobre el texto original del Reglamento.
+       Nunca presentes como vigente un texto que el DS 001-2026-EF modificó.
+    4. Si el contexto no alcanza para responder con seguridad, indica
+       contexto_suficiente = false y NO inventes una respuesta.
+    5. Responde en español claro, apto para el dueño de una micro o pequeña
+       empresa. Esto es información normativa, no asesoría legal vinculante.
+  usuario: |
+    CONTEXTO
+    {contexto}
+
+    PREGUNTA
+    {pregunta}
+  herramienta_nombre: responder_con_citas
+  herramienta_descripcion: >
+    Entrega la respuesta a la pregunta usando solo el contexto, con las citas
+    (documento y página) que la sustentan, e indica si el contexto fue suficiente.
+  etiqueta_fragmento: "[{documento} | versión: {version} | p. {pagina}]"
+
+# ── Mensajes al usuario ──────────────────────────────────────────────────────
+mensajes:
+  abstencion: >
+    No encontré información suficiente en los documentos indexados para responder
+    con seguridad. Puede que la respuesta esté en una parte del Reglamento que no
+    forma parte del índice, o que la pregunta esté fuera de la normativa de
+    contrataciones públicas. Reformula la pregunta o consulta la norma oficial.
+  error_generico: "No se pudo generar la respuesta por un error del servicio. Intenta de nuevo en unos minutos."
+  error_config: "Falta configuración necesaria. Revisa el README y tu archivo .env."
+  indice_faltante: "No se encontró el índice en {ruta}. Constrúyelo antes de usar la app: python scripts/build_index.py"
+  aviso_version: "El artículo {articulo} fue modificado por el DS 001-2026-EF; prevalece el texto de la modificatoria."
+  limite_sesion: "Alcanzaste el máximo de consultas de esta sesión. Vuelve más tarde."
+  limite_global: "Se alcanzó el tope diario de consultas de la demo pública. Vuelve mañana."
+  bot:
+    no_autorizado: "Este bot es de acceso restringido. Tu usuario no está autorizado."
+    limite_excedido: "Llegaste al límite de {limite} consultas por día. Vuelve mañana."
+    ayuda: >
+      Soy un asistente sobre contrataciones públicas del Perú. Escríbeme tu pregunta
+      y te respondo citando documento y página. Comandos: /fuente (fuentes de mi última
+      respuesta), /costo (costo de tus consultas), /ayuda. Límite: {limite} consultas por día.
+    sin_fuente: "Todavía no has hecho ninguna consulta."
+    sin_costo: "Todavía no has hecho ninguna consulta."
+    feedback_gracias: "¡Gracias por tu opinión!"
+    backend_despertando: "Estoy despertando el servicio, puede tardar un momento. Te respondo apenas esté listo."
+
+# ── Evaluación (Fases 3, 4, 6, 9) ────────────────────────────────────────────
+eval:
+  ks: [1, 3, 5]
+  min_recall_at_3: 0.0             # PROVISIONAL (Fase 9): se fija con los resultados reales y margen
+  codigo_salida_fallo: 1           # exit code de run_eval.py si Recall@3 < mínimo (usa el CI)
+
+# ── Bot de Telegram (Fases 10 y 11) ──────────────────────────────────────────
+bot:
+  modo: polling                    # polling (desarrollo local) | webhook (producción, Fase 11)
+  limite_consultas_por_usuario_dia: 10
+  zona_horaria_limite: America/Lima
+  max_caracteres_mensaje: 4096     # PROVISIONAL (Fase 10): verificar límite vigente de la Bot API
+
+# ── Despliegue (Fases 11 y 12) ───────────────────────────────────────────────
+deploy:
+  topes:                           # protección de costo: la app pública usa mi clave
+    consultas_por_sesion: 10
+    consultas_globales_por_dia: 100

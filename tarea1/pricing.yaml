@@ -1,0 +1,45 @@
+# =============================================================================
+# pricing.yaml — precios usados para calcular el costo de cada llamada
+#
+# Regla del proyecto: ningún precio se inventa. Cada bloque cita su fuente y la
+# fecha en que se verificó. Si un precio es null, el código se niega a calcular
+# costos con él (mejor un error que un costo falso).
+#
+# Estructura por VENTANAS HORARIAS: cada modelo tiene una lista de ventanas
+# (zona horaria, hora de inicio, hora de fin, USD por millón de tokens). El
+# costo de una llamada usa la ventana que contiene la hora de ESA llamada
+# (llm/pricing.py :: precio_en). Esta estructura está probada con una tabla
+# ficticia de horas pico y valle en tests/test_pricing.py.
+# =============================================================================
+
+anthropic:
+  fuente: https://platform.claude.com/docs/en/about-claude/pricing
+  fuente_modelos: https://platform.claude.com/docs/en/about-claude/models/overview
+  fecha_verificacion: 2026-09-21
+  moneda: USD
+  unidad: por millón de tokens (MTok)
+  nota_horarios: >
+    La documentación oficial (verificada en la fecha indicada) publica UN precio por
+    modelo y NO menciona tarifas distintas según la hora del día. Por eso cada modelo
+    tiene una única ventana 00:00-24:00. Los únicos modificadores documentados son
+    ajenos al horario y NO se aplican aquí: Batch API (-50 %), caché de prompts
+    (lecturas al 0.1x) y residencia de datos inference_geo "us" (1.1x).
+  modelos:
+    claude-haiku-4-5-20251001:
+      ventanas:
+        - zona_horaria: America/Lima
+          hora_inicio: "00:00"
+          hora_fin: "24:00"
+          usd_por_millon_entrada: 1.00
+          usd_por_millon_salida: 5.00
+
+# Embeddings por API (solo para la comparación de la Fase 6).
+# PENDIENTE: verificar en la página oficial de precios de OpenAI antes de calcular costos.
+openai_embeddings:
+  fuente: null
+  fecha_verificacion: null
+  moneda: USD
+  unidad: por millón de tokens
+  modelos:
+    text-embedding-3-small:
+      usd_por_millon_tokens: null
