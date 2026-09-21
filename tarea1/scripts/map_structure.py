@@ -65,7 +65,6 @@ def main(argv: list[str] | None = None) -> int:
         info.update({
             "caracteres": len(r.texto), "confianza": round(r.confianza, 1) if r.confianza is not None else None,
             "segundos": round(r.segundos, 2),
-            "tipo": "texto" if len(r.texto) >= ajustes["min_caracteres_texto"] else "escasa_lectura",
             "muestra": " ".join(r.texto.split())[:160],
         })
         mapa["paginas"][str(n)] = info

@@ -17,8 +17,10 @@ from datetime import date
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+from extraction import store  # noqa: E402
 from extraction.rangos import formatear_rangos  # noqa: E402
-from extraction.subset import prioridad, seleccionar  # noqa: E402
+from extraction.structure import analizar_pagina  # noqa: E402
+from extraction.subset import es_pagina_de_texto, prioridad, seleccionar  # noqa: E402
 from rag_engine.config import ConfigError, cargar_config  # noqa: E402
 
 DOC = "ds_009_2025_ef"
@@ -57,7 +59,7 @@ def main(argv: list[str] | None = None) -> int:
     mod = json.loads(ruta_mod.read_text(encoding="utf-8"))
     articulos_mod = sorted({c["articulo"] for c in mod["cambios"]})
 
-    decisiones = seleccionar(mapa, articulos_mod, sub["max_articulo"], sub["paginas_objetivo"], sub["paginas_minimo"], sub["pesos"])
+    decisiones = seleccionar(mapa, articulos_mod, sub["max_articulo"], sub["paginas_objetivo"], sub["paginas_minimo"], sub["pesos"], sub["criterio_texto"])
     incluidas = [d.pagina for d in decisiones if d.incluida]
     prio = prioridad(decisiones)
     rangos = formatear_rangos(incluidas)
@@ -78,10 +80,18 @@ def main(argv: list[str] | None = None) -> int:
                         "encabezados": d.encabezados, "motivos": d.motivos} for d in decisiones],
     }, ensure_ascii=False, indent=1))
 
+    ocr = store.listar_paginas(dir_doc)
+    vistos: dict[int, list[int]] = {}
+    for e in ocr:
+        for a in set(analizar_pagina(e["texto"])["articulos"]):
+            vistos.setdefault(a, []).append(e["pagina"])
+    hallados = [a for a in articulos_mod if a in vistos]
+    no_hallados = [a for a in articulos_mod if a not in vistos]
     total = len(decisiones)
-    texto = sorted(p for p, v in mapa.items() if v["tipo"] == "texto")
-    escasas = sorted(p for p, v in mapa.items() if v["tipo"] != "texto")
-    excl_texto = [d.pagina for d in decisiones if not d.incluida and mapa[d.pagina]["tipo"] == "texto"]
+    crit = sub["criterio_texto"]
+    texto = sorted(p for p, v in mapa.items() if es_pagina_de_texto(v, crit))
+    escasas = sorted(p for p, v in mapa.items() if not es_pagina_de_texto(v, crit))
+    excl_texto = [d.pagina for d in decisiones if not d.incluida and es_pagina_de_texto(mapa[d.pagina], crit)]
     L = [
         "# Subconjunto del DS 009-2025-EF procesado con OCR", "",
         f"_Generado por `scripts/plan_ocr.py` el {date.today().isoformat()}. Es un PLAN reproducible: si cambia el mapa o los pesos de "
@@ -90,8 +100,11 @@ def main(argv: list[str] | None = None) -> int:
         f"- El PDF tiene **{total} páginas**, todas escaneadas (0 caracteres de capa de texto).",
         f"- **{len(incluidas)} páginas procesadas con OCR** (mínimo exigido: {sub['paginas_minimo']}): `{rangos}`.",
         f"- Páginas con texto normativo legible: {len(texto)} (págs. {min(texto)}–{max(texto)}); se procesa el {100 * len(incluidas) / len(texto):.0f} % de ellas.",
-        f"- **Cobertura del manejo de versiones:** {len(cubiertos)} de {len(articulos_mod)} artículos modificados o incorporados por el DS 001-2026-EF "
-        f"tienen su página de inicio en el subconjunto.", "",
+        (f"- **Cobertura del manejo de versiones (verificada sobre el texto OCR):** el texto original de **{len(hallados)} de {len(articulos_mod)}** artículos "
+         f"modificados o incorporados por el DS 001-2026-EF está en el corpus (estimación previa al OCR, por interpolación de páginas: {len(cubiertos)})."
+         if ocr else
+         f"- **Cobertura del manejo de versiones (estimada por interpolación, aún sin verificar con OCR):** {len(cubiertos)} de {len(articulos_mod)} artículos "
+         f"modificados o incorporados por el DS 001-2026-EF empiezan en una página del subconjunto."), "",
         "## Convención de número de página", "",
         "`pagina` es el índice del PDF empezando en 1 (la primera página del archivo es la 1). En este PDF coincide con el número impreso en la "
         "cabecera de El Peruano (p. ej. la página 60 dice «60 NORMAS LEGALES»), pero el sistema usa siempre el índice del PDF, igual que en una "
@@ -99,8 +112,10 @@ def main(argv: list[str] | None = None) -> int:
         "## Cómo se eligió", "",
         "1. **Mapeo de estructura** (`scripts/map_structure.py`): un OCR rápido de las 196 páginas que guarda solo estructura (tipo de página, "
         "encabezados, números de artículo, conteos de palabras clave), **no el texto**. Ese OCR de exploración no forma parte del corpus.",
-        "2. **Solo páginas de texto.** Las portadas, formularios y tablas (`escasa_lectura`, menos de "
-        f"{cfg.get('extraccion.mapeo.min_caracteres_texto')} caracteres leídos) quedan fuera.",
+        "2. **Solo páginas de texto**: al menos "
+        f"{crit['min_caracteres']} caracteres leídos **y** confianza del motor ≥ {crit['min_confianza']:g}. Las portadas, formularios y tablas (`escasa_lectura`) "
+        "quedan fuera. Ninguna de las dos condiciones basta sola: los formularios del anexo dan miles de caracteres de ruido con confianza ≈ 55, "
+        "y algunas páginas de formulario dan confianza alta con casi nada de texto.",
         "3. **Cobertura obligatoria:** la página donde empieza cada título, capítulo, subcapítulo, disposición y anexo detectados.",
         "4. **Versiones:** se prioriza el texto ORIGINAL de los artículos que el DS 001-2026-EF modifica o incorpora "
         f"(`data/processed/articulos_modificados.json`, {len(articulos_mod)} artículos). Sin él no se puede mostrar cuándo el reglamento original quedó desactualizado.",
@@ -123,6 +138,20 @@ def main(argv: list[str] | None = None) -> int:
     if sin_cubrir:
         L += ["## Artículos modificados cuyo texto original NO está en el subconjunto", "",
               f"`{', '.join(map(str, sin_cubrir))}`. Para estos, el motor solo tendrá el texto del DS 001-2026-EF (la modificatoria).", ""]
+    # verificación POSTERIOR al OCR: ¿el texto original de cada artículo modificado está realmente en el corpus?
+    if ocr:
+        fantasma = sorted(a for a in vistos if a > 389)
+        L += ["## Verificación posterior al OCR: artículos modificados presentes en el corpus", "",
+              f"Se buscó, en el texto ya extraído de las {len(ocr)} páginas, una línea que empiece con «Artículo N.» para cada uno de los {len(articulos_mod)} artículos "
+              f"que el DS 001-2026-EF modifica o incorpora: **{len(hallados)} encontrados**, {len(no_hallados)} no encontrados"
+              + (f" (`{', '.join(map(str, no_hallados))}`)." if no_hallados else ".") +
+              " Un «no encontrado» puede ser un artículo cuyo número el OCR leyó mal o cuya página quedó fuera del subconjunto; para ninguno de ellos hay "
+              "garantía de que el texto original esté indexado.", ""]
+        if fantasma:
+            L += [f"Números de artículo que el OCR leyó pero que no existen en el Reglamento (> 389; errores de lectura): `{', '.join(map(str, fantasma))}`. "
+                  "La extracción de `articulos_mencionados` (Fase 4) debe descartarlos.", ""]
+        (dir_doc / "_verificacion_versiones.json").write_text(json.dumps(
+            {"encontrados": hallados, "no_encontrados": no_hallados, "articulos_leidos_fuera_de_rango": fantasma}, ensure_ascii=False, indent=1), encoding="utf-8")
     L += ["## Limitaciones", "",
           "- La página de inicio de cada artículo se **detecta** por OCR (cobertura de detección medida en el mapa) o se **interpola** entre artículos vecinos "
           "(error típico de ±1 página). Un artículo puede empezar en una página incluida y terminar en una excluida.",

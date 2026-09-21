@@ -177,6 +177,34 @@ def escribir_articulos_modificados(cfg: Config) -> Path | None:
     return ruta
 
 
+def generar_reportes(cfg: Config) -> None:
+    """Reporte de calidad por documento (JSON + MD en data/processed/<doc>/) y uno consolidado para la app."""
+    import json
+    import os
+
+    from extraction.quality_report import escribir_reporte, reporte_documento
+
+    todos = []
+    for doc in cfg.documentos:
+        dir_doc = cfg.ruta("processed") / doc["id"]
+        entradas = store.listar_paginas(dir_doc)
+        if not entradas:
+            continue
+        with pymupdf.open(cfg.ruta("raw") / doc["archivo"]) as pdf:
+            total = pdf.page_count
+        ruta_plan = dir_doc / "_plan_ocr.json"
+        plan = json.loads(ruta_plan.read_text(encoding="utf-8")) if ruta_plan.is_file() else None
+        r = reporte_documento(doc, entradas, total, plan)
+        escribir_reporte(dir_doc, r)
+        todos.append(r)
+    if todos:
+        ruta = cfg.ruta("processed") / "reporte_calidad.json"
+        tmp = ruta.with_suffix(".json.tmp")
+        tmp.write_text(json.dumps({"documentos": todos}, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+        os.replace(tmp, ruta)
+        print(f"Reportes de calidad escritos ({len(todos)} documentos): {ruta}")
+
+
 def main(argv: list[str] | None = None) -> int:
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -186,6 +214,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--relimpiar", action="store_true")
     ap.add_argument("--forzar", action="store_true", help="rehace todas las páginas (incluido el OCR)")
     ap.add_argument("--max-paginas", type=int, default=None)
+    ap.add_argument("--solo-reporte", action="store_true", help="solo regenera los reportes de calidad")
     args = ap.parse_args(argv)
     try:
         cfg = cargar_config(args.config) if args.config else cargar_config()
@@ -194,6 +223,9 @@ def main(argv: list[str] | None = None) -> int:
         print(f"ERROR de configuración: {exc}", file=sys.stderr)
         return 1
     ajustes = dict(cfg.get("extraccion"))
+    if args.solo_reporte:
+        generar_reportes(cfg)
+        return 0
 
     # Los documentos con capa de texto van primero: su texto forma el vocabulario de referencia del OCR.
     docs = sorted(docs, key=lambda d: d["id"] == "ds_009_2025_ef")
@@ -221,6 +253,7 @@ def main(argv: list[str] | None = None) -> int:
         ruta = escribir_articulos_modificados(cfg)
         if ruta:
             print(f"articulos_modificados.json actualizado: {ruta}")
+    generar_reportes(cfg)
     return rc
 
 

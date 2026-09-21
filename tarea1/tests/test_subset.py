@@ -1,13 +1,14 @@
 """Selección del subconjunto de OCR con un mapa sintético."""
 import pytest
 
-from extraction.subset import Decision, anclas_monotonas, articulo_a_pagina, prioridad, seleccionar
+from extraction.subset import Decision, anclas_monotonas, articulo_a_pagina, es_pagina_de_texto, prioridad, seleccionar
 
 PESOS = {"modificados": 10.0, "mype": 1.0}
+CRITERIO = {"min_caracteres": 4500, "min_confianza": 80.0}
 
 
-def pagina(tipo="texto", cap=None, arts=(), claves=None, car=6000):
-    return {"tipo": tipo, "caracteres": car, "articulos": list(arts), "palabras_clave": claves or {},
+def pagina(tipo="texto", cap=None, arts=(), claves=None, car=6000, conf=88.0):
+    return {"tipo": tipo, "caracteres": car, "confianza": conf, "articulos": list(arts), "palabras_clave": claves or {},
             "encabezados": [{"nivel": "capitulo", "texto": cap}] if cap else []}
 
 
@@ -41,7 +42,7 @@ def mapa_sintetico():
 
 
 def test_seleccion_incluye_encabezados_y_modificados_y_excluye_formularios():
-    ds = {d.pagina: d for d in seleccionar(mapa_sintetico(), [17], max_articulo=20, objetivo=4, minimo=4, pesos=PESOS)}
+    ds = {d.pagina: d for d in seleccionar(mapa_sintetico(), [17], max_articulo=20, objetivo=4, minimo=4, pesos=PESOS, criterio_texto=CRITERIO)}
     assert [p for p, d in ds.items() if d.incluida] == [3, 4, 6, 7]     # 2 encabezados + p7 (art. 17 modificado) + p4 (MYPE)
     assert not ds[5].incluida and any("menor prioridad" in m for m in ds[5].motivos)
     assert all(not ds[p].incluida and "escasa_lectura" in ds[p].motivos[0] for p in (1, 2, 8))
@@ -49,27 +50,38 @@ def test_seleccion_incluye_encabezados_y_modificados_y_excluye_formularios():
 
 
 def test_las_paginas_obligatorias_van_primero_en_la_prioridad():
-    ds = seleccionar(mapa_sintetico(), [17], max_articulo=20, objetivo=4, minimo=4, pesos=PESOS)
+    ds = seleccionar(mapa_sintetico(), [17], max_articulo=20, objetivo=4, minimo=4, pesos=PESOS, criterio_texto=CRITERIO)
     assert prioridad(ds) == [3, 6]
 
 
 def test_falla_si_las_obligatorias_superan_el_objetivo():
     with pytest.raises(ValueError, match="obligatorias"):
-        seleccionar(mapa_sintetico(), [], max_articulo=20, objetivo=1, minimo=1, pesos=PESOS)
+        seleccionar(mapa_sintetico(), [], max_articulo=20, objetivo=1, minimo=1, pesos=PESOS, criterio_texto=CRITERIO)
 
 
 def test_el_minimo_manda_sobre_un_objetivo_menor():
-    ds = seleccionar(mapa_sintetico(), [], max_articulo=20, objetivo=2, minimo=5, pesos=PESOS)
+    ds = seleccionar(mapa_sintetico(), [], max_articulo=20, objetivo=2, minimo=5, pesos=PESOS, criterio_texto=CRITERIO)
     assert sum(d.incluida for d in ds) == 5
 
 
 def test_desempate_por_numero_de_pagina():
     m = {3: pagina(cap="CAPÍTULO I", arts=[1]), 4: pagina(arts=[5]), 5: pagina(arts=[9])}
-    ds = {d.pagina: d for d in seleccionar(m, [], max_articulo=10, objetivo=2, minimo=2, pesos=PESOS)}
+    ds = {d.pagina: d for d in seleccionar(m, [], max_articulo=10, objetivo=2, minimo=2, pesos=PESOS, criterio_texto=CRITERIO)}
     assert ds[4].incluida and not ds[5].incluida
 
 
 def test_devuelve_una_decision_por_pagina_del_mapa():
     m = mapa_sintetico()
-    ds = seleccionar(m, [], max_articulo=20, objetivo=4, minimo=4, pesos=PESOS)
+    ds = seleccionar(m, [], max_articulo=20, objetivo=4, minimo=4, pesos=PESOS, criterio_texto=CRITERIO)
     assert [d.pagina for d in ds] == sorted(m) and all(isinstance(d, Decision) for d in ds)
+
+
+@pytest.mark.parametrize("car, conf, esperado", [
+    (7000, 89.0, True),      # página normativa típica
+    (4859, 80.3, True),      # la más justa del DS 009 real (p. 21)
+    (4700, 53.5, False),     # formulario: muchos caracteres de ruido, baja confianza
+    (277, 82.4, False),      # buena confianza pero casi vacía
+    (7000, None, False),     # sin confianza -> no se puede afirmar que sea legible
+])
+def test_criterio_de_pagina_de_texto_exige_caracteres_y_confianza(car, conf, esperado):
+    assert es_pagina_de_texto({"caracteres": car, "confianza": conf}, CRITERIO) is esperado

@@ -1,8 +1,9 @@
 """Selección del subconjunto de páginas del DS 009-2025-EF que se procesan con OCR.
 
 Reglas (deterministas; los pesos y el tamaño objetivo están en config.yaml, extraccion.subconjunto):
-  1. Solo son candidatas las páginas de TEXTO. Portadas, formularios y tablas ("escasa_lectura") se excluyen: el OCR
-     no las lee (a 96 DPI nativos) y no contienen normativa consultable.
+  1. Solo son candidatas las páginas de TEXTO: las que el OCR de exploración lee con muchos caracteres Y alta confianza
+     (``criterio_texto`` en config.yaml). Portadas, formularios y tablas ("escasa_lectura") se excluyen: el OCR
+     las lee mal a 96 DPI nativos y no contienen normativa consultable.
   2. OBLIGATORIAS: la página donde empieza cada título, capítulo, subcapítulo, disposición y anexo detectados. Así
      el subconjunto cubre toda la estructura del Reglamento.
   3. El resto del presupuesto se llena por puntaje:  puntaje = peso_modificados × (artículos modificados por el
@@ -24,6 +25,12 @@ class Decision:
     puntaje: float = 0.0
     modificados: list[int] = field(default_factory=list)
     encabezados: list[str] = field(default_factory=list)
+
+
+def es_pagina_de_texto(info: dict, criterio: dict) -> bool:
+    """Página normativa legible: suficientes caracteres Y confianza del motor alta. Ninguna de las dos por sí sola basta:
+    los formularios del anexo dan miles de caracteres de ruido con baja confianza, y otros dan buena confianza con casi nada."""
+    return info["caracteres"] >= criterio["min_caracteres"] and (info.get("confianza") or 0.0) >= criterio["min_confianza"]
 
 
 def anclas_monotonas(pares: list[tuple[int, int]]) -> list[tuple[int, int]]:
@@ -75,7 +82,7 @@ def articulo_a_pagina(mapa: dict[int, dict], max_articulo: int) -> dict[int, int
 
 
 def seleccionar(mapa: dict[int, dict], articulos_modificados: list[int], max_articulo: int, objetivo: int,
-                minimo: int, pesos: dict) -> list[Decision]:
+                minimo: int, pesos: dict, criterio_texto: dict) -> list[Decision]:
     """Devuelve una Decision por cada página del mapa (incluida o excluida, con sus motivos)."""
     a_pag = articulo_a_pagina(mapa, max_articulo)
     modificados_en: dict[int, list[int]] = {}
@@ -84,10 +91,12 @@ def seleccionar(mapa: dict[int, dict], articulos_modificados: list[int], max_art
             modificados_en.setdefault(a_pag[art], []).append(art)
 
     decisiones = {p: Decision(pagina=p, incluida=False) for p in mapa}
-    candidatas = [p for p in mapa if mapa[p]["tipo"] == "texto"]
+    candidatas = [p for p in mapa if es_pagina_de_texto(mapa[p], criterio_texto)]
     for p in mapa:
         if p not in candidatas:
-            decisiones[p].motivos.append("escasa_lectura: portada, formulario o tabla; el OCR no la lee a 96 DPI y no es normativa consultable")
+            decisiones[p].motivos.append(
+                f"escasa_lectura: portada, formulario o tabla ({mapa[p]['caracteres']} car., confianza {mapa[p].get('confianza')}); "
+                f"el OCR la lee mal a 96 DPI y no es normativa consultable")
 
     obligatorias: list[int] = []
     for p in candidatas:

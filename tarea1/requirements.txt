@@ -1,6 +1,15 @@
-# Dependencias de tarea1. Se amplía fase por fase, solo con paquetes realmente
-# instalados y probados; al cerrar la Fase 7 se fijan versiones desde un venv limpio.
+# Dependencias de tarea1. Se amplía fase por fase, solo con paquetes realmente instalados y probados;
+# al cerrar la Fase 7 se fijan versiones desde un venv limpio.
 # Python 3.12 recomendado (las ruedas de PyTorch/ChromaDB tardan en llegar a versiones muy nuevas).
+
+# Configuración
 pyyaml>=6.0
 python-dotenv>=1.0
+
+# Extracción (proceso OFFLINE): PDF -> texto por página, OCR
 pymupdf>=1.24
+pillow>=10.0
+pytesseract>=0.3.10          # requiere el ejecutable de Tesseract (ver README: TESSERACT_CMD)
+
+# Solo para scripts/ocr_benchmark.py (comparación de motores; arrastra PyTorch, ~1 GB). No hace falta para usar el proyecto.
+# easyocr>=1.7

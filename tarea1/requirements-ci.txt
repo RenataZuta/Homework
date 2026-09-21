@@ -1,6 +1,8 @@
-# Dependencias livianas para GitHub Actions (sin OCR, sin Streamlit, sin bots).
+# Dependencias livianas para GitHub Actions (sin OCR real, sin Streamlit, sin bots).
 # Se completa en la Fase 9.
 pyyaml>=6.0
 python-dotenv>=1.0
 pytest>=8.0
 pymupdf>=1.24
+pillow>=10.0
+pytesseract>=0.3.10

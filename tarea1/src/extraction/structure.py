@@ -14,7 +14,10 @@ RE_CAPITULO = re.compile(rf"^\W{{0,3}}CAP[IÍ]TULO\s+({ROMANOS}|[ÚU]NICO)\b\s*(
 RE_SUBCAPITULO = re.compile(rf"^\W{{0,3}}(SUBCAP[IÍ]TULO|SECCI[OÓ]N)\s+({ROMANOS}|[ÚU]NICA?)\b\s*(.*)$", re.I)
 RE_DISPOSICION = re.compile(r"^\W{0,3}(DISPOSICI[OÓ]N(?:ES)?\s+COMPLEMENTARIAS?\s+(?:FINAL(?:ES)?|TRANSITORIAS?|DEROGATORIAS?|MODIFICATORIAS?))\b", re.I)
 RE_ANEXO = re.compile(rf"^\W{{0,3}}ANEXO\s*({ROMANOS}|\d{{1,2}}|[A-Z])?\b\s*(.*)$")
-RE_ARTICULO = re.compile(r"^\W{0,3}Art[ií]culo\s+(\d{1,3})\s*[.\-–°º]")
+# Encabezado de artículo tolerante a OCR: "Artículo 69." / "Articulo 69, Contenido" (coma en vez de punto) /
+# "Artículo-64." / variantes de la palabra ("Aríículo", "Artfculo"). Solo al INICIO de línea y con mayúscula inicial:
+# las referencias en minúscula dentro de una frase ("… del artículo 69 de la Ley") no cuentan.
+RE_ARTICULO = re.compile(r"^\W{0,3}A[rn][tíf1l][íi1lf]?c[uo]l[oa0][\s\-]{0,2}(\d{1,3})\s*[.,\-–°º:]")
 
 
 def sin_tildes(texto: str) -> str:

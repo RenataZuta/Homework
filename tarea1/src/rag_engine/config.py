@@ -33,7 +33,7 @@ CLAVES_REQUERIDAS = (
     "descarga.espera_reintento_segundos", "descarga.aviso_tamano_mb",
     "extraccion.umbral_caracteres_ocr", "extraccion.dpi", "extraccion.idioma_ocr",
     "extraccion.motor_ocr", "extraccion.rangos_paginas", "extraccion.ocr.banda_cabecera", "extraccion.prioridad_ocr",
-    "extraccion.codigo_fin_norma", "extraccion.mapeo.motor", "extraccion.mapeo.dpi", "extraccion.mapeo.min_caracteres_texto",
+    "extraccion.codigo_fin_norma", "extraccion.mapeo.motor", "extraccion.mapeo.dpi",
     "chunking.unidad", "chunking.configuraciones", "chunking.activa",
     "embeddings.proveedor", "embeddings.batch", "embeddings.normalizar",
     "retrieval.modo", "retrieval.top_k", "retrieval.umbral_similitud", "retrieval.umbral_calibrado",

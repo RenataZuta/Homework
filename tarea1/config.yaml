@@ -70,24 +70,23 @@ descarga:
 
 # ── Extracción y OCR (Fase 2) ────────────────────────────────────────────────
 extraccion:
-  umbral_caracteres_ocr: 100       # PROVISIONAL (Fase 2): páginas con menos caracteres útiles van a OCR
+  umbral_caracteres_ocr: 100       # DECIDIDO (Fase 2): páginas con capa de texto: mín 946 car. útiles; escaneadas: 0. Cualquier valor de 1 a 945 clasifica igual
   dpi: 200                         # DECIDIDO (Fase 2, 2026-09-21): más palabras correctas (620) sin omitir texto; ver eval/results/ocr_benchmark.md
   idioma_ocr: spa
   motor_ocr: tesseract             # DECIDIDO (Fase 2, 2026-09-21): 6.7x más rápido y ~2x más exacto que EasyOCR
   ocr:
     banda_cabecera: 0.10           # PROVISIONAL (Fase 2): fracción superior de la página que es cabecera (R1o)
   prioridad_ocr:                   # páginas a procesar PRIMERO (representativas por capítulo); el resto sigue en orden
-    ds_009_2025_ef: []
+    ds_009_2025_ef: [3, 4, 5, 6, 11, 15, 26, 28, 32, 33, 34, 37, 39, 40, 53, 54, 55, 56, 57, 58, 59, 60, 65, 67, 70, 73, 78, 81, 82, 94, 96, 97, 100]
   rangos_paginas:                  # páginas del PDF (base 1) a procesar; null = todas
     ley_32069: null
     ds_001_2026_ef: null
-    ds_009_2025_ef: null           # PROVISIONAL (Fase 2): subconjunto OCR (≥ 60 páginas), ver docs/ocr_subset.md
+    ds_009_2025_ef: "3-7, 9-11, 13-21, 26-34, 36-48, 50-60, 62-65, 67-68, 70-71, 73-74, 76-82, 91-94, 96-98, 100"   # subconjunto de OCR: ver docs/ocr_subset.md
   codigo_fin_norma:                # el PDF de El Peruano arrastra texto de OTRAS normas tras este código (regla R3)
     ds_001_2026_ef: "2474920-3"
   mapeo:                           # paso de exploración de estructura del DS 009 (scripts/map_structure.py)
     motor: tesseract
     dpi: 200                       # el mapa a 96 DPI cubrió solo 71 % de los artículos; a 200 DPI se lee mejor
-    min_caracteres_texto: 1500     # por debajo, la página es portada/formulario/tabla ("escasa_lectura")
     palabras_clave:                # conteos por página, para priorizar contenido útil a una MYPE
       mype: ["mype", "micro y pequena", "microempresa", "pequena empresa"]
       contratacion_menor: ["contratacion menor", "hasta ocho", "8 uit", "ocho (8) uit", "contratos menores"]
@@ -96,9 +95,21 @@ extraccion:
       garantias_penalidades: ["garantia", "penalidad", "adelanto", "pago", "resolucion del contrato"]
       controversias: ["arbitraje", "conciliacion", "junta de prevencion", "controversia", "recurso de apelacion"]
       pladicop: ["pladicop", "catalogo electronico", "acuerdo marco", "compra corporativa"]
+  limpieza_demo:                   # páginas mostradas en docs/limpieza_encabezados.md (antes / después)
+    ds_001_2026_ef: [2, 16]        # cabecera con "/" en línea aparte; p. 16 = fin de norma con texto ajeno
+    ds_009_2025_ef: [60]           # página escaneada: cabecera por posición
+  orden_lectura:                   # verificación del orden de lectura (scripts/reading_order_check.py)
+    paginas: [60, 26, 100]         # 60 = cuerpo típico; 26 = capítulos y subcapítulo a media página; 100 = disposiciones transitorias numeradas
+    recorte_desde: 0.10            # fracción superior del recorte (justo bajo la cabecera)
+    recorte_hasta: 0.45
+    max_lineas_mostradas: 40
+    saltos_aceptables: 3           # más saltos I<->D que esto marca la página para revisión
   subconjunto:                     # selección de páginas del DS 009 para OCR (scripts/plan_ocr.py)
     paginas_minimo: 60             # requisito del proyecto
     paginas_objetivo: 75           # PROVISIONAL (Fase 2): se ajusta con el conteo de páginas obligatorias
+    criterio_texto:                # página de texto normativo legible = AMBAS condiciones (medido en el mapa a 200 DPI)
+      min_caracteres: 4500         # normativas: mín 4859; formularios del anexo: mediana 2188
+      min_confianza: 80.0          # normativas: mín 80.3 (p. 21) y mediana 89; anexo: mediana 54.7
     max_articulo: 400              # las interpolaciones artículo->página no pasan de aquí
     pesos: {modificados: 10.0, mype: 1.0}   # puntaje = 10 × artículos modificados que empiezan en la página + densidad de palabras clave
   benchmark:                       # mini-benchmark de OCR (scripts/ocr_benchmark.py)

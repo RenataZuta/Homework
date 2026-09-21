@@ -47,3 +47,24 @@ def test_palabras_clave_ignoran_tildes_y_mayusculas():
 def test_pagina_sin_estructura():
     r = analizar_pagina("texto corrido sin nada especial", CLAVES)
     assert r == {"encabezados": [], "articulos": [], "palabras_clave": {}}
+
+
+@pytest.mark.parametrize("linea, numero", [
+    ("Artículo 69, Contenido de las ofertas", 69),        # coma en vez de punto (muy frecuente en el OCR)
+    ("Artículo-64. Cronograma de los procedimientos", 64),  # guion pegado
+    ("Articulo 100, Condiciones generales", 100),
+    ("Aríículo 12. Objeto", 12),                            # errores en la palabra
+    ("“Artículo 15. Compradores Públicos", 15),
+])
+def test_encabezados_de_articulo_con_errores_tipicos_de_ocr(linea, numero):
+    assert analizar_pagina(linea)["articulos"] == [numero]
+
+
+@pytest.mark.parametrize("linea", [
+    "el numeral 64.1 puede reducirse conforme a lo que señalen",
+    "del articulo 69.",                       # referencia en minúscula
+    "Anexo 12, Formularios",                  # otra palabra que empieza con A
+    "Artículo de la ley",                     # sin número
+])
+def test_no_toma_referencias_ni_otras_palabras_como_encabezado(linea):
+    assert analizar_pagina(linea)["articulos"] == []
