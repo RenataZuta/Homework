@@ -8,8 +8,8 @@
 
 - [x] **Fase 0** — Preparación: estructura, `.gitignore`, `.env.example`, `config.yaml`, `config.py`, `check_secrets.py`
 - [x] **Fase 1** — Descarga de PDFs oficiales + `MANIFEST.json`
-- [~] **Fase 2** — Extracción por página, OCR (75 págs del DS 009-2025-EF), limpieza, reporte de calidad `[MANUAL pendiente: comparar recortes con el texto de docs/reading_order_check.md y revisar docs/ocr_subset.md]`
-- [ ] **Fase 3** — Set de evaluación (`eval/preguntas.csv`) `[MANUAL: validar páginas contra el PDF]`
+- [x] **Fase 2** — Extracción por página, OCR (75 págs del DS 009-2025-EF), limpieza, reporte de calidad (revisión manual confirmada por la persona el 2026-09-21)
+- [~] **Fase 3** — Set de evaluación (`eval/preguntas.csv`) `[MANUAL pendiente: validar CADA paginas_esperadas con docs/eval_revision_manual.md; no empezar la Fase 4 hasta confirmarlo]`
 - [ ] **Fase 4** — Chunking, embeddings, índice idempotente y reanudable
 - [ ] **Fase 5** — Motor RAG: umbral, versiones, costo `[MANUAL: ANTHROPIC_API_KEY]`
 - [ ] **Fase 6** — Evaluación y comparación de embeddings local vs API `[MANUAL: OPENAI_API_KEY]`
@@ -54,6 +54,16 @@ Tarea 2 (`tarea2/`): pendiente, se hará después; importará `rag_engine`.
 | Versiones | DS 001 modifica 96 y incorpora 15 (105 artículos distintos); **98 de 105** tienen su texto original en el corpus (verificado sobre el OCR) |
 | Tests | 175 pasan |
 
+## Resultados de la Fase 3 (borrador; 2026-09-21)
+
+| Ítem | Resultado |
+|---|---|
+| Preguntas | **27**: 21 in_domain (11 coloquiales, 10 jurídicas, 5 sobre artículos modificados por el DS 001) y 6 out_of_domain |
+| Páginas esperadas | 34 evidencias en 29 páginas distintas, **todas dentro del subconjunto procesado** (lo comprueba `validate_eval_set.py`) |
+| Verificación contra el PDF | Los 34 recortes de imagen se revisaron uno a uno (`docs/eval_evidencia/`); el ancla no se tomó del texto extraído sino que se comparó con la imagen |
+| Fuera de dominio | tributación (o01), contratación privada (o02), Colombia (o03), ceviche (o04), **fórmula de la capacidad máxima de contratación (o05, art. 28, p. 8 del DS 009, excluida del índice)**, valor de la UIT (o06) |
+| Tests | 192 pasan (17 nuevos del set de evaluación) |
+
 ## Decisiones registradas
 
 | Fase | Decisión | Evidencia / fuente | Fecha |
@@ -68,6 +78,9 @@ Tarea 2 (`tarea2/`): pendiente, se hará después; importará `rag_engine`.
 | 2 | Cabecera de páginas escaneadas: regla por **posición** (banda superior 10 %), no por texto | El OCR lee la cabecera de forma impredecible (`Miércoses 22 48 enero…`) | 2026-09-21 |
 | 2 | Página pública = índice del PDF (base 1), que coincide con el nº impreso del DS 009 | Verificado en las págs. 10 y 60 | 2026-09-21 |
 | 2 | Subconjunto de OCR: 75 págs = 33 por cobertura de estructura + resto por artículos modificados y relevancia MYPE; criterio de página de texto = ≥ 4 500 car. **y** confianza ≥ 80 | `docs/ocr_subset.md`; separa exactamente las 98 págs normativas de los formularios del anexo | 2026-09-21 |
+| 3 | Formato del CSV: varios documentos con `\|` y varias páginas de un documento con `;` (`ds_001_2026_ef\|ds_009_2025_ef` / `8;9\|47`); en las preguntas de versiones el primer documento es siempre el DS 001 | Permite medir aparte si el recuperador trae el texto vigente y no solo el original | 2026-09-21 |
+| 3 | Las evidencias (ancla + dato de cada página) van en `eval/evidencia.yaml`, no en el CSV, para no romper las columnas pedidas | `scripts/eval_evidence.py` recorta la imagen del PDF | 2026-09-21 |
+| 3 | 27 preguntas en lugar de 20: más out_of_domain cercanas (o02, o03, o05, o06) para que el barrido de umbral no se calibre solo con casos fáciles | Limitación: se calibra con el mismo set | 2026-09-21 |
 | 0 | README completo en `tarea1/README.md`; el README de la raíz solo recibe una sección con enlace | El repo aloja varias tareas; no se sobrescribe lo existente | 2026-09-21 |
 | 0 | Los módulos se crean en la fase que los necesita (sin archivos vacíos de relleno) | Historial de commits refleja el trabajo real | 2026-09-21 |
 
@@ -81,3 +94,7 @@ Tarea 2 (`tarea2/`): pendiente, se hará después; importará `rag_engine`.
 6. **Errores de carácter en números del OCR** (`Articulo 399` por 99, `598.2` por 98.2, `CAPITULO 111`): la extracción de `articulos_mencionados` (Fase 4) debe descartar números > 389 y apoyarse en el rango de artículos de la página. El OCR suele leer coma en vez de punto tras el número de artículo.
 7. **Siete artículos modificados sin texto original en el corpus**: `46, 88, 94, 113, 198, 218, 318` (página excluida o número mal leído). Para ellos el motor solo tendrá el texto del DS 001.
 8. **Trabajo pendiente para la Fase 4:** `easyocr` y `torch` quedaron instalados en el entorno `tarea1` solo por el benchmark; `requirements.txt` los deja comentados.
+9. **El compendio de la Ley trae versiones dentro de la propia página.** En la p. 36 el art. 73.2 aparece en cursiva (0,5 %, tope 50 UIT) y una nota `(*)` reproduce el texto vigente desde 2025 (Ley 32187: 3 % en general); el 67.8 está derogado por la Ley 32103. El prompt de la Fase 5 debe tratar «(*) … cuyo texto es el siguiente» como el texto que prevalece.
+10. **Ley y Reglamento numeran sus artículos por separado** (el art. 98 de la Ley es «Retiro temporal del registro»; el 98 del Reglamento es sobre la comparación de precios). Al extraer `articulos_mencionados` hay que registrar a qué norma remite cada mención («artículo 61 **de la Ley**»), y el aviso de versión solo aplica a fragmentos del Reglamento.
+11. **Encabezados huérfanos:** el título de un artículo puede quedar al final de una página y su contenido en la siguiente (arts. 89 y 93 de la Ley). Las páginas esperadas son siempre las del contenido. Idea para la Fase 4: guardar el último encabezado de la página anterior como metadato del primer fragmento.
+12. **El OCR falla en cifras:** el art. 114 original dice «S/ 480 000» y el OCR leyó `430 000` (la imagen y el DS 001, que tiene capa de texto, confirman 480 000). Toda respuesta con cifras del Reglamento original merece cautela. El DS 001 marca en **negrita** lo nuevo de cada numeral, y el art. 25.7 se invierte: el original dice que los ejecutores de obra **no pueden** acreditar experiencia de una reorganización societaria y el DS 001 dice que **pueden** (esa página del original, la 8, está fuera del índice).

@@ -1,0 +1,163 @@
+# Evidencia de cada página esperada de eval/preguntas.csv.
+#   ancla = frase corta para localizar el pasaje en la imagen del PDF (scripts/eval_evidence.py recorta esa zona);
+#   dato  = lo que debe verse en el recorte para que la página sea válida.
+# 'fuera_del_indice' = páginas que responden una pregunta fuera de dominio y que NO deben estar en el índice.
+q01:
+- documento: ley_32069
+  pagina: 17
+  ancla: Para ser proveedor del Estado se debe contar con inscripción vigente
+  dato: 'Art. 29.2: inscripción vigente en el RNP y sin impedimentos'
+- documento: ds_009_2025_ef
+  pagina: 7
+  ancla: Condiciones para la inscripción en el RNP
+  dato: 'Art. 25.1: RUC activo y domicilio habido, sin inhabilitación vigente'
+q02:
+- documento: ley_32069
+  pagina: 32
+  ancla: El pago se realiza en un plazo máximo de diez días hábiles
+  dato: 'Art. 67.3: diez días hábiles (prorrogable cinco); 67.5: intereses legales'
+q03:
+- documento: ley_32069
+  pagina: 32
+  ancla: tienen la facultad de emitir facturas negociables
+  dato: 'Art. 67.7: facturas negociables a plazo de hasta ciento ochenta días'
+q04:
+- documento: ley_32069
+  pagina: 19
+  ancla: Se consideran contratos menores a aquellos celebrados
+  dato: 'Art. 34.1: iguales o inferiores a ocho UIT, sin procedimiento de selección'
+q05:
+- documento: ds_001_2026_ef
+  pagina: 14
+  ancla: La retención de pago, conforme a lo señalado en el numeral 61.8
+  dato: 'Art. 114.2 (nuevo): retención en la primera mitad de los pagos, prorrateada'
+- documento: ds_009_2025_ef
+  pagina: 30
+  ancla: Artículo 114. Retención de pago
+  dato: 'Art. 114 original: a MYPE le procede la retención con independencia del monto'
+- documento: ley_32069
+  pagina: 29
+  ancla: estas pueden otorgar como garantía de fiel cumplimiento
+  dato: 'Art. 61.3: la MYPE puede dar como garantía la retención de pago'
+q06:
+- documento: ley_32069
+  pagina: 32
+  ancla: pueden establecer adelantos directos al
+  dato: 'Art. 66.3: adelantos directos, en conjunto hasta 30 % del monto original'
+- documento: ds_009_2025_ef
+  pagina: 34
+  ancla: Solo pueden otorgarse adelantos directos
+  dato: 'Art. 137.1: solo bienes de alta complejidad, servicios especializados u otros por condiciones de mercado'
+q07:
+- documento: ds_009_2025_ef
+  pagina: 19
+  ancla: Criterios en caso de empate
+  dato: 'Art. 81: orden de desempate (puntaje técnico, MYPE con discapacidad, MYPE, sorteo)'
+q08:
+- documento: ley_32069
+  pagina: 36
+  ancla: El monto de la garantía es de hasta el 0.5 %
+  dato: 'Art. 73.2: MYPE, garantía del 0,5 % con tope de 25 UIT; la nota (*) trae el texto vigente (Ley 32187: 3 % en general)'
+- documento: ds_009_2025_ef
+  pagina: 68
+  ancla: por las micro y pequeñas empresas
+  dato: 'Art. 309.2: MYPE, garantía del 0,5 % de la cuantía'
+q09:
+- documento: ley_32069
+  pagina: 45
+  ancla: En el caso de las micro y pequeñas empresas, la multa
+  dato: 'Art. 89.3: multa a MYPE no mayor al 8 % (u 8 UIT sin monto)'
+q10:
+- documento: ds_009_2025_ef
+  pagina: 31
+  ancla: Penalidad por mora en la ejecución de la prestación
+  dato: 'Art. 120.1: penalidad diaria = 0,10 × monto / (F × plazo); F = 0,40 en bienes y servicios'
+q11:
+- documento: ds_001_2026_ef
+  pagina: 4
+  ancla: oferta económica no
+  dato: 'Art. 75.1 (nuevo): 40 puntos y hasta 70 en licitación pública abreviada de bienes homologados'
+- documento: ds_009_2025_ef
+  pagina: 18
+  ancla: Determinación del puntaje total
+  dato: 'Art. 75.1 original: 40 puntos «con excepción de la comparación de precios»'
+q12:
+- documento: ley_32069
+  pagina: 30
+  ancla: En caso de bienes, servicios y consultorías de obras
+  dato: 'Art. 64.1: prestaciones adicionales hasta por el 25 % del monto del contrato original'
+q13:
+- documento: ds_009_2025_ef
+  pagina: 67
+  ancla: Plazo de interposición
+  dato: 'Art. 304.1: ocho días hábiles siguientes a la notificación de la buena pro'
+q14:
+- documento: ley_32069
+  pagina: 47
+  ancla: prescriben, para efectos de las sanciones
+  dato: 'Art. 93.1: prescriben a los cuatro años de cometida la infracción'
+q15:
+- documento: ley_32069
+  pagina: 45
+  ancla: La sanción de inhabilitación temporal es impuesta
+  dato: 'Art. 90.1: 3 a 12 meses (a-e); 6 a 18 (f-h); 6 a 24 (i-l)'
+q16:
+- documento: ds_009_2025_ef
+  pagina: 26
+  ancla: En la subasta inversa electrónica no se realiza
+  dato: 'Art. 96.3: no se realiza evaluación técnica; los requisitos de calificación se revisan después de la evaluación económica'
+q17:
+- documento: ds_009_2025_ef
+  pagina: 60
+  ancla: Obligatoriedad y valor legal del uso
+  dato: 'Art. 257.1: misma validez y eficacia que los medios físicos tradicionales'
+q18:
+- documento: ds_001_2026_ef
+  pagina: 4
+  ancla: Los evaluadores revisan los requisitos de
+  dato: 'Art. 72.2 (nuevo): con jurados, los revisa la DEC, que puede pedir opinión al jurado'
+- documento: ds_009_2025_ef
+  pagina: 17
+  ancla: Los evaluadores revisan los requisitos de
+  dato: 'Art. 72.2 original: solo «los evaluadores revisan los requisitos de calificación»'
+q19:
+- documento: ds_001_2026_ef
+  pagina: 8
+  ancla: prohibida la aprobación de prestaciones adicionales
+  dato: 'Art. 194 (nuevo): prohibida la aprobación en vía de regularización'
+- documento: ds_001_2026_ef
+  pagina: 9
+  ancla: prohibida la aprobación de prestaciones adicionales
+  dato: 'Art. 195 (nuevo): misma prohibición'
+- documento: ds_009_2025_ef
+  pagina: 47
+  ancla: regularización se da conforme al procedimiento
+  dato: 'Art. 194.1 original: regularización según el procedimiento del 194.2'
+q20:
+- documento: ds_001_2026_ef
+  pagina: 15
+  ancla: A los contratos menores les son aplicables
+  dato: 'Art. 229.5 (nuevo): aplican las causales de nulidad del 71.1 de la Ley'
+- documento: ds_009_2025_ef
+  pagina: 55
+  ancla: Ejecución contractual en contratos
+  dato: Art. 229 original (sin el numeral 229.5)
+- documento: ley_32069
+  pagina: 35
+  ancla: Después de perfeccionados los contratos
+  dato: 'Art. 71.1: causales de nulidad del contrato'
+q21:
+- documento: ley_32069
+  pagina: 39
+  ancla: tiene competencia para las siguientes acciones
+  dato: 'Art. 79.2: absolver consultas y resolver controversias técnicas y contractuales'
+- documento: ds_009_2025_ef
+  pagina: 76
+  ancla: Funciones de la JPRD
+  dato: 'Art. 350: funciones de la JPRD'
+o05:
+  fuera_del_indice:
+  - documento: ds_009_2025_ef
+    pagina: 8
+    ancla: "Artículo 28. Capacidad máxima de contratación"
+    dato: 'Art. 28.1: fórmula CMC = Σ obras culminadas × G. Página EXCLUIDA del subconjunto de OCR'
