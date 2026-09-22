@@ -15,7 +15,7 @@
 - [~] **Fase 6** — Evaluación y comparación de embeddings local vs API `[pendiente: repetir mañana `PYTHONPATH=src python -m evaluation.compare_embeddings` (Gemini: 960/1674 fragmentos indexados, la cuota gratuita es de 1000 textos/día); OPENAI_API_KEY opcional]` (`run_eval` y la fila local están medidos)
 - [x] **Fase 7** — Interfaz Streamlit (`app.py`; probada sin navegador con `AppTest` y abierta en un venv limpio; **no se revisó visualmente en un navegador** ni se ejecutó PowerShell, ver hallazgos 33-35)
 - [x] **Fase 8** — Innovación A: BM25 vs semántica (modo final: `semantico`, con evidencia; `bm25` e `hibrido` disponibles)
-- [ ] **Fase 9** — Innovación B: GitHub Actions con umbral de Recall@3
+- [~] **Fase 9** — Innovación B: GitHub Actions con umbral de Recall@3 `[MANUAL pendiente: push de la rama para que corra el workflow, ejecución verde en main y una roja demostrada; requiere tu confirmación de push y decidir el merge a main]` (workflow, mínimo y simulación local del CI listos)
 - [ ] **Fase 10** — Innovación C: bot de Telegram `[MANUAL: @BotFather]`
 - [ ] **Fase 11** — Innovación D: bot 24/7 con Cloudflare Worker `[MANUAL: cuentas y deploy]`
 - [ ] **Fase 12** — Innovación E: despliegue público de la app `[MANUAL: deploy]`
@@ -103,6 +103,17 @@ Modelo `gemini-3.5-flash-lite`, capa gratuita, `retrieval.busqueda: exacta`, umb
 | Log | `logs/llm_calls.jsonl`: 30 líneas reales (29 éxitos, 1 rechazo de modelo), cero reintentos |
 | Determinismo | La búsqueda exacta da el mismo resultado en 4 procesos distintos (con HNSW, `o01` cambiaba en 2 de 3) |
 | Tests | **553 pasan** |
+
+## Resultados de la Fase 9 hasta el punto de push (2026-09-21)
+
+| Ítem | Resultado |
+|---|---|
+| Workflow | `.github/workflows/eval.yml`: en cada push y pull request que toque `tarea1/**`; Python 3.12 con caché de pip; **PyTorch CPU** desde el índice oficial de CPU; `requirements-ci.txt` (versiones fijadas); caché del modelo de embeddings; pruebas; índice desde `data/processed` (sin OCR); `run_eval`; sube `eval/results/` como artefacto (`if: always()`); permisos de solo lectura; **cero secretos** |
+| Mínimo | `eval.min_recall_at_3 = 0,85` (real 0,905 = 19/21; 0,85 exige 18/21 y tolera **una** pregunta más fallida). Vive solo en `config.yaml`; el workflow no repite el número |
+| Acciones | Últimos mayores verificados con `git ls-remote --tags`: `checkout@v7`, `setup-python@v7`, `cache@v6`, `upload-artifact@v7` |
+| Simulación del CI | Clon limpio del commit + `venv` nuevo + `pip install torch` + `requirements-ci.txt`, sin `.env`, sin Tesseract ni Streamlit: **610 pruebas pasan (2 se omiten a propósito: Streamlit y Tesseract)**, `build_index` OK, `run_eval` → **OK: Recall@3 = 0,905 ≥ 0,85** (código 0) |
+| Fallo simulado | `run_eval --min-recall-3 0.99` → código de salida 1 (Fase 6); falta la corrida roja real en GitHub |
+| Pruebas del workflow | 11 pruebas (sin secretos, orden de pasos, PyTorch antes que el resto, sin OCR ni LLM, artefacto, mínimo con margen frente al resultado real) + 4 mutaciones del workflow detectadas 4/4 |
 
 ## Resultados de la Fase 8 (medidos el 2026-09-21; PROVISIONALES hasta validar el set)
 
@@ -251,3 +262,6 @@ Petición de la persona: **no pagar nada adicional a su suscripción**; ninguna 
 36. **El set de evaluación no tiene ninguna pregunta con cifras** (0 de 21), así que no puede medir la búsqueda por número de artículo, que es donde BM25 se espera fuerte. Se añadió una sonda sintética de 96 consultas generadas del índice (claramente separada del set). Conviene que la persona añada 3-5 preguntas con número de artículo o monto al validar el set.
 37. **q04 y q07 son la brecha de vocabulario que nadie cierra:** q07 tiene el fragmento en el puesto 1 de BM25 pero en el 166 del semántico; q04 en los puestos 51 (semántico) y 58 (BM25). Una reescritura de la consulta con el LLM («contratos menores», «criterios de desempate») sería el siguiente paso, fuera del alcance de la fase.
 38. **La generación con temperatura por defecto no es determinista:** la diferencia semántico/híbrido de punta a punta (18 frente a 17) es de una pregunta y una sola corrida por modo; no es concluyente. Las respuestas del semántico quedan en la caché (`eval/cache_llm/`, ignorada por git) para poder repetir sin gastar cuota.
+39. **La simulación del CI encontró un fallo real que mi entorno ocultaba:** una prueba de la fábrica de LLM construía el cliente de Anthropic y exigía tener instalado el SDK (`anthropic`), que el CI no instala. Se corrigió con un doble del módulo. Lección: probar en un clon limpio con solo `requirements-ci.txt`.
+40. **Las fechas de las páginas de releases de las acciones que devolvió la herramienta de lectura no son fiables** (daba 2024 para versiones que no existían entonces); por eso los mayores se verificaron con las etiquetas reales del repositorio (`git ls-remote`).
+41. **El workflow solo se dispara con cambios en `tarea1/**` o en él mismo:** el repositorio aloja otras tareas y no deben gastar minutos de CI. El badge apunta a la rama `tarea1-rag` (en `main` no existe el workflow hasta hacer el merge).

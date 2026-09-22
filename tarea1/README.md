@@ -1,5 +1,7 @@
 # Tarea 1 — RAG normativo de contrataciones públicas del Perú
 
+[![eval](https://github.com/RenataZuta/Homework/actions/workflows/eval.yml/badge.svg?branch=tarea1-rag)](https://github.com/RenataZuta/Homework/actions/workflows/eval.yml)
+
 Asistente que responde preguntas sobre la **Ley 32069**, su **Reglamento (DS 009-2025-EF, subconjunto con OCR)** y la **modificatoria DS 001-2026-EF**,
 citando documento y página. Repositorio: `RenataZuta/Homework`, rama `tarea1-rag`, carpeta `tarea1/`.
 
@@ -85,6 +87,18 @@ Equivalente en Linux/CI: `grep -rnE "streamlit|telegram|fastapi|flask|gradio" sr
 Carga el índice existente **una sola vez** (`@st.cache_resource`) y **nunca lo reconstruye** al iniciar; si falta, muestra un error con el comando para construirlo. Solo llama a `MotorRAG.responder(pregunta)`.
 Pestañas: **Consulta** (respuesta, indicador de abstención, avisos de versión, fragmentos citados con documento/página/similitud/texto, y costo, tokens y latencia de la consulta),
 **Calidad de extracción**, **Evaluación** (Recall@k, abstención, barrido de umbral, embeddings, troceado, BM25) y **Costos** (agregado de `logs/llm_calls.jsonl`). Los errores salen con `st.error`.
+
+## Integración continua: compuerta de Recall@3 (Fase 9)
+
+`.github/workflows/eval.yml` corre en cada push y pull request que toque `tarea1/`: instala Python 3.12 con caché de pip, **PyTorch solo CPU** desde el índice oficial de CPU y las dependencias livianas
+(`requirements-ci.txt`), cachea el modelo de embeddings, ejecuta las pruebas, **arma el índice a partir de `data/processed/`** (el OCR **no** corre en CI: el texto procesado está versionado) y ejecuta
+`python -m evaluation.run_eval`, que **falla (código 1) si Recall@3 < `eval.min_recall_at_3`** de `config.yaml`. Sube `eval/results/` como artefacto aunque falle. **No requiere ningún secreto**: no llama a ningún LLM ni a ninguna API
+(hay una prueba que lo verifica).
+
+**Por qué 0,85.** El Recall@3 real es 0,905 (19 de 21 preguntas). Con 21 preguntas cada una pesa 0,048: un mínimo de 0,85 exige 18 de 21, es decir, **tolera una pregunta más fallida** (17/21 = 0,810 falla, 18/21 = 0,857 pasa) y detecta
+regresiones reales del troceado, del modelo o del índice sin dar falsas alarmas por una diferencia numérica mínima entre entornos. Es provisional hasta validar el set (Fase 3). Cambiarlo es editar una línea de `config.yaml`.
+
+Se probó localmente en un clon limpio con un entorno virtual nuevo, sin `.env`, Tesseract ni Streamlit (610 pruebas, `build_index`, `run_eval` en verde). La corrida roja demostrada en GitHub está en `docs/ci_rojo.md` cuando se ejecute.
 
 ## Proveedores y costo (decisión del 2026-09-21: sin pagos adicionales)
 
