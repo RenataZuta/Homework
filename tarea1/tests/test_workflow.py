@@ -99,3 +99,15 @@ def test_requirements_ci_no_arrastra_torch_pesado_de_mas_por_fastapi():
     paquetes = "\n".join(l.split("#", 1)[0] for l in lineas if l.strip() and not l.strip().startswith("#")).lower()
     assert "fastapi" in paquetes and "httpx" in paquetes
     assert "torch" not in paquetes                                       # PyTorch se instala aparte en el workflow (índice CPU), no aquí
+
+
+def test_requirements_txt_no_quedo_truncado_y_trae_todo_lo_que_usa_el_proyecto():
+    """Hallazgo real (Fase 13): una corrupción del disco (iCloud) truncó requirements.txt a 26 líneas, cortando a media
+    palabra el comentario de tzdata y borrando streamlit/pandas/fastapi/uvicorn/httpx/matplotlib SIN que ningún commit
+    ni prueba lo notara. Esta prueba existe para que un accidente así nunca vuelva a pasar inadvertido."""
+    texto = (RAIZ / "requirements.txt").read_text(encoding="utf-8")
+    assert texto.rstrip().endswith(")")                                   # el archivo termina en un comentario completo, no a media palabra
+    lineas = [l.split("==")[0].strip().lower() for l in texto.splitlines() if l.strip() and not l.strip().startswith("#")]
+    esperados = {"pyyaml", "python-dotenv", "pymupdf", "pillow", "pytesseract", "numpy", "sentence-transformers", "chromadb",
+                "openai", "requests", "anthropic", "tzdata", "streamlit", "pandas", "fastapi", "uvicorn", "httpx", "matplotlib"}
+    assert esperados <= set(lineas), f"faltan en requirements.txt: {esperados - set(lineas)}"

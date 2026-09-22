@@ -334,8 +334,8 @@
   "fragmentos_en_indice": 1674
  },
  "veredicto": {
-  "minimo_recall_3": 0.0,
+  "minimo_recall_3": 0.85,
   "codigo_de_salida": 0,
-  "mensaje": "OK: Recall@3 = 0.905 >= mínimo 0.0"
+  "mensaje": "OK: Recall@3 = 0.905 >= mínimo 0.85"
  }
 }
