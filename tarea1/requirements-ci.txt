@@ -1,13 +1,15 @@
-# Dependencias livianas para GitHub Actions (sin OCR real, sin Streamlit, sin bots).
-# PyTorch se instala aparte con el índice de CPU: pip install torch --index-url https://download.pytorch.org/whl/cpu
-pyyaml>=6.0
-python-dotenv>=1.0
-pytest>=8.0
-pymupdf>=1.24
-pillow>=10.0
-pytesseract>=0.3.10
-numpy>=1.26
-sentence-transformers>=3.0
-chromadb>=1.0
-matplotlib>=3.8
-requests>=2.31
+# Dependencias livianas para GitHub Actions (sin OCR real, sin Streamlit, sin bots, sin proveedores de LLM).
+# Mismas versiones que requirements.txt (validadas en un entorno limpio). PyTorch se instala aparte con el índice de CPU:
+#   pip install torch --index-url https://download.pytorch.org/whl/cpu
+PyYAML==6.0.3
+python-dotenv==1.2.3
+pytest==9.1.1
+PyMuPDF==1.28.2
+pillow==12.3.0
+pytesseract==0.3.13          # solo el paquete: en CI no corre el OCR (no hay ejecutable de Tesseract)
+numpy==2.5.3
+sentence-transformers==6.1.0
+chromadb==1.5.9
+matplotlib==3.11.2
+requests==2.34.2
+tzdata==2026.4

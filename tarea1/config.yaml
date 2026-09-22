@@ -322,7 +322,8 @@ eval:
     out_of_domain: 5
     modificadas_2026: 3            # preguntas sobre artículos afectados por el DS 001-2026-EF
     coloquiales: 5                 # redactadas como las haría el dueño de una MYPE
-  min_recall_at_3: 0.0             # PROVISIONAL (Fase 9): se fija con los resultados reales y margen
+  min_recall_at_3: 0.85            # Fase 9. Real medido: Recall@3 = 0,905 (19 de 21). Con 21 preguntas cada una pesa 0,048: 0,85 exige 18 de 21 y tolera UNA pregunta
+                                   #   más fallida (17/21 = 0,810 falla; 18/21 = 0,857 pasa). Provisional hasta validar el set (Fase 3)
   codigo_salida_fallo: 1           # exit code de run_eval.py si Recall@3 < mínimo (usa el CI)
 
 # ── Bot de Telegram (Fases 10 y 11) ──────────────────────────────────────────
