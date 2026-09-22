@@ -17,7 +17,7 @@
 - [x] **Fase 8** — Innovación A: BM25 vs semántica (modo final: `semantico`, con evidencia; `bm25` e `hibrido` disponibles)
 - [~] **Fase 9** — Innovación B: GitHub Actions con umbral de Recall@3 `[MANUAL pendiente: push de la rama para que corra el workflow, ejecución verde en main y una roja demostrada; requiere tu confirmación de push y decidir el merge a main]` (workflow, mínimo y simulación local del CI listos)
 - [~] **Fase 10** — Innovación C: bot de Telegram `[MANUAL pendiente: crea el bot con @BotFather y pon TELEGRAM_BOT_TOKEN y TELEGRAM_ALLOWED_USER_IDS en tu .env; ver docs/telegram_bot.md]` (código y pruebas completos, sin probar con Telegram real)
-- [ ] **Fase 11** — Innovación D: bot 24/7 con Cloudflare Worker `[MANUAL: cuentas y deploy]`
+- [~] **Fase 11** — Innovación D: bot 24/7 con Cloudflare Worker `[MANUAL pendiente: cuentas de Render y Cloudflare, wrangler login/deploy, cargar secretos, prueba con la laptop apagada; ver docs/despliegue_backend.md]` (código, Dockerfile y Worker completos; no se pudo compilar ni desplegar en este entorno: sin docker/node/wrangler)
 - [ ] **Fase 12** — Innovación E: despliegue público de la app `[MANUAL: deploy]`
 - [ ] **Fase 13** — Cierre: README, notas de video, auditoría final, costo real
 
@@ -103,6 +103,22 @@ Modelo `gemini-3.5-flash-lite`, capa gratuita, `retrieval.busqueda: exacta`, umb
 | Log | `logs/llm_calls.jsonl`: 30 líneas reales (29 éxitos, 1 rechazo de modelo), cero reintentos |
 | Determinismo | La búsqueda exacta da el mismo resultado en 4 procesos distintos (con HNSW, `o01` cambiaba en 2 de 3) |
 | Tests | **553 pasan** |
+
+## Resultados de la Fase 11 hasta el punto manual (2026-09-22)
+
+| Ítem | Resultado |
+|---|---|
+| Backend | `interfaces/api_server.py` (FastAPI): `GET /health` sin auth; `POST /telegram/webhook` exige `X-Internal-Key`, procesa en segundo plano con los handlers de la Fase 10 |
+| Bug real encontrado por las pruebas | `BackgroundTasks` despacha las funciones síncronas a un hilo del *pool*; reusar una única `sqlite3.Connection` creada en el hilo del arranque revienta con «objects created in a thread…». Se corrigió: cada tarea en segundo plano abre y cierra su propia conexión |
+| Host elegido | **Render, plan gratuito** (decisión de la persona tras verificar que Hugging Face Spaces Docker ahora exige plan PRO para cuentas personales — cambio real de política, no estaba en el plan original) |
+| Descartados | Hugging Face Spaces Docker (requiere PRO de pago); Google Cloud Run (exige tarjeta / cuenta de facturación); Fly.io (ya no ofrece capa gratuita real) |
+| Dockerfile | `python:3.12-slim`; el modelo de embeddings se descarga y el índice se **construye** durante el `build` (a partir de `data/processed/`, versionado); `requirements-backend.txt` más chico que el de desarrollo (sin OCR, sin gráficos, sin Anthropic); escucha en `0.0.0.0:$PORT`; usuario sin privilegios (`USER app`) |
+| Worker | `cloudflare_worker/src/index.js`: valida `X-Telegram-Bot-Api-Secret-Token`, responde 200 de inmediato, reenvía con `ctx.waitUntil`, avisa «despertando» y reintenta si el backend tarda |
+| Desviación documentada | El Worker necesita un 4.º secreto, `TELEGRAM_BOT_TOKEN` (el plan original solo mencionaba tres), para poder avisar «despertando» por su cuenta sin depender del backend |
+| Verificado en la documentación oficial (2026-09-22) | Límites del plan gratuito de Workers (100 000 peticiones/día, `ctx.waitUntil` hasta 30 s); Render sin tarjeta, Docker, 750 h/mes gratis, duerme a los 15 min, despierta en ~1 min; HF Spaces Docker ahora exige PRO |
+| Pruebas | `interfaces/api_server.py` probado de verdad con `fastapi.testclient` (sin red); `Dockerfile`, `wrangler.toml` y el Worker revisados con pruebas ESTÁTICAS (leen los archivos como texto: no se pudieron compilar ni ejecutar — sin docker/node/wrangler en este entorno) |
+| Tests | **712 pasan** |
+| Sin probar | Todo el despliegue real: `docker build`, `wrangler deploy`, el webhook registrado y la prueba de punta a punta con la laptop apagada |
 
 ## Resultados de la Fase 10 hasta el punto manual (2026-09-21)
 
@@ -233,6 +249,11 @@ Petición de la persona: **no pagar nada adicional a su suscripción**; ninguna 
 | 8 | **Modo final `semantico`** | Mejor en R@1/3/5 y MRR del set y de punta a punta; el híbrido solo gana en la sonda de números de artículo (y no recupera q07: el fragmento está fuera de los 50 primeros del semántico). Opción documentada para uso por número de artículo | 2026-09-21 |
 | 8 | BM25 implementado a mano, no `rank_bm25` | ~60 líneas, sin dependencia nueva y sin el IDF negativo de algunas implementaciones; comprobado contra la fórmula a mano | 2026-09-21 |
 | 8 | La compuerta usa el **mayor coseno recuperado**, no el puntaje de BM25/RRF ni la similitud del primer lugar | Los puntajes de BM25/RRF no son cosenos; así el umbral calibrado sirve en los tres modos | 2026-09-21 |
+| 11 | Host del backend: **Render** (plan gratuito) | Sin tarjeta, admite Docker; Hugging Face Spaces Docker pasó a exigir PRO para cuentas personales (verificado en la documentación oficial); Google Cloud Run exige tarjeta. Decisión de la persona tras vérselo planteado | 2026-09-22 |
+| 11 | Cada tarea en segundo plano del backend abre su PROPIA conexión SQLite | `sqlite3.Connection` no se puede compartir entre hilos; `BackgroundTasks` corre las funciones síncronas en un hilo del *pool*, distinto del que abrió la conexión en el arranque. Lo encontró una prueba real (`fastapi.testclient`), no una revisión de código | 2026-09-22 |
+| 11 | El Worker usa 4 secretos, no 3 (agrega `TELEGRAM_BOT_TOKEN`) | Sin el token, el Worker no podría enviar el aviso de «despertando» cuando el backend tarda; esa llamada a Telegram la hace el propio Worker, no el backend | 2026-09-22 |
+| 11 | `requirements-backend.txt` separado de `requirements.txt` | El backend no hace OCR, no dibuja gráficos y no usa Anthropic: una imagen más chica arranca más rápido en un plan gratuito que ya duerme | 2026-09-22 |
+| 11 | El índice se CONSTRUYE en el `Dockerfile` (no se copia un `data/index/` ya armado) | `data/index/` no está versionado (igual que en el CI de la Fase 9); construirlo en el build es la única forma de tenerlo en la imagen sin cambiar esa regla | 2026-09-22 |
 | 0 | README completo en `tarea1/README.md`; el README de la raíz solo recibe una sección con enlace | El repo aloja varias tareas; no se sobrescribe lo existente | 2026-09-21 |
 | 0 | Los módulos se crean en la fase que los necesita (sin archivos vacíos de relleno) | Historial de commits refleja el trabajo real | 2026-09-21 |
 
@@ -284,3 +305,6 @@ Petición de la persona: **no pagar nada adicional a su suscripción**; ninguna 
 41. **El workflow solo se dispara con cambios en `tarea1/**` o en él mismo:** el repositorio aloja otras tareas y no deben gastar minutos de CI. El badge apunta a la rama `tarea1-rag` (en `main` no existe el workflow hasta hacer el merge).
 42. **El workflow de la Fase 9 corrió en GitHub y salió verde a la primera** (`run 35677918111`, disparado por el push de las Fases 5-9): confirma que la simulación local del CI representaba bien el entorno real.
 43. **La Fase 10 quedó completa en código y pruebas, pero SIN probarse con Telegram real:** falta el token. Un fallo posible que las pruebas no cubren: el formato exacto de un `Update` real de Telegram (aquí se construyó a mano según la documentación). La primera prueba con `scripts/run_telegram_bot.py` lo confirma.
+44. **Hugging Face Spaces cambió su política de precios entre el plan original y hoy:** su documentación oficial dice ahora que crear un Space Docker en una cuenta personal exige el plan PRO (de pago); antes de este hallazgo, HF Spaces era la opción «obvia» que sugería el propio enunciado de la fase. Se le planteó a la persona y decidió Render.
+45. **No hay `docker`, `node` ni `wrangler` en esta Mac de desarrollo** (ya se sabía por proyectos previos; confirmado de nuevo aquí). El `Dockerfile` y el Worker de Cloudflare se escribieron y se revisaron con pruebas ESTÁTICAS en Python (leen los archivos como texto, verifican invariantes concretas), pero **nunca se compilaron ni se ejecutaron**. La persona debe correr `docker build` y `wrangler dev`/`deploy` ella misma antes de confiar en que funcionan de verdad.
+46. **No pude verificar con una fuente oficial la RAM exacta del plan gratuito de Render** (la documentación pública que revisé no la publica). Es un riesgo real para una imagen con PyTorch + el modelo de embeddings + ChromaDB; si el despliegue falla por memoria, la salida es una imagen más liviana o cambiar de host.

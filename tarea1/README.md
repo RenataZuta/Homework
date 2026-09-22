@@ -8,6 +8,43 @@ citando documento y página. Repositorio: `RenataZuta/Homework`, rama `tarea1-ra
 > **Estado:** en desarrollo por fases; el estado exacto y las decisiones están en [`PROGRESO.md`](PROGRESO.md). Este README se completa en la Fase 13
 > (diagrama Mermaid del pipeline, pasos de instalación en Windows PowerShell, notas del video). Lo que ya está aquí describe **proveedores, costos, límites y privacidad**.
 
+## Bot 24/7 con Cloudflare Worker + backend (Fase 11)
+
+Un Worker de Cloudflare **no puede** ejecutar el motor: su runtime no corre `sentence-transformers` (necesita PyTorch) ni ChromaDB.
+Por eso hay dos piezas, no una:
+
+```mermaid
+flowchart LR
+    T[Usuario en Telegram] --> W["Worker de Cloudflare<br/>(cloudflare_worker/)<br/>valida el secreto, responde 200<br/>de inmediato, reenvía con ctx.waitUntil"]
+    W -- "X-Internal-Key" --> B["Backend FastAPI<br/>(interfaces/api_server.py)<br/>SIEMPRE encendido: tiene el motor"]
+    B -- responder&#40;pregunta&#41; --> M[rag_engine.engine]
+    B -- sendMessage --> T
+    W -. "si el backend tarda<br/>(arranque en frío)" .-> T
+```
+
+- **Worker** (`cloudflare_worker/`): valida `X-Telegram-Bot-Api-Secret-Token`, responde `200` a Telegram de inmediato (para que no
+  reintente) y reenvía el update al backend con `ctx.waitUntil(...)`. Si el backend no contesta a tiempo (el plan gratuito de
+  Render duerme tras 15 min sin tráfico y tarda en despertar), el propio Worker le avisa al usuario y reintenta una vez más.
+- **Backend** (`interfaces/api_server.py`, FastAPI): `GET /health` sin autenticación; `POST /telegram/webhook` exige la cabecera
+  `X-Internal-Key` (un secreto que solo conocen el Worker y el backend — **no** es el token de Telegram) y procesa el update
+  con los mismos `interfaces/telegram_handlers` de la Fase 10, en segundo plano.
+- **Host elegido: Render, plan gratuito.** Verificado el 2026-09-22: sin tarjeta, admite Docker, dan 750 horas gratis al mes.
+  Duerme tras 15 min sin tráfico y tarda ~1 minuto en despertar (documentado oficialmente); el Worker está pensado para ese
+  arranque en frío, no para evitarlo. **Se descartó Hugging Face Spaces con Docker**: su documentación oficial dice ahora que
+  crear un Space Docker en una cuenta personal **requiere el plan PRO de pago** (antes era gratis); Google Cloud Run se
+  descartó porque exige asociar una tarjeta a una cuenta de facturación. **Riesgo sin confirmar:** no encontré con una fuente
+  oficial la RAM exacta del plan gratuito de Render; si el modelo + el índice no caben, hay que achicar la imagen o cambiar de host.
+- **El índice y el modelo se preparan en el `Dockerfile` durante el `build`, nunca al arrancar** (`RUN` descarga el modelo y
+  construye el índice a partir de `data/processed/`, que sí está en git; `data/index/` no lo está, igual que en el CI de la
+  Fase 9). `requirements-backend.txt` es más chico que `requirements.txt`: sin OCR, sin gráficos, sin el cliente de Anthropic.
+- **Desviación del plan original:** el Worker usa un 4.º secreto, `TELEGRAM_BOT_TOKEN` (el plan solo mencionaba
+  `TELEGRAM_WEBHOOK_SECRET`, `BACKEND_URL` y `BACKEND_INTERNAL_KEY`). Sin él, el Worker no podría enviar el aviso de «me estoy
+  despertando» cuando el backend tarda: esa llamada a Telegram la hace directamente el propio Worker.
+- **No se pudo probar de punta a punta ni ejecutar `docker build`/`wrangler deploy`**: esta máquina de desarrollo no tiene
+  `docker`, `node` ni `wrangler` instalados. El código se revisó con pruebas estáticas (`tests/test_cloudflare_worker.py`, que
+  lee el `Dockerfile` y el Worker como texto) y con `interfaces/api_server.py` probado de verdad (`fastapi.testclient`,
+  711 pruebas en total). Los pasos [MANUAL] de cuentas y despliegue están en `docs/despliegue_backend.md`.
+
 ## Puesta en marcha en Windows (PowerShell)
 
 > Los pasos se probaron con sus equivalentes en macOS (entorno virtual limpio, instalación desde `requirements.txt`, tests y apertura de la app). **Los comandos de PowerShell no se pudieron

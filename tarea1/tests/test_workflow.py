@@ -92,3 +92,10 @@ def test_el_minimo_de_recall_3_tiene_margen_pero_no_es_trivial():
 
 def test_el_workflow_no_tiene_pasos_que_dependan_de_un_umbral_escrito_a_mano():
     assert "0.85" not in _texto() and "min-recall" not in _texto()          # el mínimo vive SOLO en config.yaml
+
+
+def test_requirements_ci_no_arrastra_torch_pesado_de_mas_por_fastapi():
+    lineas = (RAIZ / "requirements-ci.txt").read_text(encoding="utf-8").splitlines()
+    paquetes = "\n".join(l.split("#", 1)[0] for l in lineas if l.strip() and not l.strip().startswith("#")).lower()
+    assert "fastapi" in paquetes and "httpx" in paquetes
+    assert "torch" not in paquetes                                       # PyTorch se instala aparte en el workflow (índice CPU), no aquí

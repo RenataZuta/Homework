@@ -13,3 +13,5 @@ chromadb==1.5.9
 matplotlib==3.11.2
 requests==2.34.2
 tzdata==2026.4
+fastapi==0.141.1                # pruebas de interfaces/api_server.py (Fase 11); no arrastra torch
+httpx==0.28.1                    # lo usa fastapi.testclient.TestClient

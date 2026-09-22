@@ -1,0 +1,13 @@
+# Dependencias del backend siempre encendido (Fase 11, Dockerfile). Deliberadamente MÁS chicas que requirements.txt:
+# el backend solo responde preguntas sobre un índice ya construido, así que no necesita OCR (pymupdf/pillow/pytesseract),
+# gráficos (matplotlib) ni el cliente de Anthropic (proveedor activo: Gemini, por REST con `requests`). Mismas versiones
+# que requirements.txt donde coinciden (fijadas el 2026-09-21 desde un venv limpio).
+PyYAML==6.0.3
+python-dotenv==1.2.3
+numpy==2.5.3
+sentence-transformers==6.1.0
+chromadb==1.5.9
+requests==2.34.2
+tzdata==2026.4
+fastapi==0.141.1
+uvicorn==0.53.0

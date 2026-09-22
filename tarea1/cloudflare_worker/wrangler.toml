@@ -1,0 +1,8 @@
+# Worker de Cloudflare: gateway del webhook de Telegram (Fase 11). Sin cuenta de pago: el plan gratuito de Workers alcanza
+# (100 000 peticiones/día, 10 ms de CPU por petición — este Worker solo valida una cabecera y reenvía, no calcula nada pesado).
+# Los SECRETOS (TELEGRAM_WEBHOOK_SECRET, BACKEND_URL, BACKEND_INTERNAL_KEY, TELEGRAM_BOT_TOKEN) NO van aquí:
+# se cargan uno por uno con "wrangler secret put <NOMBRE>" (piden el valor por stdin; Cloudflare los guarda cifrados,
+# nunca quedan en este archivo ni en el repositorio).
+name = "contrataciones-telegram-webhook"
+main = "src/index.js"
+compatibility_date = "2026-09-22"
