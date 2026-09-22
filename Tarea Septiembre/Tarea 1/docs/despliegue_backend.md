@@ -11,7 +11,7 @@ secretos). Yo nunca te pido pegarme una credencial en el chat, y nunca las guard
 
 ## 1. Backend en Render (plan gratuito, sin tarjeta)
 1. Crea una cuenta en <https://render.com> (gratis, sin tarjeta).
-2. **New → Web Service**, conecta tu repositorio de GitHub, rama `main`, **Root Directory: `Tarea Septiembre/tarea1`**, entorno **Docker**
+2. **New → Web Service**, conecta tu repositorio de GitHub, rama `main`, **Root Directory: `Tarea Septiembre/Tarea 1`**, entorno **Docker**
    (Render detecta el `Dockerfile`).
 3. En **Environment**, agrega las variables (Render las guarda cifradas; nunca van al repositorio):
    `GEMINI_API_KEY`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_ALLOWED_USER_IDS`, y genera un valor al azar para `BACKEND_INTERNAL_KEY`

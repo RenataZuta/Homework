@@ -1,13 +1,13 @@
 # Evaluación de la recuperación en cada push y pull request (Tarea 1, Tarea Septiembre).
-# El job FALLA si Recall@3 < eval.min_recall_at_3 (Tarea Septiembre/tarea1/config.yaml). NO necesita secretos: no llama a ningún LLM ni a ninguna API de pago;
-# el modelo de embeddings es local y el OCR NO corre en CI (el texto procesado, Tarea Septiembre/tarea1/data/processed, está versionado).
+# El job FALLA si Recall@3 < eval.min_recall_at_3 (Tarea Septiembre/Tarea 1/config.yaml). NO necesita secretos: no llama a ningún LLM ni a ninguna API de pago;
+# el modelo de embeddings es local y el OCR NO corre en CI (el texto procesado, Tarea Septiembre/Tarea 1/data/processed, está versionado).
 name: eval
 
 on:
   push:
-    paths: ["Tarea Septiembre/tarea1/**", ".github/workflows/eval.yml"]
+    paths: ["Tarea Septiembre/Tarea 1/**", ".github/workflows/eval.yml"]
   pull_request:
-    paths: ["Tarea Septiembre/tarea1/**", ".github/workflows/eval.yml"]
+    paths: ["Tarea Septiembre/Tarea 1/**", ".github/workflows/eval.yml"]
   workflow_dispatch:
 
 permissions:
@@ -23,7 +23,7 @@ jobs:
     timeout-minutes: 30
     defaults:
       run:
-        working-directory: "Tarea Septiembre/tarea1"
+        working-directory: "Tarea Septiembre/Tarea 1"
     env:
       PYTHONPATH: src
       HF_HOME: ${{ github.workspace }}/.hf_cache          # el modelo de embeddings se descarga aquí y se cachea
@@ -35,7 +35,7 @@ jobs:
         with:
           python-version: "3.12"
           cache: pip
-          cache-dependency-path: "Tarea Septiembre/tarea1/requirements-ci.txt"
+          cache-dependency-path: "Tarea Septiembre/Tarea 1/requirements-ci.txt"
 
       - name: PyTorch solo CPU (índice oficial de CPU; evita bajar la versión con CUDA)
         run: pip install torch --index-url https://download.pytorch.org/whl/cpu
@@ -47,7 +47,7 @@ jobs:
         uses: actions/cache@v6
         with:
           path: ${{ github.workspace }}/.hf_cache
-          key: hf-${{ runner.os }}-${{ hashFiles('Tarea Septiembre/tarea1/config.yaml') }}
+          key: hf-${{ runner.os }}-${{ hashFiles('Tarea Septiembre/Tarea 1/config.yaml') }}
           restore-keys: hf-${{ runner.os }}-
 
       - name: Pruebas unitarias
@@ -64,5 +64,5 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: eval-results
-          path: "Tarea Septiembre/tarea1/eval/results/"
+          path: "Tarea Septiembre/Tarea 1/eval/results/"
           if-no-files-found: warn

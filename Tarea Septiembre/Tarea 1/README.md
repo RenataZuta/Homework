@@ -5,7 +5,7 @@
 Asistente que responde preguntas sobre la **Ley 32069**, su **Reglamento (DS 009-2025-EF, subconjunto con OCR)** y la **modificatoria DS 001-2026-EF**,
 citando documento y página, sin inventar información fuera de esos tres documentos. Pensado para el dueño de una micro o pequeña empresa que quiere
 saber, en su propio lenguaje, cómo venderle al Estado. Disponible como app web, bot de Telegram y API.
-Repositorio: `RenataZuta/Homework`, rama `tarea1-rag`, carpeta `tarea1/`. Issue del curso: d2cml-ai/Data-Science-Python#187.
+Repositorio: `RenataZuta/Homework`, carpeta `Tarea Septiembre/Tarea 1/`. Issue del curso: d2cml-ai/Data-Science-Python#187.
 
 > **Estado (2026-09-22):** las 13 fases están implementadas y probadas (**717 tests**, `check_secrets.py` limpio, motor sin imports de interfaz). Quedan
 > puntos [MANUAL] que solo la persona puede completar: validar el set de evaluación (Fase 3), probar el bot con un token real (Fase 10), desplegar el
@@ -60,7 +60,7 @@ abstención es siempre el campo `abstuvo: bool`, nunca algo que se infiere leyen
 # 1. Clonar y entrar a la carpeta del proyecto
 git clone https://github.com/RenataZuta/Homework.git
 cd Homework
-cd "Tarea Septiembre\tarea1"    # en macOS/Linux: cd "Tarea Septiembre/tarea1"
+cd "Tarea Septiembre\Tarea 1"    # en macOS/Linux: cd "Tarea Septiembre/Tarea 1"
 
 # 2. Entorno virtual con Python 3.12
 py -3.12 -m venv .venv
@@ -111,7 +111,7 @@ python -m evaluation.sweep_threshold_e2e  #    umbral a partir de esa evaluació
 streamlit run app.py                      # 6. interfaz
 ```
 
-Los scripts se ejecutan **desde la carpeta `tarea1`**. En Linux/macOS: `source .venv/bin/activate`, `cp .env.example .env` y `PYTHONPATH=src python -m evaluation.run_eval`.
+Los scripts se ejecutan **desde esta carpeta (`Tarea Septiembre/Tarea 1`)**. En Linux/macOS: `source .venv/bin/activate`, `cp .env.example .env` y `PYTHONPATH=src python -m evaluation.run_eval`.
 
 ### Pruebas y verificación de la arquitectura
 ```powershell
@@ -270,7 +270,7 @@ distintos entre ejecuciones en este corpus (para la pregunta `o01`, 2 de 3 proce
 
 ## Integración continua: compuerta de Recall@3 (Fase 9)
 
-`.github/workflows/eval.yml` corre en cada push y pull request que toque `tarea1/`: instala Python 3.12 con caché de pip, **PyTorch solo CPU** desde el índice oficial de CPU y las dependencias livianas
+`.github/workflows/eval.yml` corre en cada push y pull request que toque `Tarea Septiembre/Tarea 1/`: instala Python 3.12 con caché de pip, **PyTorch solo CPU** desde el índice oficial de CPU y las dependencias livianas
 (`requirements-ci.txt`), cachea el modelo de embeddings, ejecuta las pruebas, **arma el índice a partir de `data/processed/`** (el OCR **no** corre en CI: el texto procesado está versionado) y ejecuta
 `python -m evaluation.run_eval`, que **falla (código 1) si Recall@3 < `eval.min_recall_at_3`** de `config.yaml`. Sube `eval/results/` como artefacto aunque falle. **No requiere ningún secreto**: no llama a ningún LLM ni a ninguna API
 (hay una prueba que lo verifica).
@@ -357,7 +357,7 @@ y la estructura está probada con una tabla ficticia de horas pico y valle. Las 
 
 ### Conseguir y guardar la clave (gratis, sin tarjeta)
 1. Crea una clave en **Google AI Studio**: <https://aistudio.google.com/apikey>.
-2. Guárdala **sin mostrarla** (pide el valor con entrada oculta y escribe `tarea1/.env`, que git ignora):
+2. Guárdala **sin mostrarla** (pide el valor con entrada oculta y escribe `.env` en esta carpeta, que git ignora):
    ```
    python scripts/set_env_key.py GEMINI_API_KEY
    python scripts/set_env_key.py --estado        # qué variables están definidas (nunca muestra valores)

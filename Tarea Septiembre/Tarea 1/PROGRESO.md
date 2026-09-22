@@ -2,7 +2,7 @@
 
 > Archivo de retoma: si se pierde el contexto, continuar desde la primera fase sin `[x]`. Leyenda: `[x]` hecha y verificada · `[~]` trabajo técnico hecho, **falta confirmación `[MANUAL]`** de la persona.
 > Issue: https://github.com/d2cml-ai/Data-Science-Python/issues/187 · Fecha límite: **miércoles 23-sep-2026**.
-> Rama de trabajo: `main` (fusionada desde `tarea1-rag` el 2026-09-22) · Repo: `RenataZuta/Homework` (público) · Carpeta: `Tarea Septiembre/tarea1/` (reorganizado el 2026-09-22 a pedido de la persona).
+> Rama de trabajo: `main` (fusionada desde `tarea1-rag` el 2026-09-22) · Repo: `RenataZuta/Homework` (público) · Carpeta: `Tarea Septiembre/Tarea 1/` (reorganizado el 2026-09-22 a pedido de la persona; ver «Reorganización» más abajo).
 
 ## Fases
 
@@ -435,3 +435,20 @@ encontrar `.git`, sin asumir una profundidad fija — así no se rompe si la est
 
 Verificado tras el cambio: **717 tests pasan**, `check_secrets.py` limpio (42 commits, 413 archivos), 0 imports de UI en el motor.
 `tarea1-rag` se sincronizó con `main` (mismo commit) para no dejarlas divergentes.
+
+## Segunda reorganización: tarea1/ -> Tarea 1/, y Tarea 2/ reservada (2026-09-22, a pedido de la persona)
+
+La persona pidió que, dentro de Tarea Septiembre/, la carpeta de este proyecto se llame "Tarea 1" (no "tarea1") y que exista, junto a
+ella, una carpeta "Tarea 2" vacía para mas adelante. Se hizo con mv (no git mv, para no perder ningun archivo sin seguimiento como
+.env) + git add -A; se creo Tarea Septiembre/Tarea 2/README.md como marcador (una nota de que reutilizara rag_engine, no codigo).
+
+Se actualizo todo lo que dependia del nombre exacto: .gitignore, .github/workflows/eval.yml (8 apariciones: disparadores, directorio
+de trabajo, cache, artefacto), el README raiz, este README.md (comando de clonacion, y varias menciones en prosa), docs/despliegue_backend.md,
+docs/despliegue_app_publica.md y las 3 aserciones de ruta en tests/test_workflow.py. La rama tarea1-rag NO cambio de nombre (es un
+nombre de rama de git, no una carpeta): sigue igual, solo cambio lo que hay dentro de ella.
+
+Se reutilizo el arreglo de la reorganizacion anterior: tests/test_workflow.py ya buscaba la raiz del repositorio subiendo hasta
+encontrar .git (en vez de asumir una profundidad fija), asi que este segundo cambio de nombre no rompio ese descubrimiento de ruta;
+solo hubo que actualizar las cadenas de texto que comparan el VALOR esperado en el workflow.
+
+Verificado: 717 tests pasan, check_secrets.py limpio (43 commits, 0 hallazgos), 0 imports de UI, sin enlaces rotos en ningun README.

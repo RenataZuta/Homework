@@ -21,7 +21,7 @@ de pago para crear un Space que corre cómputo en una cuenta personal (ver Fase 
 
 ## 2. Crear la app en Streamlit Community Cloud
 1. Entra a <https://share.streamlit.io> con tu cuenta de GitHub (gratis, sin tarjeta).
-2. **New app** → elige el repositorio `RenataZuta/Homework`, rama `main`, **Main file path: `Tarea Septiembre/tarea1/app.py`**.
+2. **New app** → elige el repositorio `RenataZuta/Homework`, rama `main`, **Main file path: `Tarea Septiembre/Tarea 1/app.py`**.
 3. En **Advanced settings → Secrets**, pega (con tus valores reales, nunca los compartas conmigo):
    ```toml
    GEMINI_API_KEY = "<pega-aqui-tu-clave>"
