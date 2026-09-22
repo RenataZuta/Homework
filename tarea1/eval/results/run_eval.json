@@ -15,16 +15,16 @@
   "recall@5_modificatoria": 0.8
  },
  "abstencion": {
-  "umbral": 0.865,
+  "umbral": 0.835,
   "in_domain": 21,
-  "in_domain_respondidas": 16,
-  "abstenciones_incorrectas": 5,
-  "tasa_abstencion_incorrecta": 0.2381,
+  "in_domain_respondidas": 21,
+  "abstenciones_incorrectas": 0,
+  "tasa_abstencion_incorrecta": 0.0,
   "out_of_domain": 6,
-  "abstenciones_correctas": 5,
-  "respuestas_indebidas": 1,
-  "tasa_abstencion_correcta": 0.8333,
-  "tasa_abstencion_global": 0.3704
+  "abstenciones_correctas": 2,
+  "respuestas_indebidas": 4,
+  "tasa_abstencion_correcta": 0.3333,
+  "tasa_abstencion_global": 0.0741
  },
  "por_pregunta": [
   {
@@ -35,7 +35,7 @@
    "rango_acierto": 1,
    "rango_modificatoria": null,
    "mejor_similitud": 0.8429,
-   "se_abstiene": true,
+   "se_abstiene": false,
    "primero": "ley_32069 p.17"
   },
   {
@@ -68,7 +68,7 @@
    "rango_acierto": null,
    "rango_modificatoria": null,
    "mejor_similitud": 0.8564,
-   "se_abstiene": true,
+   "se_abstiene": false,
    "primero": "ds_009_2025_ef p.58"
   },
   {
@@ -101,7 +101,7 @@
    "rango_acierto": null,
    "rango_modificatoria": null,
    "mejor_similitud": 0.8643,
-   "se_abstiene": true,
+   "se_abstiene": false,
    "primero": "ds_009_2025_ef p.40"
   },
   {
@@ -112,7 +112,7 @@
    "rango_acierto": 1,
    "rango_modificatoria": null,
    "mejor_similitud": 0.86,
-   "se_abstiene": true,
+   "se_abstiene": false,
    "primero": "ds_009_2025_ef p.68"
   },
   {
@@ -134,7 +134,7 @@
    "rango_acierto": 3,
    "rango_modificatoria": null,
    "mejor_similitud": 0.8365,
-   "se_abstiene": true,
+   "se_abstiene": false,
    "primero": "ley_32069 p.32"
   },
   {
@@ -266,7 +266,7 @@
    "rango_acierto": null,
    "rango_modificatoria": null,
    "mejor_similitud": 0.8405,
-   "se_abstiene": true,
+   "se_abstiene": false,
    "primero": "ds_009_2025_ef p.96"
   },
   {
@@ -277,7 +277,7 @@
    "rango_acierto": null,
    "rango_modificatoria": null,
    "mejor_similitud": 0.8556,
-   "se_abstiene": true,
+   "se_abstiene": false,
    "primero": "ds_009_2025_ef p.10"
   },
   {
@@ -288,7 +288,7 @@
    "rango_acierto": null,
    "rango_modificatoria": null,
    "mejor_similitud": 0.8541,
-   "se_abstiene": true,
+   "se_abstiene": false,
    "primero": "ds_009_2025_ef p.67"
   },
   {

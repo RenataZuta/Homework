@@ -13,7 +13,7 @@
 - [x] **Fase 4** — Chunking, embeddings, índice idempotente y reanudable (técnica completa; las **métricas de Recall son PROVISIONALES** hasta que se valide el set de la Fase 3)
 - [x] **Fase 5** — Motor RAG: umbral, versiones, costo (llamadas reales con `gemini-3.5-flash-lite` verificadas el 2026-09-21; las métricas son **PROVISIONALES** hasta validar el set de la Fase 3)
 - [~] **Fase 6** — Evaluación y comparación de embeddings local vs API `[pendiente: repetir mañana `PYTHONPATH=src python -m evaluation.compare_embeddings` (Gemini: 960/1674 fragmentos indexados, la cuota gratuita es de 1000 textos/día); OPENAI_API_KEY opcional]` (`run_eval` y la fila local están medidos)
-- [ ] **Fase 7** — Interfaz Streamlit
+- [x] **Fase 7** — Interfaz Streamlit (`app.py`; probada sin navegador con `AppTest` y abierta en un venv limpio; **no se revisó visualmente en un navegador** ni se ejecutó PowerShell, ver hallazgos 33-35)
 - [ ] **Fase 8** — Innovación A: BM25 vs semántica
 - [ ] **Fase 9** — Innovación B: GitHub Actions con umbral de Recall@3
 - [ ] **Fase 10** — Innovación C: bot de Telegram `[MANUAL: @BotFather]`
@@ -104,6 +104,18 @@ Modelo `gemini-3.5-flash-lite`, capa gratuita, `retrieval.busqueda: exacta`, umb
 | Determinismo | La búsqueda exacta da el mismo resultado en 4 procesos distintos (con HNSW, `o01` cambiaba en 2 de 3) |
 | Tests | **553 pasan** |
 
+## Resultados de la Fase 7 (medidos el 2026-09-21)
+
+| Ítem | Resultado |
+|---|---|
+| `app.py` | Cuatro pestañas: **Consulta** (respuesta, indicador de abstención por el campo `abstuvo`, avisos de versión agrupados y sin repetidos, fragmentos citados con documento/página/similitud/texto y origen —recuperado, modificatoria forzada, original forzado—, tokens, costo real y de referencia, latencia), **Calidad de extracción**, **Evaluación** (Recall@k, abstención, barrido de umbral con gráfico, embeddings, troceado, BM25 «pendiente Fase 8») y **Costos** (agregado de `llm_calls.jsonl`) |
+| Índice | Se carga UNA vez con `@st.cache_resource` y **nunca se reconstruye**: si falta, `st.error` con el comando. Tests: el contenido de todas las colecciones (nombre, conteo, hash de textos) es idéntico antes y después de abrir la app con el índice real; la app no importa `indexing`/`extraction` |
+| Errores | `st.error`; la cuota agotada muestra `mensajes.error_cuota` y el detalle técnico |
+| Datos de las pestañas | `src/reporting/datos.py` (sin dependencias de interfaz, 14 tests): si falta un archivo lo dice, nunca inventa cifras |
+| Pruebas | 15 tests de `AppTest` + 7 mutaciones de la app (error como markdown, abstención inferida del texto, sin caché del motor, importar indexación, avisos repetidos, sin agrupar citadas, costo real = referencia) → **7/7 detectadas** |
+| Entorno limpio | `venv` nuevo (Python 3.12.13, macOS), `pip install -r requirements.txt` + pytest → **581 tests pasan** y la app abre; `requirements.txt` quedó **fijado** con esas versiones. `streamlit run app.py` arranca (HTTP 200, `/_stcore/health` = ok) |
+| Tests totales | **583 pasan** (~42 s) |
+
 ## Resultados de la Fase 6 hasta el punto manual (medidos el 2026-09-21; PROVISIONALES hasta validar el set)
 
 | Ítem | Resultado |
@@ -173,6 +185,10 @@ Petición de la persona: **no pagar nada adicional a su suscripción**; ninguna 
 | 5 | **Búsqueda exacta** (`retrieval.busqueda: exacta`) en lugar de la aproximada HNSW de Chroma | Con HNSW, la pregunta `o01` devolvía un top-5 distinto al exacto en 2 de 3 procesos (faltaba el fragmento p. 96, el más parecido). Con ~1 700 vectores la exacta cuesta <1 ms y es determinista. Recall no cambia (0,762 / 0,905 / 0,905). Test de equivalencia con fuerza bruta y mutaciones | 2026-09-21 |
 | 5 | **Umbral 0,835** calibrado con el LLM real (antes 0,865) | Con el LLM como segunda defensa, F-β es plano hasta 0,840; se toma el tope de la meseta menos un margen de 0,005. El 0,865 descartaba 2 respuestas buenas (q01, q08) sin evitar ninguna mala. La compuerta se conserva por costo y latencia | 2026-09-21 |
 | 6 | La comparación de embeddings por API **reanuda** en vez de reiniciar | La cuota gratuita de embeddings es de **1000 solicitudes por día y por modelo** (cuenta cada texto; medido con el cuerpo del 429), y el corpus tiene 1674 fragmentos: se completa en 2 días conservando lo ya indexado | 2026-09-21 |
+| 7 | Lectura de reportes en un módulo aparte (`src/reporting/datos.py`), sin pandas ni Streamlit | Se prueba sin interfaz y no obliga al CI ligero a instalar Streamlit; la app solo pinta | 2026-09-21 |
+| 7 | Pruebas con `streamlit.testing.AppTest` (sin navegador) | Permiten comprobar de forma automática qué se muestra en cada caso (respuesta, abstención, error, cuota) | 2026-09-21 |
+| 7 | `requirements.txt` con versiones exactas de los paquetes directos, sacadas de un venv limpio | Lo pide la fase y evita que una versión nueva rompa la instalación del corrector | 2026-09-21 |
+| 7 | **Copia de trabajo fuera de iCloud: `~/dev/Homework`** (la de `~/Documents/Github/Homework` queda intacta, con los mismos commits) | Con la carpeta en iCloud, macOS «desmaterializaba» archivos y los tests/`git commit` daban `Operation timed out` o se colgaban (hasta 5 min por corrida). Copia de seguridad adicional: `~/Homework_tarea1-rag.bundle` (`git bundle` de `main` y `tarea1-rag`) | 2026-09-21 |
 | 0 | README completo en `tarea1/README.md`; el README de la raíz solo recibe una sección con enlace | El repo aloja varias tareas; no se sobrescribe lo existente | 2026-09-21 |
 | 0 | Los módulos se crean en la fase que los necesita (sin archivos vacíos de relleno) | Historial de commits refleja el trabajo real | 2026-09-21 |
 
@@ -213,3 +229,6 @@ Petición de la persona: **no pagar nada adicional a su suscripción**; ninguna 
 30. **`o05` (etiquetada fuera de dominio) recibe una respuesta parcial y fundamentada** (Ley p. 17 y Reglamento p. 97 hablan de la capacidad máxima de contratación). No es una invención; es un problema de etiquetado del set. **Conviene que la persona revise `o05` en la validación de la Fase 3** (¿realmente está fuera del corpus indexado?).
 31. **Cuota gratuita de embeddings de Gemini: 1000 solicitudes/día por modelo, cada texto cuenta** (cuerpo del 429: `EmbedContentRequestsPerDayPerProjectPerModel-FreeTier`, `quotaValue: 1000`). Indexar 1674 fragmentos + 21 consultas no cabe en un día: la comparación reanuda (960/1674 hoy). El 429 diario incluye un `retryDelay` de ~23 s pero no basta esperar segundos.
 32. **El repo dentro de `~/Documents` (iCloud) vuelve a «desmaterializar» archivos** aunque haya 9,9 GB libres (303 archivos, incluidos objetos de `.git`), y entonces `check_secrets.py` y `git commit` se cuelgan. Se re-materializan con `find … -flags +dataless | xargs cat`. **Recomendación: mover el repo fuera de iCloud.** Se liberaron 6,17 GB borrando los blobs de modelos candidatos de Hugging Face (se conservó `multilingual-e5-small`, comprobado offline).
+33. **Trabajo ahora en `~/dev/Homework`** (fuera de iCloud). La carpeta original `~/Documents/Github/Homework` conserva los mismos commits y el mismo árbol de trabajo hasta el commit `297dfbf`; **conviene borrarla o dejarla como respaldo para no editar dos copias**. Los 3 archivos del índice temporal `data/index_cmp` de Gemini (960/1674 fragmentos ya pagados con cuota) no se pudieron descargar de iCloud: si no se recuperan, mañana la comparación de Gemini reindexa desde cero (1000 textos/día).
+34. **La interfaz no se ha visto en un navegador real** (no hay herramienta de captura en este entorno): se verificó con `AppTest`, con el servidor arrancando y con el contenido de cada elemento. Conviene que la persona la abra (`streamlit run app.py`) y revise el aspecto.
+35. **Los pasos de PowerShell del README no se ejecutaron** (la máquina es macOS): se probaron sus equivalentes (venv limpio, instalación, tests, apertura). La URL del instalador de Tesseract para Windows y el ajuste `Set-ExecutionPolicy` se dan de memoria: verificarlos.

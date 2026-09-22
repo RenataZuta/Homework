@@ -1,32 +1,27 @@
-# Dependencias de tarea1. Se amplía fase por fase, solo con paquetes realmente instalados y probados;
-# al cerrar la Fase 7 se fijan versiones desde un venv limpio.
+# Dependencias de tarea1, FIJADAS el 2026-09-21 desde un entorno virtual limpio (Python 3.12.13, macOS arm64) en el que pasó toda la suite de tests
+# (581) y se abrió la app. Se fijan solo los paquetes directos; los transitivos los resuelve pip.
 # Python 3.12 recomendado (las ruedas de PyTorch/ChromaDB tardan en llegar a versiones muy nuevas).
 #
 # En Windows instala PyTorch para CPU ANTES que el resto (evita descargar la versión con CUDA, ~2 GB):
 #   pip install torch --index-url https://download.pytorch.org/whl/cpu
+# (sentence-transformers necesita torch; con el comando de arriba ya queda instalado; en la prueba se usó torch 2.14.0)
 
 # Configuración
-pyyaml>=6.0
-python-dotenv>=1.0
+PyYAML==6.0.3
+python-dotenv==1.2.3
 
 # Extracción (proceso OFFLINE): PDF -> texto por página, OCR
-pymupdf>=1.24
-pillow>=10.0
-pytesseract>=0.3.10          # requiere el ejecutable de Tesseract (ver README: TESSERACT_CMD)
+PyMuPDF==1.28.2
+pillow==12.3.0
+pytesseract==0.3.13          # requiere el ejecutable de Tesseract (ver README: TESSERACT_CMD)
 
 # Indexación y recuperación
-numpy>=1.26
-sentence-transformers>=3.0   # embeddings locales (multilingual-e5-small)
-chromadb>=1.0                # índice vectorial persistente
-openai>=1.0                  # solo para la comparación de embeddings por API (Fase 6)
+numpy==2.5.3
+sentence-transformers==6.1.0   # embeddings locales (multilingual-e5-small)
+chromadb==1.5.9                # almacén persistente de vectores, textos y metadatos (la búsqueda es exacta, ver README)
+openai==3.16.2                 # solo para la comparación de embeddings por API (Fase 6; opcional)
 
 # Generación
-requests>=2.31              # llamadas REST a la API de Gemini (LLM y embeddings)
-anthropic>=1.0               # cliente de Claude: proveedor alternativo conservado, sin usar (llm.provider: anthropic)
-tzdata>=2024.1               # zonas horarias en Windows (precios por hora)
-
-# Reportes y gráficos
-matplotlib>=3.8
-
-# Solo para scripts/ocr_benchmark.py (comparación de motores; arrastra PyTorch). No hace falta para usar el proyecto.
-# easyocr>=1.7
+requests==2.34.2               # llamadas REST a la API de Gemini (LLM y embeddings)
+anthropic==1.7.0               # cliente de Claude: proveedor alternativo conservado, sin usar (llm.provider: anthropic)
+tzdata==2026.4                 # zonas horarias en Windows (precios po

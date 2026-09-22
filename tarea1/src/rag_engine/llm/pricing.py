@@ -103,7 +103,7 @@ class TablaPrecios:
 
 
 def cargar_tabla(ruta: Path, proveedor: str = "anthropic") -> TablaPrecios:
-    datos = yaml.safe_load(Path(ruta).read_text(encoding="utf-8"))
+    datos = yaml.safe_load(Path(ruta).read_text(encoding="utf-8")) or {}          # archivo vacío o ilegible -> error claro, no un TypeError
     if proveedor not in datos:
         raise ErrorPrecio(f"{Path(ruta).name} no tiene el bloque '{proveedor}'")
     return TablaPrecios.desde_dict(datos[proveedor])

@@ -6,6 +6,86 @@ citando documento y página. Repositorio: `RenataZuta/Homework`, rama `tarea1-ra
 > **Estado:** en desarrollo por fases; el estado exacto y las decisiones están en [`PROGRESO.md`](PROGRESO.md). Este README se completa en la Fase 13
 > (diagrama Mermaid del pipeline, pasos de instalación en Windows PowerShell, notas del video). Lo que ya está aquí describe **proveedores, costos, límites y privacidad**.
 
+## Puesta en marcha en Windows (PowerShell)
+
+> Los pasos se probaron con sus equivalentes en macOS (entorno virtual limpio, instalación desde `requirements.txt`, tests y apertura de la app). **Los comandos de PowerShell no se pudieron
+> ejecutar en la máquina de desarrollo** (macOS): si alguno falla, revisa primero rutas y versiones, y avísame.
+
+**Requisitos:** Windows 10/11, **Python 3.12** (`py -3.12 --version`; con Python 3.13+ pueden no existir ruedas de PyTorch o ChromaDB), Git y ~3 GB libres (PyTorch CPU + modelo de embeddings).
+
+```powershell
+# 1. Clonar y entrar a la carpeta del proyecto
+git clone https://github.com/RenataZuta/Homework.git
+cd Homework
+git checkout tarea1-rag
+cd tarea1
+
+# 2. Entorno virtual con Python 3.12
+py -3.12 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+#   Si PowerShell bloquea el script:  Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+python -m pip install --upgrade pip
+
+# 3. PyTorch SOLO CPU, ANTES del resto (evita bajar la versión con CUDA, ~2 GB)
+pip install torch --index-url https://download.pytorch.org/whl/cpu
+
+# 4. Dependencias del proyecto
+pip install -r requirements.txt
+
+# 5. Credenciales: copia la plantilla y completa GEMINI_API_KEY (clave gratuita: https://aistudio.google.com/apikey)
+Copy-Item .env.example .env
+python scripts\set_env_key.py GEMINI_API_KEY      # pide la clave con entrada oculta y la guarda en .env (no la muestra)
+python scripts\set_env_key.py --estado            # comprueba qué variables están definidas (nunca muestra valores)
+```
+
+### Tesseract (solo si vas a repetir la extracción con OCR)
+`data\processed\` ya viene en el repositorio, así que **la app no necesita Tesseract**. Para rehacer el OCR del Reglamento (75 páginas escaneadas):
+
+1. Instala Tesseract 5 para Windows (compilación de UB Mannheim, <https://github.com/UB-Mannheim/tesseract/wiki>) y marca el idioma **Spanish** en el instalador.
+2. Comprueba el idioma: `& "C:\Program Files\Tesseract-OCR\tesseract.exe" --list-langs` debe listar `spa`.
+3. En `.env` escribe la ruta: `TESSERACT_CMD=C:\Program Files\Tesseract-OCR\tesseract.exe`
+
+### Orden de ejecución
+**Ruta rápida (lo mínimo para usar la app):** el índice no se versiona (se regenera), así que se construye una vez. La primera vez descarga el modelo de embeddings (~470 MB).
+
+```powershell
+python scripts\build_index.py            # idempotente y reanudable (Ctrl+C es seguro)
+streamlit run app.py                      # abre http://localhost:8501; NO reconstruye el índice
+```
+
+**Ruta completa (reproducir todo):**
+
+```powershell
+$env:PYTHONPATH = "src"                   # para los módulos de src\evaluation (solo en esta sesión)
+python scripts\download_pdfs.py           # 1. descarga los PDFs oficiales y escribe data\raw\MANIFEST.json
+python scripts\run_extraction.py          # 2. PDF -> una entrada JSON por página (OCR solo en el subconjunto configurado)
+python scripts\validate_eval_set.py       # 3. evaluación previa: el set apunta a páginas procesadas
+python -m evaluation.select_local_model   #    (opcional) compara modelos de embeddings locales: descarga varios candidatos, ~6 GB
+python -m evaluation.compare_chunking     #    (opcional) compara configuraciones de troceado
+python scripts\build_index.py             # 4. índice persistente en data\index
+python -m evaluation.run_eval             # 5. Recall@k y abstención, sin llamar al LLM (código de salida 1 si Recall@3 < eval.min_recall_at_3)
+python -m evaluation.eval_end_to_end --umbral 0   #    evaluación con el LLM real (usa la cuota gratuita; ~27 llamadas)
+python -m evaluation.sweep_threshold_e2e  #    umbral a partir de esa evaluación
+streamlit run app.py                      # 6. interfaz
+```
+
+Los scripts se ejecutan **desde la carpeta `tarea1`**. En Linux/macOS: `source .venv/bin/activate`, `cp .env.example .env` y `PYTHONPATH=src python -m evaluation.run_eval`.
+
+### Pruebas y verificación de la arquitectura
+```powershell
+pip install pytest
+python -m pytest                                          # toda la suite (~30 s, sin red ni claves)
+python scripts\check_secrets.py                           # sin claves ni tokens en el árbol ni en el historial de git
+# El motor NO importa librerías de interfaz: debe dar 0 coincidencias
+Select-String -Path src\rag_engine\*.py,src\rag_engine\*\*.py -Pattern "streamlit|telegram|fastapi|flask|gradio"
+```
+Equivalente en Linux/CI: `grep -rnE "streamlit|telegram|fastapi|flask|gradio" src/rag_engine` (0 coincidencias).
+
+### La interfaz (`app.py`)
+Carga el índice existente **una sola vez** (`@st.cache_resource`) y **nunca lo reconstruye** al iniciar; si falta, muestra un error con el comando para construirlo. Solo llama a `MotorRAG.responder(pregunta)`.
+Pestañas: **Consulta** (respuesta, indicador de abstención, avisos de versión, fragmentos citados con documento/página/similitud/texto, y costo, tokens y latencia de la consulta),
+**Calidad de extracción**, **Evaluación** (Recall@k, abstención, barrido de umbral, embeddings, troceado, BM25) y **Costos** (agregado de `logs/llm_calls.jsonl`). Los errores salen con `st.error`.
+
 ## Proveedores y costo (decisión del 2026-09-21: sin pagos adicionales)
 
 | Etapa | Proveedor activo | Costo real | Cómo cambiarlo |
@@ -19,63 +99,4 @@ El cliente de **Anthropic se conserva pero no se usa** (`llm.provider: anthropic
 ### Costo real y costo de referencia
 Cada llamada al LLM se registra en `logs/llm_calls.jsonl` con **`costo_usd_real`** (lo que se cobra: 0 en la capa gratuita) y **`costo_usd_referencia`**
 (lo que costaría con el precio de **pago** del modelo, de `pricing.yaml`, con fuente y fecha de verificación). Sirve para dimensionar el gasto si algún
-día se pasara a un plan de pago. Los precios se conservan por **ventanas horarias** (`pricing.yaml`, `llm/pricing.py`): hoy Google publica un único precio por modelo,
-y la estructura está probada con una tabla ficticia de horas pico y valle. Las respuestas que salen de la caché de la evaluación **no** son llamadas y no se registran.
-
-### Conseguir y guardar la clave (gratis, sin tarjeta)
-1. Crea una clave en **Google AI Studio**: <https://aistudio.google.com/apikey>.
-2. Guárdala **sin mostrarla** (pide el valor con entrada oculta y escribe `tarea1/.env`, que git ignora):
-   ```
-   python scripts/set_env_key.py GEMINI_API_KEY
-   python scripts/set_env_key.py --estado        # qué variables están definidas (nunca muestra valores)
-   ```
-Nunca pegues una clave en el chat, en `config.yaml` ni en el repositorio. Si se filtra, revócala en AI Studio y crea otra.
-
-## Límites de uso: throttle, reintentos y cuota
-
-La capa gratuita tiene límites por proyecto (RPM, TPM, RPD). Los números **no figuran en la documentación pública**: se consultan en
-<https://aistudio.google.com/rate-limit>. El proyecto los respeta así (`llm.limites` y `embeddings.limites` en `config.yaml`):
-
-- **Throttle por RPM** (`rpm`): ventana deslizante de 60 s; nunca envía más de `rpm` peticiones por minuto. El valor por defecto (10 para el LLM, 20 para embeddings) es un
-  **valor de diseño conservador, no el límite de Google**: ajústalo a lo que muestre tu AI Studio.
-- **Reintentos con backoff exponencial** ante 429 por tasa, 5xx y errores de red: esperas de 4, 8, 16, 32 s (tope 60 s) con jitter, respetando el `retryDelay` que sugiera Google.
-  **No** se reintentan clave inválida, formato malformado, bloqueo de contenido ni la **cuota diaria** agotada (esperar segundos no sirve).
-- **Cuota agotada = error estructurado.** Si el límite persiste tras los reintentos, o se agota la cuota diaria, `responder()` devuelve `respuesta=None`, `error` con
-  el mensaje y `error_tipo="cuota_agotada"`. **Nunca** una respuesta normal ni una abstención disfrazada. La interfaz muestra `mensajes.error_cuota`.
-- **Caché de la evaluación de punta a punta** (`eval.cache_llm`, carpeta `eval/cache_llm/`, ignorada por git): la clave es el hash de proveedor, modelo, temperatura, `max_tokens`,
-  prompt de sistema, prompt de usuario (pregunta + fragmentos) y esquema. Repetir la evaluación no repite llamadas ni gasta cuota; si cambia cualquiera de esos elementos, se llama de nuevo.
-  Si la cuota se agota a mitad de la evaluación, se corta con un informe «EVALUACIÓN INCOMPLETA», y al repetirla continúa donde quedó. `--sin-cache` fuerza llamadas reales.
-
-## Recuperación exacta
-
-`retrieval.busqueda: exacta` calcula el coseno contra todos los vectores del índice (menos de 1 ms con ~1 700 fragmentos). La búsqueda aproximada HNSW de Chroma daba resultados
-distintos entre ejecuciones en este corpus (para la pregunta `o01`, 2 de 3 procesos), lo que hacía irreproducibles las respuestas; la exacta es determinista y el Recall no cambia.
-
-## Privacidad
-
-> **En la capa gratuita, Google puede usar el contenido enviado para mejorar sus productos.** La página oficial de precios lo indica en la fila
-> «Used to improve our products» (Sí en el nivel gratuito, No en el de pago; verificado el 2026-09-21: <https://ai.google.dev/gemini-api/docs/pricing>).
-
-Por eso el motor **solo envía al proveedor la pregunta y fragmentos de normas públicas** (Ley, Reglamento y modificatoria, publicados oficialmente), dentro de las plantillas de
-`config.yaml` (`prompts.sistema` y `prompts.usuario`). No envía claves, variables de entorno, rutas locales ni datos de otros usuarios; hay un test que lo verifica
-(`test_al_proveedor_solo_llegan_la_pregunta_y_fragmentos_de_normas`). Aun así:
-
-- **No escribas datos personales ni información confidencial en las preguntas**; la aplicación muestra este aviso (`mensajes.aviso_privacidad`).
-- Si necesitas privacidad total, usa el nivel de pago (`llm.nivel: pago`, en el que Google indica que no usa el contenido para mejorar sus productos) o un proveedor local.
-- Los embeddings del índice se calculan **localmente**: el texto de las normas y las preguntas no salen de tu máquina para la recuperación. Solo la generación, y la comparación
-  opcional de embeddings por API (que envía fragmentos de normas públicas), usan la red.
-
-## Embeddings por API: desviación respecto al plan original
-
-El plan comparaba el modelo local con `text-embedding-3-small` de OpenAI. Como **no se cargará crédito**, se aplicó esta regla (`evaluation/compare_embeddings.py`):
-
-1. Se intenta OpenAI **sin cargar crédito**. Si la API responde `insufficient_quota` (cuenta sin saldo), la fila queda **«no ejecutada por costo»**, sin cifras inventadas.
-   Sin `OPENAI_API_KEY`, la fila queda «pendiente».
-2. Como segunda implementación por API se agregó **`gemini-embedding-2`** (capa gratuita «Free of charge», verificado el 2026-09-21; el preview `gemini-embedding-2-preview` se retiró el 2026-08-10),
-   de 768 dimensiones (la guía recomienda 768, 1536 o 3072). Este modelo no usa `task_type`: la tarea va en el texto con las plantillas de la guía oficial
-   (`task: search result | query: …` y `title: none | text: …`, en `config.yaml`).
-3. **Cuota gratuita: 1000 textos por día y por modelo** (cada texto cuenta; medido en la respuesta 429 de Google). El corpus tiene 1674 fragmentos, así que la fila de Gemini se
-   completa en **dos días**: `compare_embeddings.py` conserva el índice de los modelos por API y **reanuda** donde quedó al volver a ejecutarlo.
-4. Su respuesta **no informa tokens**, así que la fila lo declara («no informado por la API») en vez de estimar un costo.
-
-Resultados: [`eval/results/embeddings_comparacion.md`](eval/results/embeddings_comparacion.md). Todo dato provisional se marca hasta validar el set de evaluación (Fase 3).
+día se pasara a un plan de pago. Los precios se conservan por **ventanas horarias**

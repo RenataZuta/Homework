@@ -1,14 +1,14 @@
 id,tipo,estilo,modificada_2026,rango_acierto,rango_modificatoria,mejor_similitud,se_abstiene,primero
-q01,in_domain,coloquial,False,1,,0.8429,True,ley_32069 p.17
+q01,in_domain,coloquial,False,1,,0.8429,False,ley_32069 p.17
 q02,in_domain,coloquial,False,1,,0.8738,False,ley_32069 p.32
 q03,in_domain,coloquial,False,1,,0.88,False,ley_32069 p.32
-q04,in_domain,coloquial,False,,,0.8564,True,ds_009_2025_ef p.58
+q04,in_domain,coloquial,False,,,0.8564,False,ds_009_2025_ef p.58
 q05,in_domain,coloquial,True,1,,0.8855,False,ley_32069 p.29
 q06,in_domain,coloquial,False,1,,0.872,False,ley_32069 p.32
-q07,in_domain,coloquial,False,,,0.8643,True,ds_009_2025_ef p.40
-q08,in_domain,coloquial,False,1,,0.86,True,ds_009_2025_ef p.68
+q07,in_domain,coloquial,False,,,0.8643,False,ds_009_2025_ef p.40
+q08,in_domain,coloquial,False,1,,0.86,False,ds_009_2025_ef p.68
 q09,in_domain,coloquial,False,1,,0.901,False,ley_32069 p.45
-q10,in_domain,coloquial,False,3,,0.8365,True,ley_32069 p.32
+q10,in_domain,coloquial,False,3,,0.8365,False,ley_32069 p.32
 q11,in_domain,coloquial,True,1,3,0.8691,False,ds_009_2025_ef p.18
 q12,in_domain,juridico,False,1,,0.911,False,ley_32069 p.30
 q13,in_domain,juridico,False,1,,0.9251,False,ds_009_2025_ef p.67
@@ -20,9 +20,9 @@ q18,in_domain,juridico,True,1,1,0.9132,False,ds_001_2026_ef p.4
 q19,in_domain,juridico,True,2,3,0.9002,False,ley_32069 p.31
 q20,in_domain,juridico,True,1,2,0.885,False,ley_32069 p.35
 q21,in_domain,juridico,False,1,,0.9103,False,ley_32069 p.39
-o01,out_of_domain,coloquial,False,,,0.8405,True,ds_009_2025_ef p.96
-o02,out_of_domain,coloquial,False,,,0.8556,True,ds_009_2025_ef p.10
-o03,out_of_domain,juridico,False,,,0.8541,True,ds_009_2025_ef p.67
+o01,out_of_domain,coloquial,False,,,0.8405,False,ds_009_2025_ef p.96
+o02,out_of_domain,coloquial,False,,,0.8556,False,ds_009_2025_ef p.10
+o03,out_of_domain,juridico,False,,,0.8541,False,ds_009_2025_ef p.67
 o04,out_of_domain,coloquial,False,,,0.7949,True,ds_009_2025_ef p.98
 o05,out_of_domain,juridico,False,,,0.8934,False,ds_009_2025_ef p.97
 o06,out_of_domain,coloquial,False,,,0.8298,True,ley_32069 p.8

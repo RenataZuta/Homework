@@ -163,3 +163,10 @@ def test_un_modelo_de_embeddings_sin_precio_es_error(tmp_path):
         cargar_precio_embedding(ruta, "m")
     with pytest.raises(ErrorPrecio):
         cargar_precio_embedding(ruta, "otro")
+
+
+def test_un_pricing_yaml_vacio_da_un_error_claro_no_un_typeerror(tmp_path):
+    vacio = tmp_path / "pricing.yaml"
+    vacio.write_text("", encoding="utf-8")
+    with pytest.raises(ErrorPrecio, match="no tiene el bloque 'anthropic'"):
+        cargar_tabla(vacio)
