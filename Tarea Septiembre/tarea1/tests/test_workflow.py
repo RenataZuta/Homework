@@ -7,8 +7,17 @@ import yaml
 
 from rag_engine.config import cargar_config
 
+def _raiz_del_repo(inicio: Path) -> Path:
+    """Sube desde `inicio` hasta encontrar la carpeta que tiene `.git` (no asume una profundidad fija: tarea1/ puede
+    vivir directamente en la raíz del repo o dentro de una carpeta intermedia, como «Tarea Septiembre/»)."""
+    for candidata in (inicio, *inicio.parents):
+        if (candidata / ".git").exists():
+            return candidata
+    return inicio.parents[1]                # no debería pasar en este repo; mejor que reventar con un índice fuera de rango
+
+
 RAIZ = Path(__file__).resolve().parents[1]
-WORKFLOW = RAIZ.parent / ".github" / "workflows" / "eval.yml"
+WORKFLOW = _raiz_del_repo(RAIZ) / ".github" / "workflows" / "eval.yml"
 pytestmark = pytest.mark.skipif(not WORKFLOW.is_file(), reason="el repositorio no incluye .github/workflows/eval.yml en este entorno")
 
 
@@ -66,12 +75,12 @@ def test_arma_el_indice_desde_lo_procesado_y_ejecuta_run_eval_sin_ocr(pasos):
 
 def test_sube_eval_results_como_artefacto_aunque_falle(pasos):
     p = next(p for p in pasos if p.get("uses", "").startswith("actions/upload-artifact@"))
-    assert p["if"] == "always()" and p["with"]["path"].rstrip("/") == "tarea1/eval/results"
+    assert p["if"] == "always()" and p["with"]["path"].rstrip("/") == "Tarea Septiembre/tarea1/eval/results"
 
 
 def test_corre_desde_tarea1_con_pythonpath(wf):
     job = wf["jobs"]["recall-gate"]
-    assert job["defaults"]["run"]["working-directory"] == "tarea1" and job["env"]["PYTHONPATH"] == "src"
+    assert job["defaults"]["run"]["working-directory"] == "Tarea Septiembre/tarea1" and job["env"]["PYTHONPATH"] == "src"
 
 
 def test_el_texto_procesado_esta_versionado_porque_el_ci_no_hace_ocr():

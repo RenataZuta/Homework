@@ -31,11 +31,11 @@ node_modules/
 
 # ── Tarea 1: artefactos regenerables o con datos personales ──
 # El índice de COMPARACIÓN (evaluation/*, temporal) NUNCA se versiona: se reconstruye desde data/processed/.
-tarea1/data/index_cmp/
+Tarea Septiembre/tarea1/data/index_cmp/
 # El índice PRINCIPAL (data/index/) SÍ se versiona desde la Fase 12: la app pública (Streamlit Community Cloud) no tiene un
 # paso de "build" propio, así que no puede reconstruirlo al iniciar (regla no negociable). ~13 MB: no hace falta Git LFS.
 # Recuerda reconstruirlo y volver a comprometerlo (`python scripts/build_index.py`) si cambia data/processed/ antes de desplegar.
 # La base del bot guarda IDs de usuarios de Telegram (dato personal).
 *.db
 # Caché de respuestas del LLM para la evaluación de punta a punta (regenerable; se invalida sola si cambia el prompt, el contexto o el modelo).
-tarea1/eval/cache_llm/
+Tarea Septiembre/tarea1/eval/cache_llm/

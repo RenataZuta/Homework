@@ -60,8 +60,7 @@ abstención es siempre el campo `abstuvo: bool`, nunca algo que se infiere leyen
 # 1. Clonar y entrar a la carpeta del proyecto
 git clone https://github.com/RenataZuta/Homework.git
 cd Homework
-git checkout tarea1-rag
-cd tarea1
+cd "Tarea Septiembre\tarea1"    # en macOS/Linux: cd "Tarea Septiembre/tarea1"
 
 # 2. Entorno virtual con Python 3.12
 py -3.12 -m venv .venv

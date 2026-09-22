@@ -2,7 +2,7 @@
 
 > Archivo de retoma: si se pierde el contexto, continuar desde la primera fase sin `[x]`. Leyenda: `[x]` hecha y verificada · `[~]` trabajo técnico hecho, **falta confirmación `[MANUAL]`** de la persona.
 > Issue: https://github.com/d2cml-ai/Data-Science-Python/issues/187 · Fecha límite: **miércoles 23-sep-2026**.
-> Rama de trabajo: `tarea1-rag` · Repo: `RenataZuta/Homework` (público) · Carpeta: `tarea1/`.
+> Rama de trabajo: `main` (fusionada desde `tarea1-rag` el 2026-09-22) · Repo: `RenataZuta/Homework` (público) · Carpeta: `Tarea Septiembre/tarea1/` (reorganizado el 2026-09-22 a pedido de la persona).
 
 ## Fases
 
@@ -415,3 +415,23 @@ Petición de la persona: **no pagar nada adicional a su suscripción**; ninguna 
 - [x] Commits distribuidos por fase (más de 20 commits en `tarea1-rag`).
 - [x] Sin credenciales en el historial (`check_secrets.py` sobre `git log -p`, 0 hallazgos).
 - [ ] Registrar el repositorio en la hoja de cálculo del issue — lo hace la persona.
+
+## Reorganización del repositorio (2026-09-22, a pedido de la persona)
+
+La persona pidió ordenar el repositorio por mes: `Tarea Agosto/Hw1_2026_2/` (Tareas 1-3 del curso, sin tocar su contenido) y
+`Tarea Septiembre/tarea1/` (todo este proyecto, sin cambiar nada dentro de la carpeta). Se hizo con `mv` + `git add -A` (git
+detectó **513 archivos como renombrados**, preservando su historial) y se actualizó lo que sí dependía de la ruta:
+
+- `.gitignore`: los dos patrones de `tarea1/...` pasan a `Tarea Septiembre/tarea1/...`.
+- `.github/workflows/eval.yml`: `paths`, `working-directory`, `cache-dependency-path`, la clave de caché y la ruta del artefacto.
+- `README.md` (de tarea1): el comando de clonación e instalación.
+- `docs/despliegue_backend.md` y `docs/despliegue_app_publica.md`: el *Root Directory* / *Main file path* que hay que poner en Render y Streamlit Cloud (ninguno de los dos se había desplegado todavía, así que no hubo que tocar ninguna configuración ya en producción).
+- README raíz del repositorio: ahora describe la nueva estructura de carpetas.
+
+**Hallazgo real de esta reorganización:** `tests/test_workflow.py` calculaba la raíz del repositorio como "un nivel arriba de `tarea1/`"
+(`RAIZ.parent`), lo cual asumía que `tarea1/` vive directamente en la raíz. Al anidarlo un nivel más, 13 pruebas se saltaban silenciosamente
+(«el repositorio no incluye `.github/workflows/eval.yml` en este entorno»). Se corrigió para que suba por los directorios padres hasta
+encontrar `.git`, sin asumir una profundidad fija — así no se rompe si la estructura vuelve a cambiar.
+
+Verificado tras el cambio: **717 tests pasan**, `check_secrets.py` limpio (42 commits, 413 archivos), 0 imports de UI en el motor.
+`tarea1-rag` se sincronizó con `main` (mismo commit) para no dejarlas divergentes.
