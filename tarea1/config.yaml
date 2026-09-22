@@ -193,6 +193,14 @@ embeddings:
 # ── Recuperación (Fases 5 y 8) ───────────────────────────────────────────────
 retrieval:
   modo: semantico                  # semantico | bm25 | hibrido — PROVISIONAL (Fase 8)
+  bm25:                            # solo se usa con modo bm25 o hibrido (Fase 8)
+    k1: 1.5                        # saturación de la frecuencia del término (valor clásico)
+    b: 0.75                        # normalización por largo del fragmento (valor clásico)
+    stemming: false                # true = stemmer ligero de plurales (se compara en compare_retrievers.py)
+    usar_encabezado: true          # indexa «Artículo N. Título» + texto, como el contexto de los embeddings
+  hibrido:
+    rrf_k: 60                      # constante de Reciprocal Rank Fusion (valor de la publicación original)
+    candidatos: 50                 # fragmentos de cada lista que entran a la fusión
   busqueda: exacta                 # exacta | aproximada. La aproximada (HNSW) dio resultados distintos entre procesos con este corpus: ver retrieval/semantic.py
   top_k: 5
   umbral_similitud: 0.835   # CALIBRADO con el LLM real (Fase 5, provisional hasta validar el set): ver eval/results/umbral_e2e_resumen.md

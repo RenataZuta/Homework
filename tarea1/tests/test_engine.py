@@ -130,7 +130,7 @@ def test_el_umbral_es_inclusivo_en_el_limite_exacto(entorno, monkeypatch):
     """Con la similitud FIJADA por un doble, un umbral igual a ella responde y uno apenas mayor se abstiene."""
     from rag_engine.retrieval.semantic import Recuperado
     fijo = [Recuperado(id="x:v:p0001:c000:h", documento="ley_32069", version="ley_vigente", pagina=1, similitud=0.5, texto="texto", metadatos={})]
-    monkeypatch.setattr(motor_mod, "buscar", lambda *a, **k: fijo)
+    monkeypatch.setattr(motor_mod, "buscar_por_modo", lambda *a, **k: fijo)
     assert motor(entorno, LLMFalso(), **{"retrieval.umbral_similitud": 0.5}).responder("hola").abstuvo is False
     assert motor(entorno, LLMFalso(), **{"retrieval.umbral_similitud": 0.5000001}).responder("hola").abstuvo is True
 
@@ -300,9 +300,10 @@ def test_el_motor_se_carga_una_sola_vez_por_proceso(monkeypatch, entorno):
 
 @pytest.mark.parametrize("valor, exacta", [("exacta", True), ("aproximada", False)])
 def test_el_motor_pide_la_busqueda_que_indica_la_config(entorno, monkeypatch, valor, exacta):
+    from rag_engine.retrieval import modos
     pedidos = []
-    original = motor_mod.buscar
-    monkeypatch.setattr(motor_mod, "buscar", lambda *a, **k: (pedidos.append(k.get("exacta")), original(*a, **k))[1])
+    original = modos.buscar_semantico
+    monkeypatch.setattr(modos, "buscar_semantico", lambda *a, **k: (pedidos.append(k.get("exacta")), original(*a, **k))[1])
     motor(entorno, LLMFalso(), **{"retrieval.busqueda": valor}).responder(P_PAGO)
     assert pedidos == [exacta]
 

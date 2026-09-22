@@ -24,6 +24,7 @@ class Recuperado:
     similitud: float                  # coseno, en [-1, 1]; para vectores normalizados = 1 - distancia
     texto: str
     metadatos: dict = field(default_factory=dict)
+    puntaje: float | None = None      # puntaje propio del modo que ordenó (BM25 o RRF); None en el semántico, donde el orden ES la similitud
 
 
 class _Matriz:
@@ -41,11 +42,19 @@ class _Matriz:
 
 
 _CACHE: dict[tuple[str, int], _Matriz] = {}
+_LIMPIADORES: list = []               # otros módulos (BM25) registran aquí cómo descartar sus cachés derivadas de la misma colección
+
+
+def registrar_limpiador(funcion) -> None:
+    if funcion not in _LIMPIADORES:
+        _LIMPIADORES.append(funcion)
 
 
 def olvidar_matrices() -> None:
     """Descarta las matrices en memoria (la indexación lo llama al terminar para que ninguna consulta use datos viejos)."""
     _CACHE.clear()
+    for f in _LIMPIADORES:
+        f()
 
 
 def _matriz(coleccion) -> _Matriz:
@@ -53,6 +62,23 @@ def _matriz(coleccion) -> _Matriz:
     if clave not in _CACHE:
         _CACHE[clave] = _Matriz(coleccion)
     return _CACHE[clave]
+
+
+def matriz_de(coleccion) -> _Matriz:
+    return _matriz(coleccion)
+
+
+def similitudes(coleccion, vector: np.ndarray) -> tuple[_Matriz, np.ndarray]:
+    """Coseno de la consulta contra TODOS los fragmentos (exacto). Lo usan los tres modos: el semántico ordena por él; BM25 y el híbrido lo conservan como
+    ``similitud`` de cada fragmento, que es lo que compara la compuerta del umbral (los puntajes de BM25 no son cosenos)."""
+    m = _matriz(coleccion)
+    v = np.asarray(vector, dtype=np.float32)
+    return m, m.vectores @ (v / (np.linalg.norm(v) or 1.0))
+
+
+def recuperado_en(m: _Matriz, i: int, sim: float, puntaje: float | None = None) -> Recuperado:
+    return Recuperado(id=m.ids[i], documento=m.metas[i]["documento"], version=m.metas[i]["version"], pagina=int(m.metas[i]["pagina"]),
+                      similitud=float(sim), texto=m.textos[i], metadatos=m.metas[i], puntaje=puntaje)
 
 
 def _coincide(meta: dict, donde: dict) -> bool:

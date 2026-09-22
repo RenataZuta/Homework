@@ -198,4 +198,4 @@ def test_las_pestanas_de_reportes_muestran_datos_reales(monkeypatch):
     etiquetas = {m.label for m in at.metric}
     assert {"Recall@1", "Recall@3", "Recall@5", "Llamadas", "Costo real (USD)", "Costo de referencia (USD)"} <= etiquetas
     assert any("PROVISIONAL" in w.value for w in at.warning)                             # el set aún no está validado
-    assert len(at.dataframe) >= 4 and any("Pendiente (Fase 8)" in i.value for i in at.info)
+    assert len(at.dataframe) >= 5 and not any("Pendiente (Fase 8)" in i.value for i in at.info)       # la comparación BM25 ya existe (Fase 8): se muestra la tabla

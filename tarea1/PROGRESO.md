@@ -14,7 +14,7 @@
 - [x] **Fase 5** — Motor RAG: umbral, versiones, costo (llamadas reales con `gemini-3.5-flash-lite` verificadas el 2026-09-21; las métricas son **PROVISIONALES** hasta validar el set de la Fase 3)
 - [~] **Fase 6** — Evaluación y comparación de embeddings local vs API `[pendiente: repetir mañana `PYTHONPATH=src python -m evaluation.compare_embeddings` (Gemini: 960/1674 fragmentos indexados, la cuota gratuita es de 1000 textos/día); OPENAI_API_KEY opcional]` (`run_eval` y la fila local están medidos)
 - [x] **Fase 7** — Interfaz Streamlit (`app.py`; probada sin navegador con `AppTest` y abierta en un venv limpio; **no se revisó visualmente en un navegador** ni se ejecutó PowerShell, ver hallazgos 33-35)
-- [ ] **Fase 8** — Innovación A: BM25 vs semántica
+- [x] **Fase 8** — Innovación A: BM25 vs semántica (modo final: `semantico`, con evidencia; `bm25` e `hibrido` disponibles)
 - [ ] **Fase 9** — Innovación B: GitHub Actions con umbral de Recall@3
 - [ ] **Fase 10** — Innovación C: bot de Telegram `[MANUAL: @BotFather]`
 - [ ] **Fase 11** — Innovación D: bot 24/7 con Cloudflare Worker `[MANUAL: cuentas y deploy]`
@@ -104,6 +104,19 @@ Modelo `gemini-3.5-flash-lite`, capa gratuita, `retrieval.busqueda: exacta`, umb
 | Determinismo | La búsqueda exacta da el mismo resultado en 4 procesos distintos (con HNSW, `o01` cambiaba en 2 de 3) |
 | Tests | **553 pasan** |
 
+## Resultados de la Fase 8 (medidos el 2026-09-21; PROVISIONALES hasta validar el set)
+
+| Ítem | Resultado |
+|---|---|
+| Módulos | `retrieval/bm25.py` (Okapi/Lucene propio, sin dependencia; minúsculas, sin tildes, stopwords, stemmer ligero opcional), `retrieval/hybrid.py` (RRF), `retrieval/modos.py` (despacho por `retrieval.modo`) y `evaluation/compare_retrievers.py` |
+| Set (21 preguntas) | Semántico R@1/3/5 = 0,762 / 0,905 / 0,905, MRR 0,825, coloquial R@3 0,818. BM25: 0,571 / 0,714 / 0,762 (coloquial 0,455; con stemming 0,762 / 0,545). Híbrido + stemming: 0,714 / 0,905 / 0,905, MRR 0,802. En jurídico y en modificatoria todos igualan |
+| Sonda de números de artículo (96 consultas sintéticas) | R@3: **BM25 0,844**, híbrido 0,771, semántico 0,448 |
+| Punta a punta (LLM real, umbral 0) | Semántico 18/21 con cita correcta y 1 indebida; híbrido + stemming 17/21 y 2 indebidas (26 llamadas nuevas; ver hallazgo 38) |
+| Sensibilidad del híbrido | Candidatos 50/100/200 × `rrf_k` 10/60: el set no cambia (q04 y q07 siguen fallando) |
+| Decisión | `retrieval.modo: semantico` |
+| Compuerta | Compara SIEMPRE cosenos: el mayor coseno entre los recuperados (el motor y `evaluar_recuperacion`); BM25/RRF solo ordenan |
+| Tests | **615 pasan**; 8 mutaciones de BM25/RRF/compuerta detectadas 8/8 |
+
 ## Resultados de la Fase 7 (medidos el 2026-09-21)
 
 | Ítem | Resultado |
@@ -189,6 +202,9 @@ Petición de la persona: **no pagar nada adicional a su suscripción**; ninguna 
 | 7 | Pruebas con `streamlit.testing.AppTest` (sin navegador) | Permiten comprobar de forma automática qué se muestra en cada caso (respuesta, abstención, error, cuota) | 2026-09-21 |
 | 7 | `requirements.txt` con versiones exactas de los paquetes directos, sacadas de un venv limpio | Lo pide la fase y evita que una versión nueva rompa la instalación del corrector | 2026-09-21 |
 | 7 | **Copia de trabajo fuera de iCloud: `~/dev/Homework`** (la de `~/Documents/Github/Homework` queda intacta, con los mismos commits) | Con la carpeta en iCloud, macOS «desmaterializaba» archivos y los tests/`git commit` daban `Operation timed out` o se colgaban (hasta 5 min por corrida). Copia de seguridad adicional: `~/Homework_tarea1-rag.bundle` (`git bundle` de `main` y `tarea1-rag`) | 2026-09-21 |
+| 8 | **Modo final `semantico`** | Mejor en R@1/3/5 y MRR del set y de punta a punta; el híbrido solo gana en la sonda de números de artículo (y no recupera q07: el fragmento está fuera de los 50 primeros del semántico). Opción documentada para uso por número de artículo | 2026-09-21 |
+| 8 | BM25 implementado a mano, no `rank_bm25` | ~60 líneas, sin dependencia nueva y sin el IDF negativo de algunas implementaciones; comprobado contra la fórmula a mano | 2026-09-21 |
+| 8 | La compuerta usa el **mayor coseno recuperado**, no el puntaje de BM25/RRF ni la similitud del primer lugar | Los puntajes de BM25/RRF no son cosenos; así el umbral calibrado sirve en los tres modos | 2026-09-21 |
 | 0 | README completo en `tarea1/README.md`; el README de la raíz solo recibe una sección con enlace | El repo aloja varias tareas; no se sobrescribe lo existente | 2026-09-21 |
 | 0 | Los módulos se crean en la fase que los necesita (sin archivos vacíos de relleno) | Historial de commits refleja el trabajo real | 2026-09-21 |
 
@@ -232,3 +248,6 @@ Petición de la persona: **no pagar nada adicional a su suscripción**; ninguna 
 33. **Trabajo ahora en `~/dev/Homework`** (fuera de iCloud). La carpeta original `~/Documents/Github/Homework` conserva los mismos commits y el mismo árbol de trabajo hasta el commit `297dfbf`; **conviene borrarla o dejarla como respaldo para no editar dos copias**. Los 3 archivos del índice temporal `data/index_cmp` de Gemini (960/1674 fragmentos ya pagados con cuota) no se pudieron descargar de iCloud: si no se recuperan, mañana la comparación de Gemini reindexa desde cero (1000 textos/día).
 34. **La interfaz no se ha visto en un navegador real** (no hay herramienta de captura en este entorno): se verificó con `AppTest`, con el servidor arrancando y con el contenido de cada elemento. Conviene que la persona la abra (`streamlit run app.py`) y revise el aspecto.
 35. **Los pasos de PowerShell del README no se ejecutaron** (la máquina es macOS): se probaron sus equivalentes (venv limpio, instalación, tests, apertura). La URL del instalador de Tesseract para Windows y el ajuste `Set-ExecutionPolicy` se dan de memoria: verificarlos.
+36. **El set de evaluación no tiene ninguna pregunta con cifras** (0 de 21), así que no puede medir la búsqueda por número de artículo, que es donde BM25 se espera fuerte. Se añadió una sonda sintética de 96 consultas generadas del índice (claramente separada del set). Conviene que la persona añada 3-5 preguntas con número de artículo o monto al validar el set.
+37. **q04 y q07 son la brecha de vocabulario que nadie cierra:** q07 tiene el fragmento en el puesto 1 de BM25 pero en el 166 del semántico; q04 en los puestos 51 (semántico) y 58 (BM25). Una reescritura de la consulta con el LLM («contratos menores», «criterios de desempate») sería el siguiente paso, fuera del alcance de la fase.
+38. **La generación con temperatura por defecto no es determinista:** la diferencia semántico/híbrido de punta a punta (18 frente a 17) es de una pregunta y una sola corrida por modo; no es concluyente. Las respuestas del semántico quedan en la caché (`eval/cache_llm/`, ignorada por git) para poder repetir sin gastar cuota.

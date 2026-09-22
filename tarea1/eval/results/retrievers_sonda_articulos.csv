@@ -1,0 +1,7 @@
+variante,consultas,recall@1,recall@3,recall@5
+semantico,96,0.271,0.448,0.542
+bm25,96,0.521,0.844,0.938
+bm25_stem,96,0.521,0.844,0.938
+bm25_sin_encabezado,96,0.302,0.698,0.833
+hibrido_rrf,96,0.5,0.771,0.823
+hibrido_rrf_stem,96,0.5,0.771,0.823

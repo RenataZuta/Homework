@@ -132,13 +132,13 @@ def main(argv: list[str] | None = None) -> int:
     args = ap.parse_args(argv)
     from rag_engine.embeddings.factory import crear_embedder
     from rag_engine.retrieval.indice import abrir_para_lectura
-    from rag_engine.retrieval.semantic import buscar
+    from rag_engine.retrieval.modos import buscar_por_modo
 
     cfg = cargar_config()
     preguntas = cargar_preguntas(cfg.ruta("eval_preguntas"))
     emb, col = crear_embedder(cfg), abrir_para_lectura(cfg)
     k = cfg.get("retrieval.top_k")
-    ev = evaluar_recuperacion(preguntas, lambda q, kk: buscar(col, emb, q, kk), (k,))
+    ev = evaluar_recuperacion(preguntas, lambda q, kk: buscar_por_modo(col, emb, q, cfg, kk), (k,))
     puntos = [Punto(r.tipo, r.mejor_similitud, r.rango_acierto is not None and r.rango_acierto <= k) for r in ev.por_pregunta]
     b = cfg.get("eval.barrido_umbral")
     filas = barrido(puntos, b["desde"], b["hasta"], b["paso"], b["beta"])

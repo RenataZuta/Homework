@@ -67,13 +67,13 @@ def main(argv: list[str] | None = None) -> int:
     args = ap.parse_args(argv)
     from rag_engine.embeddings.factory import crear_embedder
     from rag_engine.retrieval.indice import abrir_para_lectura
-    from rag_engine.retrieval.semantic import buscar
+    from rag_engine.retrieval.modos import buscar_por_modo
 
     cfg = cargar_config()
     preguntas = cargar_preguntas(cfg.ruta("eval_preguntas"))
     emb, col = crear_embedder(cfg), abrir_para_lectura(cfg)
     ks = tuple(cfg.get("eval.ks"))
-    r = evaluar(preguntas, lambda t, k: buscar(col, emb, t, k), ks, cfg.get("retrieval.umbral_similitud"))
+    r = evaluar(preguntas, lambda t, k: buscar_por_modo(col, emb, t, cfg, k), ks, cfg.get("retrieval.umbral_similitud"))
     r["configuracion"] = {"modelo": emb.name, "troceado": cfg.get("chunking.activa"), "modo": cfg.get("retrieval.modo"), "top_k": cfg.get("retrieval.top_k"),
                           "set_validado": cfg.get("eval.set_validado"), "fragmentos_en_indice": col.count()}
     minimo = cfg.get("eval.min_recall_at_3") if args.min_recall_3 is None else args.min_recall_3

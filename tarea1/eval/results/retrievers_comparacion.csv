@@ -1,0 +1,7 @@
+variante,modo,recall@1,recall@3,recall@5,mrr,recall@1_coloquial,recall@3_coloquial,recall@5_coloquial,recall@1_juridico,recall@3_juridico,recall@5_juridico,recall@1_modificatoria,recall@3_modificatoria,recall@5_modificatoria,fallos@3,preguntas_in_domain,n_con_cifras,recall@3_con_cifras,recall@3_sin_cifras
+semantico,semantico,0.762,0.905,0.905,0.825,0.727,0.818,0.818,0.8,1.0,1.0,0.2,0.8,0.8,2,21,0,,0.905
+bm25,bm25,0.571,0.714,0.762,0.647,0.364,0.455,0.545,0.8,1.0,1.0,0.6,0.8,0.8,6,21,0,,0.714
+bm25_stem,bm25,0.619,0.762,0.81,0.694,0.455,0.545,0.636,0.8,1.0,1.0,0.4,0.8,0.8,5,21,0,,0.762
+bm25_sin_encabezado,bm25,0.524,0.667,0.762,0.614,0.364,0.364,0.545,0.7,1.0,1.0,0.6,0.8,0.8,7,21,0,,0.667
+hibrido_rrf,hibrido,0.714,0.81,0.81,0.754,0.545,0.636,0.636,0.9,1.0,1.0,0.4,0.8,0.8,4,21,0,,0.81
+hibrido_rrf_stem,hibrido,0.714,0.905,0.905,0.802,0.545,0.818,0.818,0.9,1.0,1.0,0.4,0.8,0.8,2,21,0,,0.905

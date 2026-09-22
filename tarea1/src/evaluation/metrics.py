@@ -72,7 +72,7 @@ def evaluar_recuperacion(preguntas: list[Pregunta], recuperar: Callable[[str, in
     for q in preguntas:
         rec = recuperar(q.pregunta, k_max)
         r = ResultadoPregunta(q.id, q.tipo, q.estilo, q.modificada_2026,
-                              mejor_similitud=rec[0].similitud if rec else 0.0,
+                              mejor_similitud=max((x.similitud for x in rec), default=0.0),           # el mayor COSENO (en BM25/híbrido el primero por orden puede no serlo)
                               recuperados=[(x.documento, x.pagina, round(x.similitud, 4)) for x in rec])
         if q.tipo == "in_domain":
             for pos, x in enumerate(rec, start=1):

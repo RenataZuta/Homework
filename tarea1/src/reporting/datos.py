@@ -112,6 +112,7 @@ def evaluacion(cfg: Config) -> dict:
         "barrido_e2e": leer_csv(res / "umbral_e2e_barrido.csv"), "barrido_recuperacion": leer_csv(res / "umbral_barrido.csv"),
         "umbral_e2e_md": leer_md(res / "umbral_e2e_resumen.md"), "embeddings": leer_csv(res / "embeddings_comparacion.csv"),
         "chunking": leer_csv(res / "chunking_comparacion.csv"), "retrievers": leer_csv(res / "retrievers_comparacion.csv"),
+        "sonda_articulos": leer_csv(res / "retrievers_sonda_articulos.csv"),
         "embeddings_md": leer_md(res / "embeddings_comparacion.md"),
     }
 

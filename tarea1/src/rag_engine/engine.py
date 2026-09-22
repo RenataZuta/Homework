@@ -30,7 +30,8 @@ from rag_engine.llm.cost_log import registrar_llamada
 from rag_engine.llm.factory import ajustes_llm, crear_cliente_llm, esquema_salida
 from rag_engine.llm.pricing import ErrorPrecio, TablaPrecios, cargar_tabla
 from rag_engine.retrieval.indice import IndiceNoDisponible, abrir_para_lectura
-from rag_engine.retrieval.semantic import Recuperado, buscar
+from rag_engine.retrieval.modos import buscar_por_modo
+from rag_engine.retrieval.semantic import Recuperado
 from rag_engine.retrieval.versions import GestorVersiones, Modificaciones
 
 MOTIVO_UMBRAL = "umbral"
@@ -100,8 +101,6 @@ class MotorRAG:
     @classmethod
     def desde_config(cls, cfg: Config | None = None) -> "MotorRAG":
         cfg = cfg or cargar_config()
-        if cfg.get("retrieval.modo") != "semantico":
-            raise ConfigError(f"El modo de recuperación '{cfg.get('retrieval.modo')}' aún no está disponible (Fase 8); usa 'semantico'.")
         ruta_mod = cfg.ruta("articulos_modificados")
         if not ruta_mod.is_file():
             raise ConfigError(f"Falta {ruta_mod.name}. Ejecuta scripts/run_extraction.py para generarlo.")
@@ -162,10 +161,10 @@ class MotorRAG:
         if not pregunta or not pregunta.strip():
             return self._resultado_error("La pregunta está vacía.", t0, ts, tipo="pregunta_vacia")
         try:
-            recuperados = buscar(self.coleccion, self.embedder, pregunta, self.cfg.get("retrieval.top_k"), exacta=self.cfg.get("retrieval.busqueda") == "exacta")
+            recuperados = buscar_por_modo(self.coleccion, self.embedder, pregunta, self.cfg)
         except Exception as exc:
             return self._resultado_error(f"No se pudo consultar el índice: {exc}", t0, ts, tipo="indice")
-        mejor = recuperados[0].similitud if recuperados else 0.0
+        mejor = max((r.similitud for r in recuperados), default=0.0)     # el mayor COSENO recuperado, sea cual sea el modo que ordenó (BM25 y RRF no son cosenos)
         fuentes = [self._fuente(r) for r in recuperados]
 
         # 2. compuerta del umbral: ANTES de llamar al LLM

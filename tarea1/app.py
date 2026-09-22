@@ -233,6 +233,9 @@ def pestana_evaluacion(cfg) -> None:
     st.subheader("BM25 frente a semántica")
     if ev["retrievers"]:
         tabla(ev["retrievers"])
+        if ev["sonda_articulos"]:
+            st.caption("Sonda sintética de búsqueda por número de artículo («artículo N de la Ley»); no forma parte del set de evaluación.")
+            tabla(ev["sonda_articulos"])
     else:
         st.info("Pendiente (Fase 8): la comparación BM25 / semántica / híbrida aún no se ha ejecutado.")
 

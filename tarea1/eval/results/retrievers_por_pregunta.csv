@@ -1,0 +1,22 @@
+id,estilo,modificada_2026,con_cifras,pregunta,semantico,bm25,bm25_stem,bm25_sin_encabezado,hibrido_rrf,hibrido_rrf_stem
+q01,coloquial,False,False,¿Puedo venderle al Estado si mi empresa recién abrió?,1,,,,1,3
+q02,coloquial,False,False,"Si la entidad se demora en pagarme, ¿en cuánto tiempo debe pagar y qué me tiene que reconocer por el atraso?",1,,,,1,1
+q03,coloquial,False,False,Soy microempresa: ¿puedo cobrar con una factura negociable a plazo cuando le vendo al Estado?,1,,1,,,1
+q04,coloquial,False,False,¿Hasta qué monto me pueden comprar sin hacer una licitación o un concurso?,,,,,,
+q05,coloquial,True,False,"No tengo carta fianza: siendo pequeña empresa, ¿cómo puedo garantizar el cumplimiento del contrato y cómo se aplica esa garantía?",1,1,1,1,1,1
+q06,coloquial,False,False,¿Puedo pedir un adelanto para empezar a trabajar y de cuánto?,1,3,4,5,3,2
+q07,coloquial,False,False,"Si dos empresas presentan ofertas con el mismo puntaje, ¿quién se lleva el contrato?",,1,1,1,,
+q08,coloquial,False,False,"Me descalificaron y quiero reclamar: siendo microempresa, ¿me cobran algo por presentar el recurso?",1,1,2,1,1,1
+q09,coloquial,False,False,"Si cometo una infracción, ¿la multa es menor por ser micro o pequeña empresa?",1,4,1,5,1,1
+q10,coloquial,False,False,¿Cuánto me pueden cobrar por cada día que entrego tarde?,3,,,,,2
+q11,coloquial,True,False,¿Qué tanto pesa el precio al calificar las ofertas? ¿Cuántos puntos puede valer como máximo?,1,1,1,1,1,1
+q12,juridico,False,False,¿Hasta qué porcentaje del monto del contrato original pueden aprobarse prestaciones adicionales en bienes y servicios?,1,2,3,2,1,1
+q13,juridico,False,False,¿Dentro de qué plazo debe interponerse el recurso de apelación contra el otorgamiento de la buena pro en un procedimiento de selección competitivo?,1,1,1,1,1,1
+q14,juridico,False,False,¿A los cuántos años prescriben las infracciones administrativas previstas en la Ley?,1,1,1,2,1,1
+q15,juridico,False,False,¿Cuánto puede durar la inhabilitación temporal para contratar con el Estado?,1,2,2,2,2,2
+q16,juridico,False,False,¿Se realiza evaluación técnica de las ofertas en la subasta inversa electrónica?,1,1,1,1,1,1
+q17,juridico,False,False,¿Qué valor legal tienen los actos y procedimientos que se realizan a través de la Pladicop?,2,1,1,1,1,1
+q18,juridico,True,False,¿Quién revisa los requisitos de calificación cuando la evaluación de ofertas la hace un jurado?,1,1,1,1,1,1
+q19,juridico,True,False,¿Se pueden aprobar prestaciones adicionales de obra en vía de regularización?,2,1,1,1,1,1
+q20,juridico,True,False,¿Les son aplicables a los contratos menores las causales de nulidad del contrato previstas en la Ley?,1,1,1,1,1,1
+q21,juridico,False,False,¿Qué funciones tiene la junta de prevención y resolución de disputas?,1,1,1,1,1,1

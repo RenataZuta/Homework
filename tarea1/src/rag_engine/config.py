@@ -39,7 +39,7 @@ CLAVES_REQUERIDAS = (
     "chunking.unidad", "chunking.configuraciones", "chunking.activa", "chunking.contexto_encabezado",
     "chunking.articulo_maximo.ley", "chunking.articulo_maximo.reglamento", "indexacion.coleccion", "indexacion.lote_upsert",
     "embeddings.proveedor", "embeddings.batch", "embeddings.normalizar",
-    "retrieval.modo", "retrieval.busqueda", "retrieval.top_k", "retrieval.umbral_similitud", "retrieval.umbral_calibrado", "retrieval.versiones.activo", "retrieval.versiones.max_fragmentos_forzados", "retrieval.versiones.max_originales_forzados",
+    "retrieval.modo", "retrieval.busqueda", "retrieval.bm25.k1", "retrieval.bm25.b", "retrieval.bm25.stemming", "retrieval.bm25.usar_encabezado", "retrieval.hibrido.rrf_k", "retrieval.hibrido.candidatos", "retrieval.top_k", "retrieval.umbral_similitud", "retrieval.umbral_calibrado", "retrieval.versiones.activo", "retrieval.versiones.max_fragmentos_forzados", "retrieval.versiones.max_originales_forzados",
     "llm.provider", "llm.nivel", "llm.max_tokens", "llm.timeout_segundos",
     "llm.limites.rpm", "llm.limites.reintentos", "llm.limites.espera_inicial_s", "llm.limites.factor_espera", "llm.limites.espera_max_s", "llm.limites.jitter",
     "embeddings.limites.rpm", "embeddings.limites.reintentos", "embeddings.limites.espera_inicial_s", "embeddings.limites.factor_espera",
@@ -138,6 +138,17 @@ def _validar(datos: dict[str, Any]) -> list[str]:
     modo = _buscar(datos, "retrieval.modo")
     if modo not in (_FALTA, None) and modo not in MODOS_RETRIEVAL:
         errores.append(f"'retrieval.modo' debe ser uno de {MODOS_RETRIEVAL}, no '{modo}'")
+
+    for ruta, cond, msg in (("retrieval.bm25.k1", lambda v: _es_numero(v) and v > 0, "un número > 0"), ("retrieval.bm25.b", lambda v: _es_numero(v) and 0 <= v <= 1, "un número entre 0 y 1"),
+                            ("retrieval.hibrido.rrf_k", lambda v: isinstance(v, int) and not isinstance(v, bool) and v >= 1, "un entero >= 1"),
+                            ("retrieval.hibrido.candidatos", lambda v: isinstance(v, int) and not isinstance(v, bool) and v >= 1, "un entero >= 1")):
+        v = _buscar(datos, ruta)
+        if v not in (_FALTA, None) and not cond(v):
+            errores.append(f"'{ruta}' debe ser {msg}, no {v!r}")
+    for ruta in ("retrieval.bm25.stemming", "retrieval.bm25.usar_encabezado"):
+        v = _buscar(datos, ruta)
+        if v not in (_FALTA, None) and not isinstance(v, bool):
+            errores.append(f"'{ruta}' debe ser true o false, no {v!r}")
 
     busqueda = _buscar(datos, "retrieval.busqueda")
     if busqueda not in (_FALTA, None) and busqueda not in ("exacta", "aproximada"):
