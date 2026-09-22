@@ -126,6 +126,12 @@ def _percentil(valores: list[float], p: float) -> float | None:
     return round(v[min(len(v) - 1, int(p * (len(v) - 1) + 0.5))], 1)
 
 
+def feedback(cfg: Config) -> dict:
+    """Resumen del feedback del bot de Telegram (eval/results/feedback_resumen.{csv,md}, generado por evaluation/feedback_summary.py)."""
+    res = cfg.ruta("eval_results")
+    return {"filas": leer_csv(res / "feedback_resumen.csv"), "md": leer_md(res / "feedback_resumen.md")}
+
+
 def costos(cfg: Config) -> dict:
     """Agregado de logs/llm_calls.jsonl (solo llamadas reales al proveedor; las respuestas de la caché de evaluación no se registran)."""
     regs = leer_registros(cfg.ruta("llm_calls_log"))

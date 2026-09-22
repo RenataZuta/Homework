@@ -51,7 +51,7 @@ CLAVES_REQUERIDAS = (
     "mensajes.indice_faltante", "mensajes.aviso_version",
     "mensajes.limite_sesion", "mensajes.limite_global",
     "eval.ks", "eval.barrido_umbral.desde", "eval.barrido_umbral.hasta", "eval.barrido_umbral.paso", "eval.barrido_umbral.beta", "eval.set_validado", "eval.requisitos_set.in_domain", "eval.requisitos_set.out_of_domain", "eval.requisitos_set.modificadas_2026", "eval.requisitos_set.coloquiales", "eval.min_recall_at_3", "eval.codigo_salida_fallo",
-    "bot.modo", "bot.limite_consultas_por_usuario_dia", "bot.zona_horaria_limite",
+    "bot.modo", "bot.limite_consultas_por_usuario_dia", "bot.zona_horaria_limite", "bot.max_caracteres_mensaje",
     "deploy.topes.consultas_por_sesion", "deploy.topes.consultas_globales_por_dia",
 )
 
@@ -194,12 +194,13 @@ def _validar(datos: dict[str, Any]) -> list[str]:
         ("retrieval.umbral_similitud", 0.0, 1.0),
         ("eval.min_recall_at_3", 0.0, 1.0),
         ("llm.temperatura", 0.0, 1.0),
+        ("bot.max_caracteres_mensaje", 1, 4096),          # 4096 es el máximo real de sendMessage (Bot API)
     ):
         valor = _buscar(datos, ruta)
         if valor not in (_FALTA, None) and not (_es_numero(valor) and minimo <= valor <= maximo):
             errores.append(f"'{ruta}' debe ser un número entre {minimo} y {maximo}, no {valor!r}")
 
-    for ruta in ("retrieval.top_k", "llm.max_tokens", "embeddings.batch"):
+    for ruta in ("retrieval.top_k", "llm.max_tokens", "embeddings.batch", "bot.limite_consultas_por_usuario_dia"):
         valor = _buscar(datos, ruta)
         if valor not in (_FALTA, None) and not (isinstance(valor, int) and not isinstance(valor, bool) and valor >= 1):
             errores.append(f"'{ruta}' debe ser un entero >= 1, no {valor!r}")

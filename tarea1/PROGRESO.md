@@ -16,7 +16,7 @@
 - [x] **Fase 7** — Interfaz Streamlit (`app.py`; probada sin navegador con `AppTest` y abierta en un venv limpio; **no se revisó visualmente en un navegador** ni se ejecutó PowerShell, ver hallazgos 33-35)
 - [x] **Fase 8** — Innovación A: BM25 vs semántica (modo final: `semantico`, con evidencia; `bm25` e `hibrido` disponibles)
 - [~] **Fase 9** — Innovación B: GitHub Actions con umbral de Recall@3 `[MANUAL pendiente: push de la rama para que corra el workflow, ejecución verde en main y una roja demostrada; requiere tu confirmación de push y decidir el merge a main]` (workflow, mínimo y simulación local del CI listos)
-- [ ] **Fase 10** — Innovación C: bot de Telegram `[MANUAL: @BotFather]`
+- [~] **Fase 10** — Innovación C: bot de Telegram `[MANUAL pendiente: crea el bot con @BotFather y pon TELEGRAM_BOT_TOKEN y TELEGRAM_ALLOWED_USER_IDS en tu .env; ver docs/telegram_bot.md]` (código y pruebas completos, sin probar con Telegram real)
 - [ ] **Fase 11** — Innovación D: bot 24/7 con Cloudflare Worker `[MANUAL: cuentas y deploy]`
 - [ ] **Fase 12** — Innovación E: despliegue público de la app `[MANUAL: deploy]`
 - [ ] **Fase 13** — Cierre: README, notas de video, auditoría final, costo real
@@ -103,6 +103,23 @@ Modelo `gemini-3.5-flash-lite`, capa gratuita, `retrieval.busqueda: exacta`, umb
 | Log | `logs/llm_calls.jsonl`: 30 líneas reales (29 éxitos, 1 rechazo de modelo), cero reintentos |
 | Determinismo | La búsqueda exacta da el mismo resultado en 4 procesos distintos (con HNSW, `o01` cambiaba en 2 de 3) |
 | Tests | **553 pasan** |
+
+## Resultados de la Fase 10 hasta el punto manual (2026-09-21)
+
+| Ítem | Resultado |
+|---|---|
+| Handlers | `interfaces/telegram_handlers.py`: solo importa `rag_engine.engine.responder`; `procesar_update()` es el punto de entrada único que también usará el webhook de la Fase 11 |
+| Autorización | `TELEGRAM_ALLOWED_USER_IDS` (denegar por defecto: vacío = nadie); un usuario no autorizado nunca llega a `responder()` |
+| Límite diario | SQLite (`data/bot.db`, ignorada por git), por usuario y por fecha en `bot.zona_horaria_limite` (no la del sistema); al superarlo, aviso y CERO llamadas al motor |
+| Comandos | `/ayuda`, `/fuente` (documento, página, similitud y fragmento de la última consulta), `/costo` (última consulta + acumulado del día); ninguno cuenta para el límite |
+| Feedback | Botones 👍/👎 con el ID de la consulta en `callback_data` (`fb:<id>:1|-1`); un segundo voto actualiza, no duplica; no se puede calificar la consulta de otro usuario ni sin estar autorizado |
+| Privacidad de errores | Los mensajes al usuario final son los de `config.yaml` (nunca el texto técnico de `r.error`, que puede traer rutas o detalles del proveedor) |
+| Cliente de la Bot API | `interfaces/telegram_api.py`: llamadas REST directas (reutiliza `llm/transporte.py`); el token nunca se registra ni aparece en un mensaje de error (se reusa el saneador de `cost_log`) |
+| Modo desarrollo | `scripts/run_telegram_bot.py` (polling, con reintentos ante fallos de red de Telegram) |
+| Feedback en Streamlit | `evaluation/feedback_summary.py` + pestaña Costos de `app.py` |
+| Verificado (sin límites de Telegram reales) | Límites de la Bot API confirmados en la referencia oficial: `sendMessage` 1-4096 caracteres, `callback_data` 1-64 bytes, `answerCallbackQuery.text` 0-200, `secret_token` 1-256 `[A-Za-z0-9_-]` en la cabecera `X-Telegram-Bot-Api-Secret-Token` |
+| Tests | **685 pasan**; 8 mutaciones de seguridad del bot (autorización, límite, mensaje de error crudo, feedback ajeno, botón en error, avisos repetidos, UNIQUE del feedback, token vacío) → **8/8 detectadas** |
+| Pendiente | **No se probó con un bot ni un chat de Telegram reales** (no hay token todavía): falta la aceptación de la fase (consulta con citas, rechazo, límite, comandos y feedback funcionando de verdad) |
 
 ## Resultados de la Fase 9 hasta el punto de push (2026-09-21)
 
@@ -265,3 +282,5 @@ Petición de la persona: **no pagar nada adicional a su suscripción**; ninguna 
 39. **La simulación del CI encontró un fallo real que mi entorno ocultaba:** una prueba de la fábrica de LLM construía el cliente de Anthropic y exigía tener instalado el SDK (`anthropic`), que el CI no instala. Se corrigió con un doble del módulo. Lección: probar en un clon limpio con solo `requirements-ci.txt`.
 40. **Las fechas de las páginas de releases de las acciones que devolvió la herramienta de lectura no son fiables** (daba 2024 para versiones que no existían entonces); por eso los mayores se verificaron con las etiquetas reales del repositorio (`git ls-remote`).
 41. **El workflow solo se dispara con cambios en `tarea1/**` o en él mismo:** el repositorio aloja otras tareas y no deben gastar minutos de CI. El badge apunta a la rama `tarea1-rag` (en `main` no existe el workflow hasta hacer el merge).
+42. **El workflow de la Fase 9 corrió en GitHub y salió verde a la primera** (`run 35677918111`, disparado por el push de las Fases 5-9): confirma que la simulación local del CI representaba bien el entorno real.
+43. **La Fase 10 quedó completa en código y pruebas, pero SIN probarse con Telegram real:** falta el token. Un fallo posible que las pruebas no cubren: el formato exacto de un `Update` real de Telegram (aquí se construyó a mano según la documentación). La primera prueba con `scripts/run_telegram_bot.py` lo confirma.

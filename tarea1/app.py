@@ -270,6 +270,11 @@ def pestana_costos(cfg) -> None:
         st.write(c["errores"])
     with st.expander("Últimas 20 llamadas"):
         tabla(c["ultimas"])
+    fb = datos.feedback(cfg)
+    if fb["filas"]:
+        st.markdown("**Feedback del bot de Telegram (👍/👎)**")
+        st.caption("Generado por `python -m evaluation.feedback_summary`; los IDs de usuario de Telegram no se muestran (dato personal).")
+        tabla(fb["filas"])
 
 
 # ───────────────────────── página ─────────────────────────

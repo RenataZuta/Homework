@@ -331,7 +331,7 @@ bot:
   modo: polling                    # polling (desarrollo local) | webhook (producción, Fase 11)
   limite_consultas_por_usuario_dia: 10
   zona_horaria_limite: America/Lima
-  max_caracteres_mensaje: 4096     # PROVISIONAL (Fase 10): verificar límite vigente de la Bot API
+  max_caracteres_mensaje: 4096     # verificado el 2026-09-21 en la referencia oficial de la Bot API: sendMessage admite 1-4096 caracteres
 
 # ── Despliegue (Fases 11 y 12) ───────────────────────────────────────────────
 deploy:
