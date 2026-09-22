@@ -335,6 +335,8 @@ bot:
 
 # ── Despliegue (Fases 11 y 12) ───────────────────────────────────────────────
 deploy:
-  topes:                           # protección de costo: la app pública usa mi clave
+  zona_horaria: America/Lima       # define qué es "hoy" para el tope diario (independiente de dónde corra el servidor)
+  topes:                           # protección de costo: la app pública usa MI clave. Cuentan solo llamadas que llegaron
+                                   # de verdad al LLM (tokens_entrada > 0): una abstención por umbral no gasta cupo
     consultas_por_sesion: 10
     consultas_globales_por_dia: 100

@@ -45,6 +45,26 @@ flowchart LR
   lee el `Dockerfile` y el Worker como texto) y con `interfaces/api_server.py` probado de verdad (`fastapi.testclient`,
   711 pruebas en total). Los pasos [MANUAL] de cuentas y despliegue están en `docs/despliegue_backend.md`.
 
+## Despliegue público de la app (Fase 12)
+
+**Estado: código y pruebas listos; el despliegue real es un paso [MANUAL], ver `docs/despliegue_app_publica.md`.** Cuando la
+persona lo haga, el enlace público queda aquí.
+
+- **Plataforma: Streamlit Community Cloud** (gratis, sin tarjeta). Se descartó Hugging Face Spaces por el mismo motivo que en
+  la Fase 11 (ahora exige plan PRO para Spaces con cómputo en cuenta personal).
+- **Memoria medida en local (dato real):** cargar el modelo de embeddings local ya usa **883 MB** de RSS, antes de sumar el
+  propio servidor de Streamlit. La cifra que más se cita para el límite gratuito de Streamlit Cloud es 1 GB (sin confirmación
+  oficial textual hoy): es un riesgo real. La salida ya está lista y probada: cambiar `embeddings.proveedor: gemini` en
+  `config.yaml` quita PyTorch y el modelo local por completo.
+- **El índice va en el repositorio** (`data/index/`, 11 MB): la app pública no tiene un paso de "build" propio, así que
+  nunca puede reconstruirlo al iniciar sesión (regla no negociable de la fase).
+- **Protección de costo (la app usa la clave de la persona):** `deploy.topes.consultas_por_sesion` y
+  `deploy.topes.consultas_globales_por_dia` en `config.yaml`. Se revisan ANTES de llamar al motor (cero costo si ya se
+  alcanzaron); el tope de sesión usa el estado de la sesión de Streamlit, el global lee `logs/llm_calls.jsonl` de hoy (en
+  `deploy.zona_horaria`) — sin base de datos nueva. Solo cuentan las llamadas que de verdad llegaron al LLM: una abstención
+  por umbral no gasta cupo.
+- La clave (`GEMINI_API_KEY`) va en los *Secrets* de Streamlit Cloud, nunca en el repositorio.
+
 ## Puesta en marcha en Windows (PowerShell)
 
 > Los pasos se probaron con sus equivalentes en macOS (entorno virtual limpio, instalación desde `requirements.txt`, tests y apertura de la app). **Los comandos de PowerShell no se pudieron

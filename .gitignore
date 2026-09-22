@@ -30,10 +30,11 @@ node_modules/
 .wrangler/
 
 # ── Tarea 1: artefactos regenerables o con datos personales ──
-# El índice se reconstruye desde data/processed/ (scripts/build_index.py).
+# El índice de COMPARACIÓN (evaluation/*, temporal) NUNCA se versiona: se reconstruye desde data/processed/.
 tarea1/data/index_cmp/
-tarea1/data/index/*
-!tarea1/data/index/.gitkeep
+# El índice PRINCIPAL (data/index/) SÍ se versiona desde la Fase 12: la app pública (Streamlit Community Cloud) no tiene un
+# paso de "build" propio, así que no puede reconstruirlo al iniciar (regla no negociable). ~13 MB: no hace falta Git LFS.
+# Recuerda reconstruirlo y volver a comprometerlo (`python scripts/build_index.py`) si cambia data/processed/ antes de desplegar.
 # La base del bot guarda IDs de usuarios de Telegram (dato personal).
 *.db
 # Caché de respuestas del LLM para la evaluación de punta a punta (regenerable; se invalida sola si cambia el prompt, el contexto o el modelo).

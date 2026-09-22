@@ -18,7 +18,7 @@
 - [~] **Fase 9** — Innovación B: GitHub Actions con umbral de Recall@3 `[MANUAL pendiente: push de la rama para que corra el workflow, ejecución verde en main y una roja demostrada; requiere tu confirmación de push y decidir el merge a main]` (workflow, mínimo y simulación local del CI listos)
 - [~] **Fase 10** — Innovación C: bot de Telegram `[MANUAL pendiente: crea el bot con @BotFather y pon TELEGRAM_BOT_TOKEN y TELEGRAM_ALLOWED_USER_IDS en tu .env; ver docs/telegram_bot.md]` (código y pruebas completos, sin probar con Telegram real)
 - [~] **Fase 11** — Innovación D: bot 24/7 con Cloudflare Worker `[MANUAL pendiente: cuentas de Render y Cloudflare, wrangler login/deploy, cargar secretos, prueba con la laptop apagada; ver docs/despliegue_backend.md]` (código, Dockerfile y Worker completos; no se pudo compilar ni desplegar en este entorno: sin docker/node/wrangler)
-- [ ] **Fase 12** — Innovación E: despliegue público de la app `[MANUAL: deploy]`
+- [~] **Fase 12** — Innovación E: despliegue público de la app `[MANUAL pendiente: crear la app en share.streamlit.io, cargar GEMINI_API_KEY en sus secrets, verificar y pasarme la URL; ver docs/despliegue_app_publica.md]` (topes de gasto activos y probados; índice versionado; sin desplegar de verdad)
 - [ ] **Fase 13** — Cierre: README, notas de video, auditoría final, costo real
 
 Tarea 2 (`tarea2/`): pendiente, se hará después; importará `rag_engine`.
@@ -103,6 +103,20 @@ Modelo `gemini-3.5-flash-lite`, capa gratuita, `retrieval.busqueda: exacta`, umb
 | Log | `logs/llm_calls.jsonl`: 30 líneas reales (29 éxitos, 1 rechazo de modelo), cero reintentos |
 | Determinismo | La búsqueda exacta da el mismo resultado en 4 procesos distintos (con HNSW, `o01` cambiaba en 2 de 3) |
 | Tests | **553 pasan** |
+
+## Resultados de la Fase 12 hasta el punto manual (2026-09-22)
+
+| Ítem | Resultado |
+|---|---|
+| Memoria medida en local (dato real, no estimado) | Cargar el modelo de embeddings local ya usa **883 MB** de RSS (antes de sumar el propio servidor de Streamlit). Es el dato que pedía el enunciado antes de elegir plataforma |
+| Plataforma | **Streamlit Community Cloud** (gratis, sin tarjeta). Se descartó Hugging Face Spaces: su documentación ahora exige plan PRO para Spaces con cómputo en cuenta personal (mismo hallazgo de la Fase 11) |
+| Riesgo aceptado y con salida documentada | La RAM gratuita de Streamlit Cloud se cita ampliamente en 1 GB, sin confirmación oficial textual hoy; 883 MB + Streamlit puede superarla. Salida ya lista: `embeddings.proveedor: gemini` (sin PyTorch) es un cambio de una línea, ya implementado y probado desde la Fase 6 |
+| Índice versionado | `data/index/` (11 MB) se agregó al repositorio — se cambió el `.gitignore` a propósito: la app pública no tiene un paso de "build" propio, así que nunca puede reconstruirlo al iniciar sesión |
+| Topes de gasto | `deploy.topes` en `config.yaml`; se revisan ANTES de llamar al motor (cero costo si ya se alcanzaron). El de sesión usa `st.session_state`; el global lee `logs/llm_calls.jsonl` de HOY (en `deploy.zona_horaria`) — sin base de datos nueva. Solo cuentan llamadas que de verdad llegaron al LLM (`r.modelo is not None`): una abstención por umbral no gasta cupo |
+| Hallazgo real durante las pruebas | El tope global de esta MISMA sesión de desarrollo (100/día) ya se había superado (101 líneas reales en `logs/llm_calls.jsonl` de hoy) y bloqueaba pruebas de `app.py` que no lo estaban probando a propósito. Se corrigió aislando esas pruebas con un log de costos vacío por defecto; en producción el archivo empieza vacío |
+| Secretos | `GEMINI_API_KEY` va en los *Secrets* de Streamlit Cloud; verificado que Streamlit expone las claves de nivel superior también como variables de entorno normales, así que `config.py` las lee sin cambios |
+| Tests | **716 pasan** (5 mutaciones de los topes de gasto detectadas 5/5) |
+| Sin hacer | El despliegue real (crear la app, cargar el secreto, verificar la URL pública) |
 
 ## Resultados de la Fase 11 hasta el punto manual (2026-09-22)
 
@@ -254,6 +268,9 @@ Petición de la persona: **no pagar nada adicional a su suscripción**; ninguna 
 | 11 | El Worker usa 4 secretos, no 3 (agrega `TELEGRAM_BOT_TOKEN`) | Sin el token, el Worker no podría enviar el aviso de «despertando» cuando el backend tarda; esa llamada a Telegram la hace el propio Worker, no el backend | 2026-09-22 |
 | 11 | `requirements-backend.txt` separado de `requirements.txt` | El backend no hace OCR, no dibuja gráficos y no usa Anthropic: una imagen más chica arranca más rápido en un plan gratuito que ya duerme | 2026-09-22 |
 | 11 | El índice se CONSTRUYE en el `Dockerfile` (no se copia un `data/index/` ya armado) | `data/index/` no está versionado (igual que en el CI de la Fase 9); construirlo en el build es la única forma de tenerlo en la imagen sin cambiar esa regla | 2026-09-22 |
+| 12 | Plataforma: **Streamlit Community Cloud** | Gratis, sin tarjeta, hecha específicamente para apps Streamlit; HF Spaces quedó descartado (exige PRO). Riesgo de RAM aceptado con una salida de una línea ya lista (`embeddings.proveedor: gemini`) | 2026-09-22 |
+| 12 | `data/index/` pasa a estar versionado (antes, deliberadamente no) | La app pública no tiene un paso de build propio: es la única forma de que nunca reconstruya el índice al iniciar sesión, como exige la fase | 2026-09-22 |
+| 12 | El tope global lee `logs/llm_calls.jsonl` en vez de una base de datos nueva | Ya es la fuente de verdad del costo real; una llamada que no llegó al LLM (abstención por umbral) tampoco aparece ahí, así que no gasta cupo — coherente con que el tope protege el COSTO, no el uso general | 2026-09-22 |
 | 0 | README completo en `tarea1/README.md`; el README de la raíz solo recibe una sección con enlace | El repo aloja varias tareas; no se sobrescribe lo existente | 2026-09-21 |
 | 0 | Los módulos se crean en la fase que los necesita (sin archivos vacíos de relleno) | Historial de commits refleja el trabajo real | 2026-09-21 |
 
@@ -308,3 +325,5 @@ Petición de la persona: **no pagar nada adicional a su suscripción**; ninguna 
 44. **Hugging Face Spaces cambió su política de precios entre el plan original y hoy:** su documentación oficial dice ahora que crear un Space Docker en una cuenta personal exige el plan PRO (de pago); antes de este hallazgo, HF Spaces era la opción «obvia» que sugería el propio enunciado de la fase. Se le planteó a la persona y decidió Render.
 45. **No hay `docker`, `node` ni `wrangler` en esta Mac de desarrollo** (ya se sabía por proyectos previos; confirmado de nuevo aquí). El `Dockerfile` y el Worker de Cloudflare se escribieron y se revisaron con pruebas ESTÁTICAS en Python (leen los archivos como texto, verifican invariantes concretas), pero **nunca se compilaron ni se ejecutaron**. La persona debe correr `docker build` y `wrangler dev`/`deploy` ella misma antes de confiar en que funcionan de verdad.
 46. **No pude verificar con una fuente oficial la RAM exacta del plan gratuito de Render** (la documentación pública que revisé no la publica). Es un riesgo real para una imagen con PyTorch + el modelo de embeddings + ChromaDB; si el despliegue falla por memoria, la salida es una imagen más liviana o cambiar de host.
+47. **El propio desarrollo ya superó el tope diario que se está configurando (100/día):** un día de pruebas reales de este proyecto generó 101 líneas en `logs/llm_calls.jsonl`. Es una señal de que 100 es un número razonable para un uso real (no artificialmente alto), pero también de que hay que vigilar el archivo si se sigue desarrollando activamente sobre la misma app desplegada.
+48. **No pude confirmar con una fuente oficial la RAM exacta de Streamlit Community Cloud** (igual que con Render en la Fase 11). Lo que sí es un dato real y medido: el modelo de embeddings local por sí solo ya ocupa 883 MB. Si el despliegue falla, la salida (cambiar a embeddings de Gemini) ya está implementada y probada, no es trabajo nuevo.

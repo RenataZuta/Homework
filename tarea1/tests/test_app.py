@@ -1,6 +1,7 @@
 """Interfaz Streamlit probada sin navegador (AppTest): carga el índice sin reconstruirlo, muestra respuestas, abstenciones y errores como corresponde."""
 import hashlib
 import re
+import uuid
 from pathlib import Path
 
 import pytest
@@ -10,6 +11,7 @@ import streamlit as st  # noqa: E402
 from streamlit.testing.v1 import AppTest  # noqa: E402
 
 from rag_engine.engine import Fuente, MotorRAG, ResultadoRAG  # noqa: E402
+from rag_engine.config import cargar_config  # noqa: E402
 from rag_engine.retrieval.indice import IndiceNoDisponible  # noqa: E402
 
 RAIZ = Path(__file__).resolve().parents[1]
@@ -43,12 +45,18 @@ def caches_limpias():
     st.cache_resource.clear()
 
 
-def abrir(monkeypatch, motor=None, error=None):
-    def desde_config(cfg):
+def abrir(monkeypatch, motor=None, error=None, cfg=None):
+    """Por defecto usa una config con el log de costos apuntando a un archivo QUE NO EXISTE: así el tope global de la Fase 12
+    (que lee logs/llm_calls.jsonl de verdad) nunca interfiere con pruebas que no lo están probando a propósito."""
+    def desde_config(cfg_):
         if error:
             raise error
         return motor
-    monkeypatch.setattr(MotorRAG, "desde_config", classmethod(lambda cls, cfg=None: desde_config(cfg)))
+    monkeypatch.setattr(MotorRAG, "desde_config", classmethod(lambda cls, cfg_=None: desde_config(cfg_)))
+    if cfg is None:
+        from fakes import cfg_con
+        cfg = cfg_con(cargar_config(cargar_env=False), **{"paths.llm_calls_log": f"/tmp/no-existe-{uuid.uuid4()}.jsonl"})
+    monkeypatch.setattr("rag_engine.config.cargar_config", lambda: cfg)
     return AppTest.from_file(str(APP), default_timeout=60).run()
 
 
@@ -193,9 +201,66 @@ def test_un_ejemplo_rellena_la_pregunta(monkeypatch):
 # ── pestañas de reportes ──
 
 def test_las_pestanas_de_reportes_muestran_datos_reales(monkeypatch):
-    at = abrir(monkeypatch, MotorFalso())
+    at = abrir(monkeypatch, MotorFalso(), cfg=cargar_config(cargar_env=False))     # config real: quiere ver los reportes de verdad
     assert not at.exception
     etiquetas = {m.label for m in at.metric}
     assert {"Recall@1", "Recall@3", "Recall@5", "Llamadas", "Costo real (USD)", "Costo de referencia (USD)"} <= etiquetas
     assert any("PROVISIONAL" in w.value for w in at.warning)                             # el set aún no está validado
     assert len(at.dataframe) >= 5 and not any("Pendiente (Fase 8)" in i.value for i in at.info)       # la comparación BM25 ya existe (Fase 8): se muestra la tabla
+
+
+# ── Fase 12: topes de gasto (la app pública usa la clave de la persona) ──
+
+def test_el_tope_de_sesion_impide_llamar_al_motor_y_avisa(monkeypatch, tmp_path):
+    from fakes import cfg_con
+    base = cargar_config(cargar_env=False)
+    cfg = cfg_con(base, **{"paths.llm_calls_log": str(tmp_path / "log.jsonl"), "deploy.topes.consultas_por_sesion": 2})
+    motor = MotorFalso(respondida())
+    at = abrir(monkeypatch, motor, cfg=cfg)
+    consultar(at, "pregunta 1")
+    consultar(at, "pregunta 2")
+    assert len(motor.preguntas) == 2                                     # las dos primeras sí llaman al motor (tope = 2)
+    at = consultar(at, "pregunta 3")
+    assert len(motor.preguntas) == 2                                     # la 3.ª NO llama: ya se alcanzó el tope de sesión
+    assert any(w.value == cfg.get("mensajes.limite_sesion") for w in at.warning)
+
+
+def test_una_abstencion_por_umbral_no_gasta_cupo_de_sesion(monkeypatch, tmp_path):
+    """r.modelo es None cuando la compuerta del umbral abstiene sin llamar al LLM: no debe contar para el tope."""
+    from fakes import cfg_con
+    base = cargar_config(cargar_env=False)
+    cfg = cfg_con(base, **{"paths.llm_calls_log": str(tmp_path / "log.jsonl"), "deploy.topes.consultas_por_sesion": 1})
+    abstencion_por_umbral = respondida(respuesta="Mensaje de abstención.", abstuvo=True, motivo_abstencion="umbral", modelo=None, proveedor=None,
+                                       tokens_entrada=0, tokens_salida=0, costo_usd_referencia=0.0)
+    motor = MotorFalso(abstencion_por_umbral)
+    at = abrir(monkeypatch, motor, cfg=cfg)
+    consultar(at, "pregunta fuera de dominio 1")
+    at = consultar(at, "pregunta fuera de dominio 2")
+    assert len(motor.preguntas) == 2                                     # ninguna de las dos gastó cupo: el tope (1) nunca se alcanzó
+    assert not any(w.value == cfg.get("mensajes.limite_sesion") for w in at.warning)
+
+
+def test_el_tope_global_lee_llamadas_de_hoy_del_log_de_costos(monkeypatch, tmp_path):
+    from datetime import datetime
+    from zoneinfo import ZoneInfo
+    from fakes import cfg_con
+    from rag_engine.llm.cost_log import registrar_llamada
+    base = cargar_config(cargar_env=False)
+    ruta_log = tmp_path / "log.jsonl"
+    cfg = cfg_con(base, **{"paths.llm_calls_log": str(ruta_log), "deploy.topes.consultas_globales_por_dia": 1, "deploy.topes.consultas_por_sesion": 100})
+    hoy = datetime.now(ZoneInfo(cfg.get("deploy.zona_horaria"))).strftime("%Y-%m-%dT10:00:00-05:00")
+    registrar_llamada(ruta_log, timestamp=hoy, proveedor="gemini", modelo="gemini-3.5-flash-lite", nivel="gratuito", tokens_in=100, tokens_out=10,
+                      latencia_ms=500.0, costo_usd_real=0.0, costo_usd_referencia=0.0001, intentos=1, exito=True)   # ya hay 1 llamada de OTRA sesión hoy
+    motor = MotorFalso(respondida())
+    at = abrir(monkeypatch, motor, cfg=cfg)
+    at = consultar(at, "una pregunta nueva")
+    assert motor.preguntas == []                                         # el tope global (1) ya estaba en 1: no se llama
+    assert any(w.value == cfg.get("mensajes.limite_global") for w in at.warning)
+
+
+def test_el_sidebar_muestra_el_cupo_de_hoy_y_de_la_sesion(monkeypatch, tmp_path):
+    from fakes import cfg_con
+    base = cargar_config(cargar_env=False)
+    cfg = cfg_con(base, **{"paths.llm_calls_log": str(tmp_path / "log.jsonl"), "deploy.topes.consultas_por_sesion": 5, "deploy.topes.consultas_globales_por_dia": 50})
+    at = abrir(monkeypatch, MotorFalso(), cfg=cfg)
+    assert any("0/50 consultas globales" in c.value and "0/5 de esta sesión" in c.value for c in at.caption)

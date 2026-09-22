@@ -17,8 +17,11 @@ import streamlit as st
 sys.path.insert(0, str(Path(__file__).resolve().parent / "src"))
 
 import pandas as pd  # noqa: E402
+from zoneinfo import ZoneInfo  # noqa: E402
+from datetime import datetime  # noqa: E402
 
 from rag_engine.config import ConfigError, cargar_config  # noqa: E402
+from rag_engine.llm.cost_log import leer_registros  # noqa: E402
 from rag_engine.embeddings.base import ErrorEmbeddings  # noqa: E402
 from rag_engine.engine import MotorRAG  # noqa: E402
 from rag_engine.llm.pricing import ErrorPrecio  # noqa: E402
@@ -108,6 +111,22 @@ def mostrar_resultado(r, cfg) -> None:
     mostrar_costo(r, cfg)
 
 
+def llamadas_llm_hoy(cfg) -> int:
+    """Filas de logs/llm_calls.jsonl con fecha de HOY en `deploy.zona_horaria` (éxito o no: cada una fue una llamada real al proveedor)."""
+    hoy = datetime.now(ZoneInfo(cfg.get("deploy.zona_horaria"))).date().isoformat()
+    return sum(1 for r in leer_registros(cfg.ruta("llm_calls_log")) if r["timestamp"][:10] == hoy)
+
+
+def tope_alcanzado(cfg) -> str | None:
+    """Mensaje de aviso si YA se alcanzó un tope de gasto (sesión o global); None si se puede seguir. Protección de costo:
+    la app pública usa la clave de la persona (Fase 12). Solo cuentan las llamadas que de verdad llegaron al LLM."""
+    if st.session_state.get("llamadas_llm_sesion", 0) >= cfg.get("deploy.topes.consultas_por_sesion"):
+        return cfg.get("mensajes.limite_sesion")
+    if llamadas_llm_hoy(cfg) >= cfg.get("deploy.topes.consultas_globales_por_dia"):
+        return cfg.get("mensajes.limite_global")
+    return None
+
+
 def pestana_consulta(cfg, motor, error_motor) -> None:
     if error_motor:
         st.error(f"No se pudo iniciar el asistente.\n\n{error_motor}")
@@ -125,9 +144,14 @@ def pestana_consulta(cfg, motor, error_motor) -> None:
     if enviar:
         if not pregunta.strip():
             st.warning("Escribe una pregunta.")
+        elif (aviso := tope_alcanzado(cfg)) is not None:            # se revisa ANTES de llamar al motor: cero costo si ya se llegó al tope
+            st.warning(aviso)
         else:
             with st.spinner("Buscando en las normas y generando la respuesta…"):
-                st.session_state["ultimo"] = motor.responder(pregunta)
+                r = motor.responder(pregunta)
+            if r.modelo is not None:                                 # hubo una llamada real (éxito o error): cuenta para el tope de sesión
+                st.session_state["llamadas_llm_sesion"] = st.session_state.get("llamadas_llm_sesion", 0) + 1
+            st.session_state["ultimo"] = r
     if "ultimo" in st.session_state:
         mostrar_resultado(st.session_state["ultimo"], cfg)
 
@@ -297,6 +321,8 @@ def main() -> None:
         st.markdown(f"**Modelo:** `{cfg.get('llm.provider')}/{aj['modelo']}` ({cfg.get('llm.nivel')})  \n**Búsqueda:** {cfg.get('retrieval.busqueda')}, top-{cfg.get('retrieval.top_k')}  \n"
                     f"**Umbral de similitud:** {cfg.get('retrieval.umbral_similitud'):.3f}")
         st.info(" ".join(cfg.get("mensajes.aviso_privacidad").split()))
+        st.caption(f"Cupo de hoy (protección de costo): {llamadas_llm_hoy(cfg)}/{cfg.get('deploy.topes.consultas_globales_por_dia')} consultas globales · "
+                   f"{st.session_state.get('llamadas_llm_sesion', 0)}/{cfg.get('deploy.topes.consultas_por_sesion')} de esta sesión.")
         st.caption("Información normativa, no asesoría legal vinculante.")
     t1, t2, t3, t4 = st.tabs(["Consulta", "Calidad de extracción", "Evaluación", "Costos"])
     with t1:
