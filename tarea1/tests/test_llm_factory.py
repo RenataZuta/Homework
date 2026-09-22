@@ -27,6 +27,11 @@ def test_con_gemini_se_crea_el_cliente_de_gemini_con_throttle_y_reintentos(monke
 
 
 def test_cambiar_de_proveedor_es_editar_la_config_y_conserva_el_cliente_de_anthropic(monkeypatch):
+    import sys
+    import types
+    falso = types.ModuleType("anthropic")                       # doble del SDK: la prueba no depende de que esté instalado (el CI no lo instala)
+    falso.Anthropic = lambda **kw: types.SimpleNamespace(messages=None, kwargs=kw)
+    monkeypatch.setitem(sys.modules, "anthropic", falso)
     monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-" + "ant-" + "x" * 30)
     cfg = cfg_con(BASE, **{"llm.provider": "anthropic", "llm.nivel": "pago"})
     c = crear_cliente_llm(cfg)
