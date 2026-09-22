@@ -6,7 +6,7 @@ Los MISMOS 1674 fragmentos (troceado `c750_o100`; se verificó que los índices 
 
 | Tipo | Modelo | Estado | Nivel | Dim | Indexación (s) | Costo real USD | Consulta (ms) | Vectores (MB) | R@1 | R@3 | R@5 | R@3 modif. |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| local | intfloat/multilingual-e5-small | medido | local | 384 | 56.0 | 0.000000 | 20.2 | 2.45 | 0.762 | 0.905 | 0.905 | 0.800 |
+| local | intfloat/multilingual-e5-small | medido | local | 384 | 51.5 | 0.000000 | 21.5 | 2.45 | 0.762 | 0.905 | 0.905 | 0.800 |
 | API (OpenAI) | text-embedding-3-small | pendiente: falta OPENAI_API_KEY en .env | — | — | — | — | — | — | — | — | — | — |
 | API (Gemini) | gemini-embedding-2 | no completada: cuota agotada del proveedor (Se agotó la cuota DIARIA de la capa gratuita de Google. Vuelve a intentarlo mañana o cambia de modelo. (You ex); 960/1674 fragmentos indexados; repetir más tarde para reanudar | — | — | — | — | — | — | — | — | — | — |
 

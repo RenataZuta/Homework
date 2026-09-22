@@ -19,7 +19,7 @@
 - [~] **Fase 10** — Innovación C: bot de Telegram `[MANUAL pendiente: crea el bot con @BotFather y pon TELEGRAM_BOT_TOKEN y TELEGRAM_ALLOWED_USER_IDS en tu .env; ver docs/telegram_bot.md]` (código y pruebas completos, sin probar con Telegram real)
 - [~] **Fase 11** — Innovación D: bot 24/7 con Cloudflare Worker `[MANUAL pendiente: cuentas de Render y Cloudflare, wrangler login/deploy, cargar secretos, prueba con la laptop apagada; ver docs/despliegue_backend.md]` (código, Dockerfile y Worker completos; no se pudo compilar ni desplegar en este entorno: sin docker/node/wrangler)
 - [~] **Fase 12** — Innovación E: despliegue público de la app `[MANUAL pendiente: crear la app en share.streamlit.io, cargar GEMINI_API_KEY en sus secrets, verificar y pasarme la URL; ver docs/despliegue_app_publica.md]` (topes de gasto activos y probados; índice versionado; sin desplegar de verdad)
-- [ ] **Fase 13** — Cierre: README, notas de video, auditoría final, costo real
+- [x] **Fase 13** — Cierre: README, notas de video, auditoría final, costo real
 
 Tarea 2 (`tarea2/`): pendiente, se hará después; importará `rag_engine`.
 
@@ -103,6 +103,37 @@ Modelo `gemini-3.5-flash-lite`, capa gratuita, `retrieval.busqueda: exacta`, umb
 | Log | `logs/llm_calls.jsonl`: 30 líneas reales (29 éxitos, 1 rechazo de modelo), cero reintentos |
 | Determinismo | La búsqueda exacta da el mismo resultado en 4 procesos distintos (con HNSW, `o01` cambiaba en 2 de 3) |
 | Tests | **553 pasan** |
+
+## Auditoría final y costo real (Fase 13, 2026-09-22)
+
+### Auditoría (ejecutada y verificada en este entorno)
+
+| Comprobación | Resultado |
+|---|---|
+| Motor sin imports de UI | `grep -rnE "streamlit\|telegram\|fastapi\|flask\|gradio" src/rag_engine` → **0 coincidencias** |
+| `check_secrets.py` (árbol + `git log -p`) | **0 hallazgos**, 413 archivos y 40 commits revisados |
+| Build del índice DOS VECES (idempotencia) | 1.ª y 2.ª corrida: `nuevos=0 actualizados=0 eliminados=0`, 1674 fragmentos ambas veces |
+| `run_eval.py` | `OK: Recall@3 = 0.905 >= mínimo 0.85` (código de salida 0) |
+| Todos los tests | **717 pasan** |
+| Instalación limpia siguiendo el README | Clon fresco + venv nuevo + `pip install torch` + `pip install -r requirements.txt` (código 0) + 717 tests + `run_eval` en verde + `streamlit run app.py` responde `HTTP 200` y `/_stcore/health` = `ok` |
+| Workflow verde en `tarea1-rag` | [run 35677918111](https://github.com/RenataZuta/Homework/actions/runs/35677918111) |
+| Workflow rojo demostrado (rama `demo-ci-rojo`, `min_recall_at_3: 0.99`) | [run 35730766798](https://github.com/RenataZuta/Homework/actions/runs/35730766798) → **failure**; rama eliminada tras capturar el enlace; `tarea1-rag` nunca tuvo el valor incorrecto |
+
+**Hallazgo real y serio de esta auditoría:** `requirements.txt` estaba truncado desde el commit de la Fase 7 (la misma corrupción de iCloud que truncó el
+README en su momento) — faltaban `streamlit`, `pandas`, `fastapi`, `uvicorn`, `httpx` y `matplotlib`, y ningún test lo detectó porque ninguno ejecuta
+`pip install`. Se corrigió y se agregó una prueba dedicada (ver hallazgo 49).
+
+### Costo real de todo el proyecto
+
+| Ítem | Valor |
+|---|---|
+| Llamadas reales al LLM (`logs/llm_calls.jsonl`) | 110 (109 exitosas, 1 rechazo por `gemini-2.5-flash-lite` retirado) |
+| Costo REAL | **USD 0** (capa gratuita de Gemini) |
+| Costo de REFERENCIA (precio de pago) | USD 0,075933 en total = **USD 0,000697 por consulta** |
+| Tokens | 161 726 de entrada + 10 966 de salida |
+| Latencia mediana | 1,92 s |
+| Embeddings por API (comparación, Fase 6) | USD 0 gastado: OpenAI nunca se probó (sin clave, sin cargar crédito); Gemini está en capa gratuita (960/1674 fragmentos, cuota diaria de 1000 textos aún no alcanzó para completarlo en dos intentos) |
+| **Costo real total del proyecto hasta hoy** | **USD 0** |
 
 ## Resultados de la Fase 12 hasta el punto manual (2026-09-22)
 
@@ -328,3 +359,59 @@ Petición de la persona: **no pagar nada adicional a su suscripción**; ninguna 
 47. **El propio desarrollo ya superó el tope diario que se está configurando (100/día):** un día de pruebas reales de este proyecto generó 101 líneas en `logs/llm_calls.jsonl`. Es una señal de que 100 es un número razonable para un uso real (no artificialmente alto), pero también de que hay que vigilar el archivo si se sigue desarrollando activamente sobre la misma app desplegada.
 48. **No pude confirmar con una fuente oficial la RAM exacta de Streamlit Community Cloud** (igual que con Render en la Fase 11). Lo que sí es un dato real y medido: el modelo de embeddings local por sí solo ya ocupa 883 MB. Si el despliegue falla, la salida (cambiar a embeddings de Gemini) ya está implementada y probada, no es trabajo nuevo.
 49. **`requirements.txt` estaba truncado desde la Fase 7** (26 líneas en vez de 43): la misma corrupción de iCloud que truncó el README en su momento (y se corrigió entonces) también cortó `requirements.txt` a media palabra, borrando `streamlit`, `pandas`, `fastapi`, `uvicorn`, `httpx` y `matplotlib` — **sin que ningún test lo notara**, porque ninguna prueba ejecuta `pip install -r requirements.txt`. Lo encontró la auditoría final de la Fase 13 (paso «instalación limpia siguiendo el README»), siguiendo el propio proceso que describe el enunciado. Se corrigió y se agregó una prueba (`test_requirements_txt_no_quedo_truncado_...`) para que no vuelva a pasar inadvertido. `requirements-ci.txt` y `requirements-backend.txt` SÍ estaban completos (son archivos separados, no los tocó la misma corrupción).
+
+## Checklist final (Fase 13)
+
+**Arquitectura**
+- [x] Offline/online separados (el motor nunca abre un PDF; test `test_el_motor_no_abre_pdfs`).
+- [x] Una función `responder()` (`rag_engine.engine.responder`), usada por `app.py`, el bot de Telegram y `interfaces/api_server.py`.
+- [x] El motor sin imports de UI (`grep` → 0 coincidencias, verificado en la auditoría de arriba).
+- [x] `config.yaml` (toda la configuración) y `.env` (solo credenciales, `.env.example` sin valores).
+- [x] Log de costos (`logs/llm_calls.jsonl`, costo real y de referencia).
+- [x] Diagrama Mermaid (offline vs online) en el README.
+
+**Extracción y OCR**
+- [x] 3 PDFs con fecha y hash (`data/raw/MANIFEST.json`).
+- [x] Página como metadato desde el primer paso (un JSON por página).
+- [x] OCR con motor justificado (Tesseract, 200 DPI, con datos de `eval/results/ocr_benchmark.md`).
+- [x] Subconjunto de 60+ páginas documentado (75 páginas del Reglamento, `docs/ocr_subset.md`).
+- [x] OCR reanudable (probado con una interrupción real, Ctrl+C).
+- [x] Limpieza de encabezados (`docs/limpieza_encabezados.md`).
+- [x] Reporte de calidad y orden de lectura (`docs/reading_order_check.md`, pestaña Calidad de extracción de la app).
+
+**Índice**
+- [x] 2+ configuraciones de troceado comparadas (6 configuraciones, `eval/results/chunking_comparacion.md`).
+- [x] Metadatos completos por fragmento (documento, versión, página, encabezado, artículos mencionados, hash).
+- [x] IDs estables e índice idempotente probado (build dos veces seguidas, `nuevos=0` la segunda vez).
+- [x] Prefijos y longitud máxima reportados (`docs/modelos_embeddings.md`; 0 fragmentos truncados con la config activa).
+- [x] Distribución de fragmentos por documento reportada (427 / 1042 / 205).
+
+**Motor**
+- [x] Abstención antes del LLM y umbral calibrado (0,835, con el LLM real).
+- [x] Manejo de versiones (bidireccional, `docs/ejemplo_versiones.md`).
+- [x] Citas (documento + página, verificadas contra las fuentes recuperadas).
+- [x] `abstuvo` estructurado (nunca inferido del texto; test `test_una_respuesta_que_dice_no_se_pero_marca_suficiente_no_es_abstencion`).
+- [x] Errores como errores (`error` + `error_tipo`, nunca una respuesta normal).
+- [x] Precio por hora (estructura de ventanas horarias, probada con una tabla ficticia pico/valle).
+
+**Evaluación**
+- [~] 15+5 preguntas válidas: el set tiene 21 in_domain + 6 out_of_domain, pero **no está validado por la persona** (Fase 3, [MANUAL] pendiente).
+- [x] Recall@1/3/5 y abstención sin LLM (`run_eval.py`, sin costo).
+- [x] Comparación local vs API con recomendación (el modelo local, con RAM medida como su único costo real).
+
+**Streamlit**
+- [x] Corre en limpio en Windows *(sin probar en Windows real; sí en macOS, ver auditoría)* sin reconstruir el índice.
+- [x] Muestra respuesta, citas, abstención, costo y paneles (Consulta, Calidad de extracción, Evaluación, Costos).
+
+**Innovación**
+- [~] Telegram: código y pruebas completos; **sin probar con un bot real** (falta el token, [MANUAL]).
+- [~] Worker 24/7: código, Dockerfile y pruebas estáticas completos; **sin compilar ni desplegar** (sin docker/node/wrangler en esta máquina).
+- [x] GitHub Actions con fallo demostrado (verde y rojo, enlaces arriba).
+- [x] BM25 vs semántica (Fase 8, con sonda de números de artículo).
+- [~] Despliegue público con topes: topes de gasto implementados y probados; **sin desplegar de verdad** ([MANUAL]).
+
+**Entrega**
+- [x] Repo público (`RenataZuta/Homework`), verificado desde la Fase 0.
+- [x] Commits distribuidos por fase (más de 20 commits en `tarea1-rag`).
+- [x] Sin credenciales en el historial (`check_secrets.py` sobre `git log -p`, 0 hallazgos).
+- [ ] Registrar el repositorio en la hoja de cálculo del issue — lo hace la persona.
