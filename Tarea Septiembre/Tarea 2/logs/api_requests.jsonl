@@ -1,0 +1,9 @@
+{"timestamp": "2026-09-23T12:42:57-05:00", "url": "https://contratacionesabiertas.oece.gob.pe/api/v1/records?page=1&paginateBy=20", "status": 200, "attempt": 1, "size_bytes": 405556, "seconds": 1.37}
+{"timestamp": "2026-09-23T12:42:58-05:00", "url": "https://contratacionesabiertas.oece.gob.pe/api/v1/records?page=2&paginateBy=20", "status": 200, "attempt": 1, "size_bytes": 369869, "seconds": 0.96}
+{"timestamp": "2026-09-23T12:43:00-05:00", "url": "https://contratacionesabiertas.oece.gob.pe/api/v1/records?page=3&paginateBy=20", "status": 200, "attempt": 1, "size_bytes": 362528, "seconds": 1.11}
+{"timestamp": "2026-09-23T12:43:00-05:00", "url": "https://contratacionesabiertas.oece.gob.pe/api/v1/record/ocds-dgv273-seacev3-1251581", "status": 200, "attempt": 1, "size_bytes": 7137, "seconds": 0.14}
+{"timestamp": "2026-09-23T12:43:01-05:00", "url": "https://contratacionesabiertas.oece.gob.pe/api/v1/record/ocds-dgv273-seacev3-0000000000", "status": 404, "attempt": 1, "size_bytes": 55, "seconds": 0.44}
+{"timestamp": "2026-09-23T12:43:17-05:00", "url": "https://contratacionesabiertas.oece.gob.pe/api/v1/record/ocds-dgv273-seacev3-0000000000", "status": 404, "attempt": 1, "size_bytes": 55, "seconds": 0.58}
+{"timestamp": "2026-09-23T12:43:17-05:00", "url": "http://fake/api/v1/records", "status": 503, "attempt": 1, "size_bytes": 2, "seconds": 0.0}
+{"timestamp": "2026-09-23T12:43:17-05:00", "url": "http://fake/api/v1/records_test_retry", "params": null, "status": null, "attempt": 2, "error": "ConnectionError: conexión cortada"}
+{"timestamp": "2026-09-23T12:43:18-05:00", "url": "http://fake/api/v1/records", "status": 200, "attempt": 3, "size_bytes": 2, "seconds": 0.0}

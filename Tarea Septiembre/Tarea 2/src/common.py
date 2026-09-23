@@ -9,12 +9,19 @@ from __future__ import annotations
 
 import json
 import logging
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
 import yaml
 
 ROOT = Path(__file__).resolve().parent.parent  # carpeta "Tarea 2/"
+
+# La consola de Windows usa cp1252 por defecto y muestra "JUN�N" aunque el dato esté bien en UTF-8.
+# Forzamos UTF-8 en la salida para no confundir un problema de pantalla con un problema de datos.
+for _stream in (sys.stdout, sys.stderr):
+    if hasattr(_stream, "reconfigure"):
+        _stream.reconfigure(encoding="utf-8")
 
 
 def load_config() -> dict:
