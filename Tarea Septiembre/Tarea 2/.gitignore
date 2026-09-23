@@ -1,0 +1,8 @@
+# Datos crudos: se regeneran con `python src/acquisition_bulk.py` / `src/acquisition_api.py`.
+# No se versionan porque pesan ~32 MB comprimidos (~300 MB descomprimidos) y OECE los regenera a diario.
+# El SHA-256 de cada ZIP usado queda en logs/descargas.jsonl (ese log SÍ se versiona).
+data/raw/*
+!data/raw/.gitkeep
+*.part
+# Logs de texto (verbosos); los .jsonl estructurados sí se versionan.
+logs/*.log

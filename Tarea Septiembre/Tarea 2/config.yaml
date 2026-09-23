@@ -1,0 +1,121 @@
+# =============================================================================
+# config.yaml — Tarea 2: datos de contrataciones públicas (SEACE V3.0 / OCDS)
+#
+# TODA la configuración vive aquí: URLs, carpetas, meses, límites de la API y
+# reglas de calidad. Ningún script tiene estos valores escritos en el código.
+# Las rutas son relativas a la carpeta que contiene este archivo (Tarea 2/).
+# =============================================================================
+
+paths:
+  raw: data/raw                       # ZIPs mensuales tal como los publica OECE (nunca se modifican)
+  raw_extracted: data/raw/extracted   # CSV descomprimidos, una subcarpeta por mes
+  api_cache: data/raw/api_cache       # respuestas de la API guardadas en disco (una por página / ocid)
+  processed: data/processed
+  outputs: data/outputs
+  logs: logs
+
+# ── Fuente oficial ───────────────────────────────────────────────────────────
+# Patrón encontrado en el portal (endpoint /api/v1/files, que usa la página /descargas):
+#   {base_url}/api/v1/file/{source}/{format}/{year}/{month}/
+#   → devuelve un ZIP "YYYY-MM_seace_v3_csv.zip" con 22 CSV (records.csv, releases.csv y tablas hijas).
+#   OJO: el mismo patrón con format=sha devuelve un SHA-256, pero lo comprobamos y es el del JSON
+#   DESCOMPRIMIDO (2026-06_seace_v3.json), no el del ZIP CSV → no sirve para verificar el CSV.
+#   Por eso la integridad se verifica con Content-Length + CRC interno del ZIP (ver bulk.verify_zip).
+source:
+  base_url: https://contratacionesabiertas.oece.gob.pe
+  system: seace_v3                    # sistema de origen (SEACE V3.0)
+  file_url_template: "{base_url}/api/v1/file/{system}/{fmt}/{year}/{month}/"
+  files_index_url: "{base_url}/api/v1/files"
+  records_url: "{base_url}/api/v1/records"
+  record_by_ocid_url: "{base_url}/api/v1/record/{ocid}"
+
+# ── Fase 1a: descarga masiva ─────────────────────────────────────────────────
+# Se eligen meses COMPLETOS de 2026. Septiembre 2026 se excluye a propósito:
+# el mes aún no termina y el archivo cambia a diario (no sería reproducible).
+bulk:
+  format: csv                         # "csv" (nombres de columna en inglés, OCDS) ; "csv_es" tiene los encabezados traducidos
+  months:
+    - "2026-06"
+    - "2026-07"
+    - "2026-08"
+  verify_zip: true                    # comprueba tamaño = Content-Length y el CRC de cada CSV dentro del ZIP
+  timeout_seconds: 300
+  chunk_bytes: 1048576                # se escribe a disco de 1 MB en 1 MB (no carga el ZIP entero en memoria)
+  download_log: logs/descargas.jsonl  # una línea JSON por intento de descarga
+
+# ── Fase 1b: cliente de la API ───────────────────────────────────────────────
+api:
+  min_seconds_between_requests: 1.0   # rate limiting: como máximo ~1 petición por segundo
+  max_retries: 5
+  backoff_base_seconds: 2.0           # espera 2, 4, 8, 16, 32 s entre reintentos
+  retry_on_status: [429, 500, 502, 503, 504]
+  timeout_seconds: 60
+  page_size: 20                       # "paginateBy" de /api/v1/records
+  max_pages: 3                        # tope para la demostración (no queremos bajar todo el SEACE por API)
+  request_log: logs/api_requests.jsonl
+  user_agent: "UP-DataScience-Tarea2/1.0 (proyecto academico)"
+
+# ── Fase 1c: normalización a una fila por ocid ───────────────────────────────
+normalize:
+  output_file: data/processed/procesos.parquet
+  output_csv: data/processed/procesos_muestra.csv   # primeras filas, para mirar a ojo / versionar
+  sample_rows: 200
+  report_file: data/outputs/reporte_normalizacion.json
+  # Cuando un mismo ocid aparece más de una vez en el archivo principal, nos quedamos
+  # con la versión más reciente según esta columna (orden descendente).
+  latest_by: date
+
+# ── Fase 2: validación y territorio ──────────────────────────────────────────
+validation:
+  input_file: data/processed/procesos.parquet
+  output_file: data/processed/procesos_validados.parquet
+  report_md: data/outputs/reporte_calidad.md
+  report_json: data/outputs/reporte_calidad.json
+  flagged_examples_per_rule: 5        # cuántos ocid de ejemplo se listan por regla en el reporte
+  # Códigos de documentType permitidos: lista oficial de OCDS 1.1 (codelist documentType).
+  # Lo que no esté aquí se marca como "código no declarado" (regla OCP #3).
+  ocds_document_types:
+    - plannedProcurementNotice
+    - tenderNotice
+    - awardNotice
+    - contractNotice
+    - completionCertificate
+    - procurementPlan
+    - biddingDocuments
+    - technicalSpecifications
+    - evaluationCriteria
+    - evaluationReports
+    - contractDraft
+    - contractSigned
+    - contractArrangements
+    - contractSchedule
+    - physicalProgressReport
+    - financialProgressReport
+    - finalAudit
+    - hearingNotice
+    - marketStudies
+    - eligibilityCriteria
+    - clarifications
+    - shortlistedFirms
+    - environmentalImpact
+    - assetAndLiabilityAssessment
+    - riskProvisions
+    - winningBid
+    - complaints
+    - contractAnnexe
+    - contractGuarantees
+    - subContract
+    - needsAssessment
+    - feasibilityStudy
+    - projectPlan
+    - billOfQuantity
+    - bidders
+    - conflictOfInterest
+    - debarments
+    - illustration
+    - submissionDocuments
+    - contractSummary
+    - cancellationDetails
+
+territory:
+  mapping_file: config/departamentos.yaml   # regla explícita de mapeo (departamentos, alias, provincias)
