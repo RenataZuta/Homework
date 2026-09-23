@@ -1,6 +1,6 @@
 # Reporte de calidad de datos — SEACE V3.0 (OCDS)
 
-Generado: 2026-09-23T12:53:24-05:00 · Meses: 2026-06, 2026-07, 2026-08 · Procesos (1 fila por ocid): **20,452**
+Generado: 2026-09-23T12:54:56-05:00 · Meses: 2026-06, 2026-07, 2026-08 · Procesos (1 fila por ocid): **20,452**
  · Procesos sin ninguna marca: **4,155**
 
 Ningún registro se eliminó: cada regla añade una columna `flag_*` en `data/processed/procesos_validados.parquet`.
