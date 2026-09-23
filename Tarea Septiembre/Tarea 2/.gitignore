@@ -1,8 +1,20 @@
+# Entorno virtual y cachés de Python (también están en el .gitignore de la raíz; se repiten aquí
+# para que esta carpeta quede protegida por sí sola).
+.venv/
+__pycache__/
+*.pyc
+
 # Datos crudos: se regeneran con `python src/acquisition_bulk.py` / `src/acquisition_api.py`.
 # No se versionan porque pesan ~32 MB comprimidos (~300 MB descomprimidos) y OECE los regenera a diario.
 # El SHA-256 de cada ZIP usado queda en logs/descargas.jsonl (ese log SÍ se versiona).
 data/raw/*
 !data/raw/.gitkeep
+# (explícitos, aunque data/raw/* ya los cubre)
+data/raw/*.zip
+data/raw/api_cache/
+data/raw/extracted/
 *.part
+*.tmp
+
 # Logs de texto (verbosos); los .jsonl estructurados sí se versionan.
 logs/*.log

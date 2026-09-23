@@ -37,10 +37,10 @@ def build_url(cfg: dict, fmt: str, year: str, month: str) -> str:
     )
 
 
-def sha256_of(file: Path) -> str:
+def sha256_of(file: Path, block_bytes: int) -> str:
     h = hashlib.sha256()
     with open(file, "rb") as f:
-        for block in iter(lambda: f.read(1 << 20), b""):
+        for block in iter(lambda: f.read(block_bytes), b""):
             h.update(block)
     return h.hexdigest()
 
@@ -110,7 +110,7 @@ def download_month(cfg: dict, ym: str, force: bool) -> dict:
 
     info = dict(month=ym, url=url, file=target.name, status="downloaded", size_bytes=size,
                 seconds=round(seconds, 2), mb_per_s=round(size / 1e6 / max(seconds, 1e-9), 2),
-                sha256=sha256_of(target), server_last_modified=server_last_modified,
+                sha256=sha256_of(target, bulk["chunk_bytes"]), server_last_modified=server_last_modified,
                 integrity_verified=bulk["verify_zip"])
     log.info("Descargado %s: %.1f MB en %.1f s (%.2f MB/s)", target.name, size / 1e6, seconds, info["mb_per_s"])
     log_event(bulk["download_log"], **info)
@@ -143,7 +143,7 @@ def main() -> int:
         results.append(info)
 
     ok = [r for r in results if r["status"] in ("downloaded", "skipped_exists")]
-    log.info("Resumen: %d/%d meses disponibles en data/raw/", len(ok), len(results))
+    log.info("Resumen: %d/%d meses disponibles en %s/", len(ok), len(results), cfg["paths"]["raw"])
     return 0 if len(ok) == len(results) else 1
 
 

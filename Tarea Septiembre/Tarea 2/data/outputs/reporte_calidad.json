@@ -1,5 +1,5 @@
 {
-  "generado": "2026-09-23T12:54:56-05:00",
+  "generado": "2026-09-23T13:12:09-05:00",
   "meses": [
     "2026-06",
     "2026-07",
@@ -146,7 +146,7 @@
       "total": 9606,
       "porcentaje": 100.0,
       "accion": "Marcado flag_ocp2_contrato_sin_estado en el proceso. No se infiere el estado a partir de fechas.",
-      "nota": "Procesos afectados: 9,046 de 20,452. El CSV mensual NO incluye la columna contracts/status: en el CSV el 100% queda sin estado. Muestra de la API (JSON, 3 páginas de /records): 46 de 52 contratos sin status (88.5%).",
+      "nota": "Procesos afectados: 9,046 de 20,452. El CSV mensual NO incluye la columna contracts/status: en el CSV el 100% queda sin estado. Muestra de la API (JSON, 60 records de /records): 46 de 52 contratos sin status (88.5%).",
       "ejemplos": [
         "ocds-dgv273-seacev3-1238201",
         "ocds-dgv273-seacev3-1224465",

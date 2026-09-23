@@ -30,45 +30,28 @@ from common import get_logger, load_config, now_iso, path
 
 log = get_logger("normalize_records")
 
-# Columnas de records.csv que conservamos → nombre corto en español.
-RECORD_COLUMNS = {
-    "ocid": "ocid",
-    "compiledRelease/date": "fecha_compilacion",
-    "compiledRelease/dataSegmentation/id": "segmento_mes",
-    "compiledRelease/tender/id": "tender_id",
-    "compiledRelease/tender/title": "nomenclatura",
-    "compiledRelease/tender/description": "descripcion",
-    "compiledRelease/tender/procurementMethod": "metodo_ocds",
-    "compiledRelease/tender/procurementMethodDetails": "tipo_procedimiento",
-    "compiledRelease/tender/mainProcurementCategory": "categoria",
-    "compiledRelease/tender/value/amount": "monto_referencial",
-    "compiledRelease/tender/value/currency": "moneda",
-    "compiledRelease/tender/value/amount_PEN": "monto_referencial_pen",
-    "compiledRelease/tender/datePublished": "fecha_convocatoria",
-    "compiledRelease/tender/numberOfTenderers": "n_postores_declarado",
-    "compiledRelease/planning/budget/amount/amount": "presupuesto",
-    "compiledRelease/buyer/id": "comprador_id",
-    "compiledRelease/buyer/name": "comprador_nombre",
-}
-NUMERIC = ["monto_referencial", "monto_referencial_pen", "presupuesto", "n_postores_declarado"]
-
-
-def read_month_table(cfg: dict, name: str) -> pd.DataFrame:
-    """Lee la misma tabla de todos los meses y la concatena, anotando el archivo de origen."""
+def read_month_table(cfg: dict, table: str) -> pd.DataFrame:
+    """Lee la tabla `table` (clave de source.tables en config.yaml) de todos los meses, la concatena,
+    anota el mes de origen y acorta los nombres de columna quitando el prefijo de la lista OCDS."""
+    spec = cfg["source"]["tables"][table]
     frames = []
     for ym in cfg["bulk"]["months"]:
-        f = path(f"{cfg['paths']['raw_extracted']}/{ym}/{name}")
+        f = path(f"{cfg['paths']['raw_extracted']}/{ym}/{spec['file']}")
         if not f.exists():
             raise FileNotFoundError(f"Falta {f}. Ejecuta primero: python src/acquisition_bulk.py")
         df = pd.read_csv(f, dtype=str, encoding="utf-8", keep_default_na=False, na_values=[""])
         df["archivo_mes"] = ym
         frames.append(df)
-    return pd.concat(frames, ignore_index=True)
+    df = pd.concat(frames, ignore_index=True)
+    prefix = spec["prefix"]
+    if prefix:  # 'compiledRelease/awards/0/value/amount' → 'value_amount'
+        df = df.rename(columns=lambda c: c.split(prefix, 1)[1].replace("/", "_") if prefix in c else c)
+    return df
 
 
-def short(df: pd.DataFrame, prefix: str) -> pd.DataFrame:
-    """'compiledRelease/awards/0/value/amount' → 'value_amount' (quita el prefijo de la lista)."""
-    return df.rename(columns=lambda c: c.split(prefix, 1)[1].replace("/", "_") if prefix in c else c)
+def count(counts: dict, cfg: dict, table: str, df: pd.DataFrame, **extra) -> None:
+    counts[cfg["source"]["tables"][table]["file"]] = {"filas": len(df), "ocid_unicos": int(df["ocid"].nunique()),
+                                                      **extra}
 
 
 def main() -> int:
@@ -77,8 +60,8 @@ def main() -> int:
     counts: dict[str, dict] = {}
 
     # ── 1) Tabla base: records.csv (compiledRelease) ─────────────────────────
-    rec = read_month_table(cfg, "records.csv")
-    counts["records.csv"] = {"filas": len(rec), "ocid_unicos": int(rec["ocid"].nunique())}
+    rec = read_month_table(cfg, "records")
+    count(counts, cfg, "records", rec)
 
     # Un ocid podría aparecer en dos archivos mensuales (si OECE lo re-segmenta). En ese caso nos quedamos
     # con la versión más reciente del compiledRelease y lo REPORTAMOS (no se borra en silencio).
@@ -87,46 +70,45 @@ def main() -> int:
     dup_mask = rec["ocid"].duplicated(keep="first")
     duplicados_descartados = rec.loc[dup_mask, ["ocid", "archivo_mes", latest_col]]
     rec = rec.loc[~dup_mask]
-    base = rec[list(RECORD_COLUMNS) + ["archivo_mes"]].rename(columns=RECORD_COLUMNS)
-    for c in NUMERIC:
+    base = rec[list(ncfg["columns"]) + ["archivo_mes"]].rename(columns=ncfg["columns"])
+    for c in ncfg["numeric_columns"]:
         base[c] = pd.to_numeric(base[c], errors="coerce")
 
     # ── 2) Historial: releases.csv → cuántas versiones tuvo cada proceso ─────
-    rel = read_month_table(cfg, "releases.csv")
-    counts["releases.csv"] = {"filas": len(rel), "ocid_unicos": int(rel["ocid"].nunique()),
-                              "releases_por_ocid_promedio": round(len(rel) / rel["ocid"].nunique(), 2)}
+    rel = read_month_table(cfg, "releases")
+    count(counts, cfg, "releases", rel, releases_por_ocid_promedio=round(len(rel) / rel["ocid"].nunique(), 2))
     agg_rel = rel.groupby("ocid").agg(n_releases=("ocid", "size"),
                                       fecha_primer_release=("releases/0/date", "min"),
                                       fecha_ultimo_release=("releases/0/date", "max"))
 
     # ── 3) Comprador y su ubicación: com_parties.csv (rol "buyer") ───────────
-    par = short(read_month_table(cfg, "com_parties.csv"), "parties/0/")
-    counts["com_parties.csv"] = {"filas": len(par), "ocid_unicos": int(par["ocid"].nunique())}
-    buyer = par[par["roles"].str.contains("buyer", na=False)].drop_duplicates("ocid")
+    par = read_month_table(cfg, "parties")
+    count(counts, cfg, "parties", par)
+    buyer = par[par["roles"].str.contains(ncfg["buyer_role"], na=False)].drop_duplicates("ocid")
     buyer = buyer.set_index("ocid")[["address_department", "address_region", "address_locality"]].rename(
         columns={"address_department": "departamento_raw", "address_region": "provincia_raw",
                  "address_locality": "distrito_raw"})
 
     # ── 4) Postores: com_ten_tenderers.csv ───────────────────────────────────
-    ten = short(read_month_table(cfg, "com_ten_tenderers.csv"), "tenderers/0/")
-    counts["com_ten_tenderers.csv"] = {"filas": len(ten), "ocid_unicos": int(ten["ocid"].nunique())}
+    ten = read_month_table(cfg, "tenderers")
+    count(counts, cfg, "tenderers", ten)
     agg_ten = ten.groupby("ocid").agg(n_postores_filas=("id", "size"), n_postores_unicos=("id", "nunique"))
 
     # ── 5) Adjudicaciones y proveedores ganadores ────────────────────────────
-    awa = short(read_month_table(cfg, "com_awards.csv"), "awards/0/")
-    counts["com_awards.csv"] = {"filas": len(awa), "ocid_unicos": int(awa["ocid"].nunique())}
+    awa = read_month_table(cfg, "awards")
+    count(counts, cfg, "awards", awa)
     awa["value_amount"] = pd.to_numeric(awa["value_amount"], errors="coerce")
     agg_awa = awa.groupby("ocid").agg(n_adjudicaciones=("id", "nunique"),
                                       monto_adjudicado=("value_amount", "sum"))
-    sup = short(read_month_table(cfg, "com_awa_suppliers.csv"), "suppliers/0/")
-    counts["com_awa_suppliers.csv"] = {"filas": len(sup), "ocid_unicos": int(sup["ocid"].nunique())}
+    sup = read_month_table(cfg, "award_suppliers")
+    count(counts, cfg, "award_suppliers", sup)
     agg_sup = sup.groupby("ocid").agg(
         proveedores=("name", lambda s: " | ".join(sorted(set(s.dropna())))),
         proveedores_ids=("id", lambda s: " | ".join(sorted(set(s.dropna())))))
 
     # ── 6) Contratos ─────────────────────────────────────────────────────────
-    con = short(read_month_table(cfg, "com_contracts.csv"), "contracts/0/")
-    counts["com_contracts.csv"] = {"filas": len(con), "ocid_unicos": int(con["ocid"].nunique())}
+    con = read_month_table(cfg, "contracts")
+    count(counts, cfg, "contracts", con)
     con["value_amount"] = pd.to_numeric(con["value_amount"], errors="coerce")
     agg_con = con.groupby("ocid").agg(n_contratos=("id", "nunique"), monto_contratado=("value_amount", "sum"),
                                       fecha_primer_contrato=("dateSigned", "min"))
@@ -143,7 +125,7 @@ def main() -> int:
     out.loc[out["n_contratos"] == 0, "monto_contratado"] = pd.NA
 
     assert out["ocid"].is_unique, "La tabla final debe tener exactamente una fila por ocid"
-    assert len(out) == counts["records.csv"]["ocid_unicos"]
+    assert len(out) == rec["ocid"].nunique()
 
     # ── 8) Guardar ───────────────────────────────────────────────────────────
     out.to_parquet(path(ncfg["output_file"]), index=False)
@@ -156,16 +138,13 @@ def main() -> int:
         "despues": {"archivo": ncfg["output_file"], "filas": len(out), "ocid_unicos": int(out["ocid"].nunique()),
                     "columnas": list(out.columns)},
         "ocid_repetidos_entre_meses_descartados": len(duplicados_descartados),
-        "detalle_repetidos": duplicados_descartados.head(50).to_dict("records"),
+        "detalle_repetidos": duplicados_descartados.head(ncfg["report_max_examples"]).to_dict("records"),
         "por_mes": out["archivo_mes"].value_counts().sort_index().to_dict(),
     }
     path(ncfg["report_file"]).write_text(json.dumps(report, ensure_ascii=False, indent=2, default=str),
                                          encoding="utf-8")
 
-    log.info("ANTES: releases.csv=%d filas (%.1f por ocid) | records.csv=%d filas | tablas hijas: %s",
-             counts["releases.csv"]["filas"], counts["releases.csv"]["releases_por_ocid_promedio"],
-             counts["records.csv"]["filas"],
-             ", ".join(f"{k}={v['filas']}" for k, v in counts.items() if k.startswith("com_")))
+    log.info("ANTES: %s", ", ".join(f"{k}={v['filas']} filas" for k, v in counts.items()))
     log.info("DESPUÉS: %d filas = %d ocid únicos (repetidos entre meses descartados: %d) → %s",
              len(out), out["ocid"].nunique(), len(duplicados_descartados), ncfg["output_file"])
     return 0

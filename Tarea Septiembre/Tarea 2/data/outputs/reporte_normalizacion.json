@@ -1,5 +1,5 @@
 {
-  "generado": "2026-09-23T12:54:52-05:00",
+  "generado": "2026-09-23T13:11:29-05:00",
   "meses": [
     "2026-06",
     "2026-07",
@@ -55,6 +55,7 @@
       "monto_referencial_pen",
       "fecha_convocatoria",
       "n_postores_declarado",
+      "info_protegida_por_ley",
       "presupuesto",
       "comprador_id",
       "comprador_nombre",

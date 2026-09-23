@@ -34,13 +34,6 @@ from common import ROOT, get_logger, load_config
 log = get_logger("territory_mapping")
 NO_UBICADO = "NO_UBICADO"
 
-# Patrones para extraer el lugar del NOMBRE de la entidad (solo entidades con alcance territorial claro).
-ENTITY_PATTERNS = [
-    re.compile(r"GOBIERNO REGIONAL (?:DE |DEL )?(?:LA REGION |REGION )?(?P<lugar>[A-Z Ñ]+?)(?: SEDE| -|$)"),
-    re.compile(r"MUNICIPALIDAD PROVINCIAL (?:DE |DEL )?(?P<lugar>[A-Z Ñ]+?)(?: -|$)"),
-]
-
-
 def clean_text(value) -> str | None:
     """Normaliza un texto para compararlo: 'Junín ' → 'JUNIN', 'Cañete' → 'CAÑETE'."""
     if value is None or (isinstance(value, float) and pd.isna(value)) or value is pd.NA:
@@ -62,7 +55,8 @@ def load_rules() -> dict:
     with open(ROOT / cfg["territory"]["mapping_file"], encoding="utf-8") as f:
         rules = yaml.safe_load(f)
     departments = {clean_text(d): d for d in rules["departamentos"]}
-    assert len(departments) == 25, "Deben ser exactamente 25 departamentos (24 + Callao)"
+    expected = cfg["territory"]["expected_departments"]
+    assert len(departments) == expected, f"Deben ser exactamente {expected} departamentos (24 + Callao)"
     aliases = {clean_text(k): v for k, v in rules["alias"].items()}
     provinces = {}
     for dep, provs in rules["provincias"].items():
@@ -80,7 +74,8 @@ def load_rules() -> dict:
             folded.setdefault(k.replace("Ñ", "N"), set()).add(dep)
     folded = {k: next(iter(v)) for k, v in folded.items() if len(v) == 1}
     return {"departments": departments, "aliases": aliases, "provinces": provinces, "prefixes": prefixes,
-            "folded": folded, "provinces_folded": {k.replace("Ñ", "N") for k in provinces}}
+            "folded": folded, "provinces_folded": {k.replace("Ñ", "N") for k in provinces},
+            "entity_patterns": [re.compile(p) for p in rules["patrones_nombre_entidad"]]}
 
 
 def strip_prefixes(s: str) -> str:
@@ -118,7 +113,7 @@ def from_entity_name(name) -> tuple[str, str]:
     s = clean_text(name)
     if not s:
         return NO_UBICADO, "vacio"
-    for pat in ENTITY_PATTERNS:
+    for pat in load_rules()["entity_patterns"]:
         m = pat.search(s)
         if m:
             dep, rule = map_value(m.group("lugar"))

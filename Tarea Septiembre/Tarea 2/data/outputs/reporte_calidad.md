@@ -1,6 +1,6 @@
 # Reporte de calidad de datos — SEACE V3.0 (OCDS)
 
-Generado: 2026-09-23T12:54:56-05:00 · Meses: 2026-06, 2026-07, 2026-08 · Procesos (1 fila por ocid): **20,452**
+Generado: 2026-09-23T13:12:09-05:00 · Meses: 2026-06, 2026-07, 2026-08 · Procesos (1 fila por ocid): **20,452**
  · Procesos sin ninguna marca: **4,155**
 
 Ningún registro se eliminó: cada regla añade una columna `flag_*` en `data/processed/procesos_validados.parquet`.
@@ -31,7 +31,7 @@ Ningún registro se eliminó: cada regla añade una columna `flag_*` en `data/pr
 - **R2b** (records.csv).  Ejemplos: `ocds-dgv273-seacev3-1232957`, `ocds-dgv273-seacev3-1246147`, `ocds-dgv273-seacev3-1244451`, `ocds-dgv273-seacev3-1243790`, `ocds-dgv273-seacev3-1240701`.
 - **R2c** (records.csv).  Ejemplos: `ocds-dgv273-seacev3-1239597`, `ocds-dgv273-seacev3-1244699`, `ocds-dgv273-seacev3-1244610`, `ocds-dgv273-seacev3-1234089`, `ocds-dgv273-seacev3-1241747`.
 - **R4** (com_ten_tenderers.csv, com_parties.csv). Id repetido exacto (ocid,id): tenderers=0, parties=0 filas. Mismo nombre con >1 id en un proceso: 156 filas de tenderers. En todo el lote, 1221 de 32752 nombres de postor usan más de un id (sobre todo extranjeros con id generado 'PE-RUC-L…'). Ejemplos: `ocds-dgv273-seacev3-1221875`, `ocds-dgv273-seacev3-1222026`, `ocds-dgv273-seacev3-1222366`, `ocds-dgv273-seacev3-1222370`, `ocds-dgv273-seacev3-1223239`.
-- **R5** (com_contracts.csv (+ muestra API)). Procesos afectados: 9,046 de 20,452. El CSV mensual NO incluye la columna contracts/status: en el CSV el 100% queda sin estado. Muestra de la API (JSON, 3 páginas de /records): 46 de 52 contratos sin status (88.5%). Ejemplos: `ocds-dgv273-seacev3-1238201`, `ocds-dgv273-seacev3-1224465`, `ocds-dgv273-seacev3-1228797`, `ocds-dgv273-seacev3-1226639`, `ocds-dgv273-seacev3-1226350`.
+- **R5** (com_contracts.csv (+ muestra API)). Procesos afectados: 9,046 de 20,452. El CSV mensual NO incluye la columna contracts/status: en el CSV el 100% queda sin estado. Muestra de la API (JSON, 60 records de /records): 46 de 52 contratos sin status (88.5%). Ejemplos: `ocds-dgv273-seacev3-1238201`, `ocds-dgv273-seacev3-1224465`, `ocds-dgv273-seacev3-1228797`, `ocds-dgv273-seacev3-1226639`, `ocds-dgv273-seacev3-1226350`.
 - **R6a** (com_ten_documents.csv, com_con_documents.csv). Procesos afectados: 0 de 20,452. Códigos encontrados: {"biddingDocuments": 47849, "awardNotice": 16801, "evaluationReports": 13306, "clarifications": 13100, "contractSigned": 11702, "contractAnnexe": 1700, "nan": 754}
 - **R6b** (com_ten_documents.csv, com_con_documents.csv). Procesos afectados: 617 de 20,452.  Ejemplos: `ocds-dgv273-seacev3-1226306`, `ocds-dgv273-seacev3-1224167`, `ocds-dgv273-seacev3-1227115`, `ocds-dgv273-seacev3-2026-2383-138`, `ocds-dgv273-seacev3-1229115`.
 - **R7a** (com_awards.csv vs com_contracts.csv). Procesos afectados: 5,032 de 20,452.  Ejemplos: `ocds-dgv273-seacev3-1245462`, `ocds-dgv273-seacev3-1226306`, `ocds-dgv273-seacev3-2026-1003000933-33`, `ocds-dgv273-seacev3-1224167`, `ocds-dgv273-seacev3-2026-1926-114`.

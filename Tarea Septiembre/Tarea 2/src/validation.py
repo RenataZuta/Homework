@@ -20,18 +20,16 @@ Reglas:
 """
 from __future__ import annotations
 
-import glob
 import json
 import sys
 
 import pandas as pd
 
 from common import ROOT, get_logger, load_config, now_iso, path
-from normalize_records import read_month_table, short
+from normalize_records import read_month_table
 from territory_mapping import NO_UBICADO, assign_department, clean_text
 
 log = get_logger("validation")
-MOJIBAKE = r"Ã|Â|�"   # huellas típicas de UTF-8 leído como Latin-1, o caracteres de reemplazo
 
 
 class Report:
@@ -58,7 +56,7 @@ def main() -> int:
     ex = lambda mask: df.loc[mask, "ocid"].head(vcfg["flagged_examples_per_rule"]).tolist()
 
     # ── R1: ocid duplicados ──────────────────────────────────────────────────
-    rec = read_month_table(cfg, "records.csv")[["ocid", "archivo_mes"]]
+    rec = read_month_table(cfg, "records")[["ocid", "archivo_mes"]]
     dup_raw = rec["ocid"].duplicated(keep=False)
     df["flag_ocid_duplicado"] = df["ocid"].isin(rec.loc[dup_raw, "ocid"])
     rep.add("R1", "ocid duplicado en records.csv (entre y dentro de meses)", "records.csv", "filas de records",
@@ -69,9 +67,7 @@ def main() -> int:
             nota=f"Tabla final: {df['ocid'].duplicated().sum()} duplicados.")
 
     # ── R2: montos faltantes o cero ──────────────────────────────────────────
-    protected = read_month_table(cfg, "records.csv").set_index("ocid")[
-        "compiledRelease/tender/hasTenderInformationProtectedByLaw"].eq("True")
-    df["valor_reservado_por_ley"] = df["ocid"].map(protected).fillna(False).astype(bool)
+    df["valor_reservado_por_ley"] = df["info_protegida_por_ley"].eq(vcfg["protected_by_law_value"]).fillna(False)
     missing = df["monto_referencial"].isna()
     zero = df["monto_referencial"].eq(0)
     df["flag_monto_faltante"] = missing
@@ -102,8 +98,8 @@ def main() -> int:
             ex(df["flag_descripcion_igual_nomenclatura"]))
 
     # ── R4 (OCP #1): identificadores duplicados en tenderers / parties ───────
-    ten = short(read_month_table(cfg, "com_ten_tenderers.csv"), "tenderers/0/")
-    par = short(read_month_table(cfg, "com_parties.csv"), "parties/0/")
+    ten = read_month_table(cfg, "tenderers")
+    par = read_month_table(cfg, "parties")
     exact_ten = ten.duplicated(["ocid", "id"], keep=False)
     exact_par = par.duplicated(["ocid", "id"], keep=False)
     # Misma organización (mismo nombre) con VARIOS ids dentro del mismo proceso.
@@ -123,17 +119,17 @@ def main() -> int:
                   f"más de un id (sobre todo extranjeros con id generado 'PE-RUC-L…')."))
 
     # ── R5 (OCP #2): contratos sin estado ────────────────────────────────────
-    con = short(read_month_table(cfg, "com_contracts.csv"), "contracts/0/")
+    con = read_month_table(cfg, "contracts")
     has_status_col = "status" in con.columns
     no_status = con["status"].isna() if has_status_col else pd.Series(True, index=con.index)
     df["flag_ocp2_contrato_sin_estado"] = df["ocid"].isin(con.loc[no_status, "ocid"])
     api_note = "Sin muestra de API en caché (ejecuta: python src/acquisition_api.py --pages)."
-    api_files = glob.glob(str(path(f"{cfg['paths']['api_cache']}/records_page_*.json")))
-    if api_files:
-        api_contracts = [c for f in api_files for r in json.load(open(f, encoding="utf-8"))["records"]
-                         for c in r["compiledRelease"].get("contracts", [])]
+    api_file = path(cfg["api"]["pages_output"])
+    if api_file.exists():
+        api_records = [json.loads(line) for line in api_file.read_text(encoding="utf-8").splitlines() if line]
+        api_contracts = [c for r in api_records for c in r["compiledRelease"].get("contracts", [])]
         api_missing = sum(1 for c in api_contracts if not c.get("status"))
-        api_note = (f"Muestra de la API (JSON, {len(api_files)} páginas de /records): {api_missing} de "
+        api_note = (f"Muestra de la API (JSON, {len(api_records)} records de /records): {api_missing} de "
                     f"{len(api_contracts)} contratos sin status "
                     f"({100 * api_missing / max(len(api_contracts), 1):.1f}%).")
     rep.add("R5", "OCP #2 · contratos sin estado (status)", "com_contracts.csv (+ muestra API)", "contratos",
@@ -146,8 +142,8 @@ def main() -> int:
     # ── R6 (OCP #3): documentType no declarado ───────────────────────────────
     allowed = set(vcfg["ocds_document_types"])
     docs = pd.concat([
-        short(read_month_table(cfg, "com_ten_documents.csv"), "documents/0/").assign(origen="tender"),
-        short(read_month_table(cfg, "com_con_documents.csv"), "documents/0/").assign(origen="contract"),
+        read_month_table(cfg, "tender_documents").assign(origen="tender"),
+        read_month_table(cfg, "contract_documents").assign(origen="contract"),
     ], ignore_index=True)
     undeclared = docs["documentType"].notna() & ~docs["documentType"].isin(allowed)
     empty_type = docs["documentType"].isna()
@@ -164,7 +160,7 @@ def main() -> int:
             docs.loc[empty_type, "ocid"].unique())
 
     # ── R7 (OCP #4): adjudicaciones ↔ contratos ──────────────────────────────
-    awa = short(read_month_table(cfg, "com_awards.csv"), "awards/0/")
+    awa = read_month_table(cfg, "awards")
     award_keys = set(zip(awa["ocid"], awa["id"]))
     contract_award_keys = set(zip(con["ocid"], con["awardID"]))
     awa_unlinked = ~pd.Series([k in contract_award_keys for k in zip(awa["ocid"], awa["id"])], index=awa.index)
@@ -184,7 +180,7 @@ def main() -> int:
     df = assign_department(df)
     no_loc = df["departamento"].eq(NO_UBICADO)
     df["flag_territorio_no_ubicado"] = no_loc
-    df["flag_territorio_inconsistente"] = df["territorio_inconsistente"]
+    df = df.rename(columns={"territorio_inconsistente": "flag_territorio_inconsistente"})
     methods = df["departamento_metodo"].value_counts().to_dict()
     rep.add("R8a", "Ubicación no mapeable a los 25 departamentos", "com_parties.csv (comprador)", "procesos",
             no_loc.sum(), n,
@@ -208,10 +204,10 @@ def main() -> int:
             "Se normaliza a MAYÚSCULAS sin tildes (se conserva la Ñ) en la columna 'departamento'; "
             "el valor original queda en 'departamento_raw'.", df.loc[raw[accent_fixed].index, "ocid"],
             nota=f"Departamentos con más de una grafía en el dato crudo: {int((variants > 1).sum())}.")
-    text_cols = ["descripcion", "comprador_nombre", "tipo_procedimiento", "proveedores"]
+    text_cols = vcfg["mojibake_columns"]
     moj = pd.Series(False, index=df.index)
     for c in text_cols:
-        moj |= df[c].fillna("").str.contains(MOJIBAKE, regex=True)
+        moj |= df[c].fillna("").str.contains(vcfg["mojibake_pattern"], regex=True)
     df["flag_texto_mojibake"] = moj
     rep.add("R9b", "Texto con mojibake o caracteres de reemplazo (Ã, Â, �)", "records.csv, com_awa_suppliers.csv",
             "procesos", moj.sum(), n,
@@ -242,13 +238,13 @@ def main() -> int:
     }
     path(vcfg["report_json"]).write_text(json.dumps(summary, ensure_ascii=False, indent=2, default=str),
                                          encoding="utf-8")
-    path(vcfg["report_md"]).write_text(render_markdown(summary), encoding="utf-8")
+    path(vcfg["report_md"]).write_text(render_markdown(summary, vcfg["output_file"]), encoding="utf-8")
     log.info("Procesos sin ninguna marca: %d de %d → %s, %s", summary["procesos_sin_ninguna_marca"], n,
              vcfg["report_md"], vcfg["output_file"])
     return 0
 
 
-def render_markdown(s: dict) -> str:
+def render_markdown(s: dict, output_file: str) -> str:
     L = [
         "# Reporte de calidad de datos — SEACE V3.0 (OCDS)",
         "",
@@ -256,7 +252,7 @@ def render_markdown(s: dict) -> str:
         f" · Procesos sin ninguna marca: **{s['procesos_sin_ninguna_marca']:,}**",
         "",
         "Ningún registro se eliminó: cada regla añade una columna `flag_*` en "
-        "`data/processed/procesos_validados.parquet`.",
+        f"`{output_file}`.",
         "",
         "| # | Regla | Unidad | Marcados | Total | % | Qué se hizo |",
         "|---|---|---|---:|---:|---:|---|",

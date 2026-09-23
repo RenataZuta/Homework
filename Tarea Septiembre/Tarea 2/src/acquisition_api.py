@@ -30,6 +30,11 @@ from common import get_logger, load_config, log_event, path
 
 log = get_logger("acquisition_api")
 
+# Nombre de los archivos de caché: parte legible (recortada) + hash corto del URL completo.
+# Son detalles internos de nombrado (no cambian ningún resultado), por eso son constantes y no config.
+CACHE_NAME_MAX_CHARS = 80
+CACHE_HASH_CHARS = 10
+
 
 class OCDSApiClient:
     def __init__(self, cfg: dict, use_cache: bool = True):
@@ -46,8 +51,8 @@ class OCDSApiClient:
     def _cache_file(self, url: str, params: dict | None) -> Path:
         key = url + ("?" + "&".join(f"{k}={v}" for k, v in sorted(params.items())) if params else "")
         # nombre legible + hash corto (evita caracteres inválidos en Windows y colisiones)
-        readable = re.sub(r"[^A-Za-z0-9]+", "_", key.split("/api/v1/")[-1])[:80]
-        return self.cache_dir / f"{readable}_{hashlib.sha1(key.encode()).hexdigest()[:10]}.json"
+        readable = re.sub(r"[^A-Za-z0-9]+", "_", key.split("/api/v1/")[-1])[:CACHE_NAME_MAX_CHARS]
+        return self.cache_dir / f"{readable}_{hashlib.sha1(key.encode()).hexdigest()[:CACHE_HASH_CHARS]}.json"
 
     # ── rate limiting ────────────────────────────────────────────────────────
     def _wait_turn(self) -> None:
@@ -135,13 +140,13 @@ def main() -> int:
     cfg = load_config()
     client = OCDSApiClient(cfg, use_cache=not args.no_cache)
     t0 = time.perf_counter()
-    records, failed = [], []
+    page_records, ocid_records, failed = [], [], []
 
     try:
         if args.pages:
             for page, recs in client.iter_record_pages(cfg["api"]["max_pages"]):
                 log.info("Página %d: %d records", page, len(recs))
-                records.extend(recs)
+                page_records.extend(recs)
         for ocid in args.ocid:
             try:
                 data = client.get_record(ocid)
@@ -152,18 +157,21 @@ def main() -> int:
             recs = data.get("records", [data])
             log.info("ocid %s: %d record(s), %d releases", ocid, len(recs),
                      sum(len(r.get("releases", [])) for r in recs))
-            records.extend(recs)
+            ocid_records.extend(recs)
     except RuntimeError as e:
         log.error("%s", e)
         log.error("Lo ya descargado quedó en la caché: relanza el mismo comando para continuar.")
         return 1
 
-    out = path(f"{cfg['paths']['api_cache']}/records_api.jsonl")
-    with open(out, "w", encoding="utf-8") as f:
-        for r in records:
-            f.write(json.dumps(r, ensure_ascii=False) + "\n")
-    log.info("Guardados %d records en %s | peticiones=%d, desde caché=%d, reintentos=%d, errores=%d | %.1f s",
-             len(records), out.name, client.stats["requests"], client.stats["cache_hits"],
+    # --pages y --ocid se guardan por separado: la validación usa la muestra de páginas, y un --ocid suelto
+    # no debe sobrescribirla.
+    for recs, out in ((page_records, cfg["api"]["pages_output"]), (ocid_records, cfg["api"]["ocid_output"])):
+        if recs:
+            with open(path(out), "w", encoding="utf-8") as f:
+                for r in recs:
+                    f.write(json.dumps(r, ensure_ascii=False) + "\n")
+            log.info("Guardados %d records en %s", len(recs), out)
+    log.info("Resumen | peticiones=%d, desde caché=%d, reintentos=%d, errores=%d | %.1f s", client.stats["requests"], client.stats["cache_hits"],
              client.stats["retries"], client.stats["errors"], time.perf_counter() - t0)
     return 1 if failed else 0
 

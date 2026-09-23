@@ -28,6 +28,18 @@ source:
   files_index_url: "{base_url}/api/v1/files"
   records_url: "{base_url}/api/v1/records"
   record_by_ocid_url: "{base_url}/api/v1/record/{ocid}"
+  # Tablas del ZIP mensual que usamos. "prefix" es la parte de la columna que se quita para dejar
+  # nombres cortos: 'compiledRelease/parties/0/address/department' → 'address_department'.
+  tables:
+    records:          {file: records.csv,           prefix: null}
+    releases:         {file: releases.csv,          prefix: null}
+    parties:          {file: com_parties.csv,       prefix: "parties/0/"}
+    tenderers:        {file: com_ten_tenderers.csv, prefix: "tenderers/0/"}
+    awards:           {file: com_awards.csv,        prefix: "awards/0/"}
+    award_suppliers:  {file: com_awa_suppliers.csv, prefix: "suppliers/0/"}
+    contracts:        {file: com_contracts.csv,     prefix: "contracts/0/"}
+    tender_documents: {file: com_ten_documents.csv, prefix: "documents/0/"}
+    contract_documents: {file: com_con_documents.csv, prefix: "documents/0/"}
 
 # ── Fase 1a: descarga masiva ─────────────────────────────────────────────────
 # Se eligen meses COMPLETOS de 2026. Septiembre 2026 se excluye a propósito:
@@ -53,6 +65,8 @@ api:
   page_size: 20                       # "paginateBy" de /api/v1/records
   max_pages: 3                        # tope para la demostración (no queremos bajar todo el SEACE por API)
   request_log: logs/api_requests.jsonl
+  pages_output: data/raw/api_cache/records_api_pages.jsonl   # records de --pages (la validación usa este archivo)
+  ocid_output: data/raw/api_cache/records_api_ocid.jsonl     # records de --ocid
   user_agent: "UP-DataScience-Tarea2/1.0 (proyecto academico)"
 
 # ── Fase 1c: normalización a una fila por ocid ───────────────────────────────
@@ -64,6 +78,29 @@ normalize:
   # Cuando un mismo ocid aparece más de una vez en el archivo principal, nos quedamos
   # con la versión más reciente según esta columna (orden descendente).
   latest_by: date
+  report_max_examples: 50            # cuántos ocid repetidos se listan en el reporte de normalización
+  buyer_role: buyer                  # rol OCDS que identifica al comprador en parties.roles
+  # Columnas de records.csv que se conservan → nombre corto en español.
+  columns:
+    ocid: ocid
+    compiledRelease/date: fecha_compilacion
+    compiledRelease/dataSegmentation/id: segmento_mes
+    compiledRelease/tender/id: tender_id
+    compiledRelease/tender/title: nomenclatura
+    compiledRelease/tender/description: descripcion
+    compiledRelease/tender/procurementMethod: metodo_ocds
+    compiledRelease/tender/procurementMethodDetails: tipo_procedimiento
+    compiledRelease/tender/mainProcurementCategory: categoria
+    compiledRelease/tender/value/amount: monto_referencial
+    compiledRelease/tender/value/currency: moneda
+    compiledRelease/tender/value/amount_PEN: monto_referencial_pen
+    compiledRelease/tender/datePublished: fecha_convocatoria
+    compiledRelease/tender/numberOfTenderers: n_postores_declarado
+    compiledRelease/tender/hasTenderInformationProtectedByLaw: info_protegida_por_ley
+    compiledRelease/planning/budget/amount/amount: presupuesto
+    compiledRelease/buyer/id: comprador_id
+    compiledRelease/buyer/name: comprador_nombre
+  numeric_columns: [monto_referencial, monto_referencial_pen, presupuesto, n_postores_declarado]
 
 # ── Fase 2: validación y territorio ──────────────────────────────────────────
 validation:
@@ -72,6 +109,10 @@ validation:
   report_md: data/outputs/reporte_calidad.md
   report_json: data/outputs/reporte_calidad.json
   flagged_examples_per_rule: 5        # cuántos ocid de ejemplo se listan por regla en el reporte
+  protected_by_law_value: "True"      # valor de info_protegida_por_ley que indica monto reservado por ley
+  # Huellas de encoding roto: UTF-8 leído como Latin-1 (Ã, Â) o carácter de reemplazo (U+FFFD).
+  mojibake_pattern: "Ã|Â|�"
+  mojibake_columns: [descripcion, comprador_nombre, tipo_procedimiento, proveedores]
   # Códigos de documentType permitidos: lista oficial de OCDS 1.1 (codelist documentType).
   # Lo que no esté aquí se marca como "código no declarado" (regla OCP #3).
   ocds_document_types:
@@ -119,3 +160,4 @@ validation:
 
 territory:
   mapping_file: config/departamentos.yaml   # regla explícita de mapeo (departamentos, alias, provincias)
+  expected_departments: 25                  # 24 departamentos + Callao; el script falla si el YAML no tiene 25

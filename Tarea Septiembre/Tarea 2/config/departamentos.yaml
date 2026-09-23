@@ -60,6 +60,12 @@ prefijos_a_quitar:
   - "PROVINCIA "
   - "PROV. "
 
+# Último recurso: extraer el lugar del NOMBRE de la entidad compradora (texto ya limpio).
+# Solo entidades cuyo nombre dice su territorio; el grupo "lugar" se pasa por la misma regla de arriba.
+patrones_nombre_entidad:
+  - "GOBIERNO REGIONAL (?:DE |DEL )?(?:LA REGION |REGION )?(?P<lugar>[A-Z Ñ]+?)(?: SEDE| -|$)"
+  - "MUNICIPALIDAD PROVINCIAL (?:DE |DEL )?(?P<lugar>[A-Z Ñ]+?)(?: -|$)"
+
 # Alias → departamento (escritos ya limpios: sin tildes, en mayúsculas).
 alias:
   LIMA METROPOLITANA: LIMA
