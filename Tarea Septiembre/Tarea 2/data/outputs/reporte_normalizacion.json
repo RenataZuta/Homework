@@ -1,0 +1,86 @@
+{
+  "generado": "2026-09-23T12:48:07-05:00",
+  "meses": [
+    "2026-06",
+    "2026-07",
+    "2026-08"
+  ],
+  "antes": {
+    "records.csv": {
+      "filas": 20452,
+      "ocid_unicos": 20452
+    },
+    "releases.csv": {
+      "filas": 285290,
+      "ocid_unicos": 20452,
+      "releases_por_ocid_promedio": 13.95
+    },
+    "com_parties.csv": {
+      "filas": 192321,
+      "ocid_unicos": 20452
+    },
+    "com_ten_tenderers.csv": {
+      "filas": 171869,
+      "ocid_unicos": 17506
+    },
+    "com_awards.csv": {
+      "filas": 14693,
+      "ocid_unicos": 13965
+    },
+    "com_awa_suppliers.csv": {
+      "filas": 14683,
+      "ocid_unicos": 13962
+    },
+    "com_contracts.csv": {
+      "filas": 9606,
+      "ocid_unicos": 9046
+    }
+  },
+  "despues": {
+    "archivo": "data/processed/procesos.parquet",
+    "filas": 20452,
+    "ocid_unicos": 20452,
+    "columnas": [
+      "ocid",
+      "fecha_compilacion",
+      "segmento_mes",
+      "tender_id",
+      "nomenclatura",
+      "descripcion",
+      "metodo_ocds",
+      "tipo_procedimiento",
+      "categoria",
+      "monto_referencial",
+      "moneda",
+      "monto_referencial_pen",
+      "fecha_convocatoria",
+      "n_postores_declarado",
+      "presupuesto",
+      "comprador_id",
+      "comprador_nombre",
+      "archivo_mes",
+      "n_releases",
+      "fecha_primer_release",
+      "fecha_ultimo_release",
+      "departamento_raw",
+      "provincia_raw",
+      "distrito_raw",
+      "n_postores_filas",
+      "n_postores_unicos",
+      "n_adjudicaciones",
+      "monto_adjudicado",
+      "proveedores",
+      "proveedores_ids",
+      "n_contratos",
+      "monto_contratado",
+      "fecha_primer_contrato"
+    ]
+  },
+  "ocid_repetidos_entre_meses_descartados": 0,
+  "detalle_repetidos": [],
+  "por_mes": {
+    "2026-06": 7313,
+    "2026-07": 6569,
+    "2026-08": 6570
+  }
+}
