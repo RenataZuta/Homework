@@ -18,3 +18,9 @@ data/raw/extracted/
 
 # Logs de texto (verbosos); los .jsonl estructurados sí se versionan.
 logs/*.log
+
+# Índice ChromaDB (Fases 3-5): se regenera con `python src/build_index_radar.py` (idempotente); son
+# archivos binarios grandes y específicos de la máquina. Los reportes de data/outputs/ SÍ se versionan
+# (son pequeños y son la evidencia de las Fases 3-5: recall, barrido de umbral, riesgo).
+data/index/
+.env

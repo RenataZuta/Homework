@@ -13,6 +13,15 @@ paths:
   processed: data/processed
   outputs: data/outputs
   logs: logs
+  # ── Fases 3-5 ──
+  index: data/index                          # índice ChromaDB de descripciones de procesos (se regenera, no se versiona)
+  eval_radar: eval/preguntas_radar.csv
+  eval_radar_resultados: data/outputs/eval_radar_resultados.json
+  umbral_barrido: data/outputs/barrido_umbral_radar.csv
+  llm_calls_log: logs/llm_calls_radar.jsonl
+  pricing: ../Tarea 1/pricing.yaml           # SE REUTILIZA la tabla de precios de la Tarea 1 (mismos modelos, misma fuente y fecha: ver ese archivo)
+  riesgo_json: data/outputs/reporte_riesgo.json
+  riesgo_md: data/outputs/reporte_riesgo.md
 
 # ── Fuente oficial ───────────────────────────────────────────────────────────
 # Patrón encontrado en el portal (endpoint /api/v1/files, que usa la página /descargas):
@@ -161,3 +170,157 @@ validation:
 territory:
   mapping_file: config/departamentos.yaml   # regla explícita de mapeo (departamentos, alias, provincias)
   expected_departments: 25                  # 24 departamentos + Callao; el script falla si el YAML no tiene 25
+  geojson_file: config/peru_departamentos.geojson   # polígonos para el mapa coroplético (Fase 4); fuente y fecha: ver config/FUENTES_GEO.md
+  geojson_key: NOMBDEP                              # propiedad del GeoJSON con el nombre del departamento (coincide con los 25 valores de arriba)
+
+# =============================================================================
+# Fases 3-5 — RAG híbrido sobre procesos de contratación
+#
+# El motor (src/radar_engine/) REUTILIZA de la Tarea 1 (../Tarea 1/src/rag_engine/):
+#   - embeddings (rag_engine.embeddings.*): el MISMO modelo local, mismo factory.
+#   - llm (rag_engine.llm.*): mismos clientes (Gemini/Anthropic), mismo throttle/reintentos,
+#     mismo log de costos y la MISMA tabla de precios (paths.pricing, arriba).
+#   - retrieval.indice (abrir_cliente/crear_o_abrir/nombre_coleccion): son genéricos, no
+#     conocen "documento/página"; el resto de retrieval (semantic.py, versions.py) es
+#     específico de la Tarea 1 (metadatos documento/versión/página) y NO se reutiliza:
+#     aquí los metadatos son ocid/departamento/monto/fecha/categoría/comprador, así que
+#     store.py implementa su propia búsqueda exacta por coseno + filtros de metadatos.
+# La ruta de import está en src/radar_engine/bootstrap_t1.py (una sola función).
+# =============================================================================
+
+embeddings:
+  proveedor: local                    # local | openai | gemini (mismas opciones que la Tarea 1)
+  batch: 32
+  normalizar: true
+  local:
+    modelo: intfloat/multilingual-e5-small   # el MISMO modelo local que la Tarea 1 (docs/modelos_embeddings.md de la Tarea 1)
+    prefijo_consulta: "query: "              # la tarjeta del modelo exige estos prefijos (idéntico a la Tarea 1)
+    prefijo_pasaje: "passage: "
+
+indexacion:
+  coleccion: radar_procesos           # prefijo del nombre de colección en ChromaDB
+  version_esquema: v1                 # cambia si se modifica QUÉ se embebe (ver build_index_radar.py); evita mezclar índices incompatibles
+  lote_upsert: 128
+  campos_texto: [nomenclatura, descripcion]   # columnas concatenadas para formar el texto que se embebe (nunca se chunkea: una descripción cabe en el límite del modelo)
+
+retrieval:
+  top_k: 8
+  umbral_similitud: 0.870             # CALIBRADO 2026-09-23 con eval/preguntas_radar.csv y python -m evaluation.sweep_threshold_radar
+                                       # (ver data/outputs/barrido_umbral_radar.csv). NO transfiere el 0.835 de la Tarea 1: con ese valor,
+                                       # 4/5 preguntas fuera de dominio se respondían indebidamente (sus similitudes van de 0.817 a 0.862,
+                                       # casi todas por ENCIMA de 0.835). A 0.870: 0 respuestas indebidas y 5/5 abstenciones correctas fuera
+                                       # de dominio, a costa de 2/15 preguntas in_domain que pasan a abstenerse (13/15 respondidas). Ver README "Fase 3".
+  busqueda: exacta                    # exacta = coseno contra TODOS los candidatos que pasan los filtros (determinista); ver Tarea 1 para por qué
+
+# ── Filtros numéricos/territoriales extraídos de la pregunta en lenguaje natural ──
+# "obras de agua y saneamiento en Cusco por encima de un millón de soles" tiene DOS tipos de
+# condición: territorial/numérica (Cusco, > S/ 1 000 000) y semántica (agua y saneamiento).
+# Las primeras se aplican como filtro exacto de metadatos (nunca se dejan a la similitud de
+# embeddings: un embedding no garantiza "mayor que", ver README "Fase 3, Hybrid RAG"); la
+# segunda es la que se compara por coseno. filtros.py hace esta extracción con reglas
+# explícitas (no con el LLM: así es gratis, rápida y se puede probar con pytest).
+filtros_nl:
+  # palabra encontrada en la pregunta -> categoria OCDS (mainProcurementCategory). ORDEN IMPORTA: se busca
+  # "services" y "works" ANTES que "goods" a propósito. "goods" tiene las palabras más genéricas (equipo,
+  # material...) y esas mismas palabras aparecen todo el tiempo DENTRO de descripciones de servicios u obras
+  # ("servicio de alquiler de EQUIPOS", "obra con adquisición de MATERIALES"); si "goods" se revisara primero,
+  # esas preguntas se clasificarían mal y se filtrarían contra la categoría equivocada (se detectó con
+  # eval/preguntas_radar.csv: la pregunta r05, sobre un SERVICIO de alquiler de laptops, se filtraba como
+  # "goods" por la palabra "equipos" y el proceso correcto quedaba fuera de los candidatos).
+  categorias:
+    services: [servicio, servicios, consultoria, consultoría, mantenimiento, limpieza, vigilancia,
+               supervision, supervisión, capacitacion, capacitación, transporte, alquiler]
+    works: [obra, obras, construccion, construcción, mejoramiento, ampliacion, ampliación,
+            rehabilitacion, rehabilitación, infraestructura, pista, pistas, carretera, puente, puentes,
+            saneamiento, pavimentacion, pavimentación]
+    goods: [bien, bienes, producto, productos, equipo, equipos, suministro, suministros,
+            uniforme, uniformes, material, materiales, mobiliario, insumo, insumos, medicamento, medicamentos]
+  monto_mayor: ["mayor a", "mayor que", "superior a", "por encima de", "más de", "arriba de"]
+  # "desde" queda fuera a propósito: es ambiguo ("desde 2020" es una fecha, no un monto) y ya sobran frases
+  # inequívocas arriba; incluirlo generaría falsos positivos de monto a partir de años.
+  monto_menor: ["menor a", "menor que", "inferior a", "por debajo de", "menos de", "hasta"]
+  unidades_monto:                     # multiplicador para "un millón", "500 mil", etc.
+    millon: 1000000
+    millones: 1000000
+    mil: 1000
+    miles: 1000
+
+llm:
+  provider: gemini                    # gemini | anthropic (mismas opciones y mismos .env que la Tarea 1)
+  nivel: gratuito
+  max_tokens: 1024
+  temperatura: 0.0
+  timeout_segundos: 60
+  limites:
+    rpm: 10
+    reintentos: 4
+    espera_inicial_s: 4
+    factor_espera: 2
+    espera_max_s: 60
+    jitter: 0.25
+  proveedores:
+    gemini:
+      modelo: gemini-3.5-flash-lite
+      env_clave: GEMINI_API_KEY
+      url_base: https://generativelanguage.googleapis.com/v1beta
+      campo_esquema: responseJsonSchema
+      temperatura: null
+      thinking_level: null
+      thinking_budget: null
+    anthropic:
+      modelo: claude-haiku-4-5-20251001
+      env_clave: ANTHROPIC_API_KEY
+
+prompts:
+  sistema: |
+    Eres un asistente que ayuda a una micro o pequeña empresa peruana a entender QUÉ está
+    comprando el Estado, usando ÚNICAMENTE los procesos de contratación recuperados (SEACE V3.0,
+    jun-ago 2026).
+
+    REGLAS OBLIGATORIAS
+    1. Responde SOLO con los procesos del CONTEXTO. No inventes procesos, montos ni compradores
+       que no estén ahí.
+    2. Cita el ocid de cada proceso que uses, con el formato [ocid: XXXX].
+    3. Si se aplicaron filtros (departamento, monto, fecha, categoría), respeta esos límites:
+       nunca menciones un proceso que el propio contexto marque fuera de ellos.
+    4. Si el contexto no alcanza para responder con seguridad (pocos procesos, ninguno relevante,
+       o la pregunta pide un dato que el contexto no trae), indica contexto_suficiente = false y
+       NO inventes una respuesta.
+    5. Los montos son referenciales en soles (PEN); acláralo si la pregunta usa otra moneda.
+    6. Responde en español claro, apto para el dueño de una micro o pequeña empresa.
+  usuario: |
+    FILTROS APLICADOS
+    {filtros}
+
+    PROCESOS RECUPERADOS
+    {contexto}
+
+    PREGUNTA
+    {pregunta}
+  herramienta_nombre: responder_con_citas_ocid
+  herramienta_descripcion: >
+    Entrega la respuesta a la pregunta usando solo los procesos del contexto, citando el ocid
+    de cada uno en que se apoya, e indica si el contexto fue suficiente.
+  etiqueta_proceso: "[ocid: {ocid} | {comprador} | {departamento} | S/ {monto} | {fecha} | {categoria}]"
+  herramienta_campos:
+    respuesta: "Respuesta a la pregunta, basada solo en el contexto, citando [ocid: XXXX] en cada afirmación."
+    citas: "El ocid de cada proceso en que se apoya la respuesta."
+    contexto_suficiente: "false si el contexto NO alcanza para responder con seguridad; true en caso contrario."
+
+mensajes:
+  abstencion: >
+    No encontré procesos de contratación suficientemente parecidos a tu pregunta para responder
+    con confianza. Puede que el dato que buscas no esté en los meses indexados (jun-ago 2026) o
+    que necesites otros filtros (departamento, monto, categoría).
+  abstencion_sin_candidatos: >
+    Ningún proceso de los meses indexados cumple los filtros indicados (departamento, monto,
+    fecha o categoría). Prueba ampliando el rango.
+  error_generico: "Ocurrió un error al generar la respuesta. Intenta de nuevo en un momento."
+  indice_faltante: "Falta el índice en {ruta}. Constrúyelo con: python src/build_index_radar.py"
+
+risk:
+  min_procesos_adjudicados: 5         # mínimo de procesos adjudicados para entrar en el ranking (evita que 1/1 = 100% domine la tabla); justificado en README Fase 5
+  top_n: 10
+
+eval:
+  ks: [1, 3, 5]

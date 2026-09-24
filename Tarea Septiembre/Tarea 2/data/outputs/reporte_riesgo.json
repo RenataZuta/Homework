@@ -1,0 +1,260 @@
+{
+  "generado": "2026-09-23T18:54:25-05:00",
+  "aviso": "Una proporción alta de adjudicaciones con un solo postor es una SEÑAL PARA REVISAR, no una prueba de irregularidad: puede deberse a un mercado con pocos proveedores, a montos pequeños poco atractivos, o a procesos perfectamente correctos. No se publican nombres de personas naturales.",
+  "procesos_adjudicados": 13965,
+  "con_un_solo_postor": 1791,
+  "share_global": 0.1282,
+  "min_procesos_adjudicados_para_ranking": 5,
+  "top_n": 10,
+  "por_departamento": [
+    {
+      "departamento": "TUMBES",
+      "procesos_adjudicados": 122,
+      "postor_unico": 44,
+      "monto_adjudicado_total": 76041917.04,
+      "share_postor_unico": 0.3607
+    },
+    {
+      "departamento": "LIMA",
+      "procesos_adjudicados": 3929,
+      "postor_unico": 1169,
+      "monto_adjudicado_total": 4184021873.3,
+      "share_postor_unico": 0.2975
+    },
+    {
+      "departamento": "AMAZONAS",
+      "procesos_adjudicados": 221,
+      "postor_unico": 35,
+      "monto_adjudicado_total": 178999272.73,
+      "share_postor_unico": 0.1584
+    },
+    {
+      "departamento": "AREQUIPA",
+      "procesos_adjudicados": 557,
+      "postor_unico": 79,
+      "monto_adjudicado_total": 409476086.65,
+      "share_postor_unico": 0.1418
+    },
+    {
+      "departamento": "PIURA",
+      "procesos_adjudicados": 409,
+      "postor_unico": 39,
+      "monto_adjudicado_total": 531677378.90000004,
+      "share_postor_unico": 0.0954
+    },
+    {
+      "departamento": "CALLAO",
+      "procesos_adjudicados": 221,
+      "postor_unico": 21,
+      "monto_adjudicado_total": 224719930.76000002,
+      "share_postor_unico": 0.095
+    },
+    {
+      "departamento": "LA LIBERTAD",
+      "procesos_adjudicados": 493,
+      "postor_unico": 46,
+      "monto_adjudicado_total": 508625668.94,
+      "share_postor_unico": 0.0933
+    },
+    {
+      "departamento": "LORETO",
+      "procesos_adjudicados": 338,
+      "postor_unico": 31,
+      "monto_adjudicado_total": 282466211.98,
+      "share_postor_unico": 0.0917
+    },
+    {
+      "departamento": "LAMBAYEQUE",
+      "procesos_adjudicados": 277,
+      "postor_unico": 25,
+      "monto_adjudicado_total": 189124201.9,
+      "share_postor_unico": 0.0903
+    },
+    {
+      "departamento": "AYACUCHO",
+      "procesos_adjudicados": 443,
+      "postor_unico": 33,
+      "monto_adjudicado_total": 300509679.66,
+      "share_postor_unico": 0.0745
+    },
+    {
+      "departamento": "SAN MARTIN",
+      "procesos_adjudicados": 247,
+      "postor_unico": 16,
+      "monto_adjudicado_total": 168684698.93,
+      "share_postor_unico": 0.0648
+    },
+    {
+      "departamento": "MADRE DE DIOS",
+      "procesos_adjudicados": 155,
+      "postor_unico": 9,
+      "monto_adjudicado_total": 52539021.16,
+      "share_postor_unico": 0.0581
+    },
+    {
+      "departamento": "CAJAMARCA",
+      "procesos_adjudicados": 607,
+      "postor_unico": 35,
+      "monto_adjudicado_total": 962120057.48,
+      "share_postor_unico": 0.0577
+    },
+    {
+      "departamento": "PASCO",
+      "procesos_adjudicados": 177,
+      "postor_unico": 10,
+      "monto_adjudicado_total": 146956086.19,
+      "share_postor_unico": 0.0565
+    },
+    {
+      "departamento": "ICA",
+      "procesos_adjudicados": 239,
+      "postor_unico": 13,
+      "monto_adjudicado_total": 448083572.34,
+      "share_postor_unico": 0.0544
+    },
+    {
+      "departamento": "JUNIN",
+      "procesos_adjudicados": 639,
+      "postor_unico": 30,
+      "monto_adjudicado_total": 860068411.85,
+      "share_postor_unico": 0.0469
+    },
+    {
+      "departamento": "MOQUEGUA",
+      "procesos_adjudicados": 263,
+      "postor_unico": 12,
+      "monto_adjudicado_total": 83705154.32000001,
+      "share_postor_unico": 0.0456
+    },
+    {
+      "departamento": "HUANUCO",
+      "procesos_adjudicados": 452,
+      "postor_unico": 19,
+      "monto_adjudicado_total": 509255858.1,
+      "share_postor_unico": 0.042
+    },
+    {
+      "departamento": "ANCASH",
+      "procesos_adjudicados": 912,
+      "postor_unico": 37,
+      "monto_adjudicado_total": 597776425.75,
+      "share_postor_unico": 0.0406
+    },
+    {
+      "departamento": "TACNA",
+      "procesos_adjudicados": 233,
+      "postor_unico": 9,
+      "monto_adjudicado_total": 136321796.99,
+      "share_postor_unico": 0.0386
+    },
+    {
+      "departamento": "HUANCAVELICA",
+      "procesos_adjudicados": 278,
+      "postor_unico": 10,
+      "monto_adjudicado_total": 173812510.67,
+      "share_postor_unico": 0.036
+    },
+    {
+      "departamento": "UCAYALI",
+      "procesos_adjudicados": 282,
+      "postor_unico": 10,
+      "monto_adjudicado_total": 355327231.23,
+      "share_postor_unico": 0.0355
+    },
+    {
+      "departamento": "PUNO",
+      "procesos_adjudicados": 771,
+      "postor_unico": 25,
+      "monto_adjudicado_total": 329900780.05,
+      "share_postor_unico": 0.0324
+    },
+    {
+      "departamento": "CUSCO",
+      "procesos_adjudicados": 1099,
+      "postor_unico": 25,
+      "monto_adjudicado_total": 497477629.29,
+      "share_postor_unico": 0.0227
+    },
+    {
+      "departamento": "APURIMAC",
+      "procesos_adjudicados": 601,
+      "postor_unico": 9,
+      "monto_adjudicado_total": 226833629.88,
+      "share_postor_unico": 0.015
+    }
+  ],
+  "top_compradores": [
+    {
+      "comprador_nombre": "UNIDAD EJECUTORA 022 \\\"PROYECTO DE TRANSFORMACIÓN DIGITAL CON EQUIDAD - PROTDE",
+      "procesos_adjudicados": 5,
+      "postor_unico": 5,
+      "monto_adjudicado_total": 141207.14,
+      "share_postor_unico": 1.0
+    },
+    {
+      "comprador_nombre": "UNIDAD EJECUTORA 002 CONSERVACION DE BOSQUES",
+      "procesos_adjudicados": 14,
+      "postor_unico": 14,
+      "monto_adjudicado_total": 1720337.25,
+      "share_postor_unico": 1.0
+    },
+    {
+      "comprador_nombre": "MINISTERIO DE JUSTICIA Y DERECHOS HUMANOS",
+      "procesos_adjudicados": 7,
+      "postor_unico": 7,
+      "monto_adjudicado_total": 17581735.64,
+      "share_postor_unico": 1.0
+    },
+    {
+      "comprador_nombre": "MINAG - PROYECTO ESPECIAL BINACIONAL PUYANGO - TUMBES",
+      "procesos_adjudicados": 6,
+      "postor_unico": 6,
+      "monto_adjudicado_total": 1406784.02,
+      "share_postor_unico": 1.0
+    },
+    {
+      "comprador_nombre": "FOMENTO Y GESTIÓN SOSTENIBLE DE LA PRODUCCIÓN FORESTAL EN EL PERÚ",
+      "procesos_adjudicados": 22,
+      "postor_unico": 22,
+      "monto_adjudicado_total": 890340.26,
+      "share_postor_unico": 1.0
+    },
+    {
+      "comprador_nombre": "GOBIERNO REGIONAL DE ANCASH - DIRECCION DE RED DE SALUD PACIFICO NORTE",
+      "procesos_adjudicados": 11,
+      "postor_unico": 11,
+      "monto_adjudicado_total": 773201.0,
+      "share_postor_unico": 1.0
+    },
+    {
+      "comprador_nombre": "ORGANISMO DE EVALUACION Y FISCALIZACION AMBIENTAL",
+      "procesos_adjudicados": 175,
+      "postor_unico": 166,
+      "monto_adjudicado_total": 16503777.44,
+      "share_postor_unico": 0.9486
+    },
+    {
+      "comprador_nombre": "PROGRAMA SUBSECTORIAL DE IRRIGACIONES - PSI",
+      "procesos_adjudicados": 31,
+      "postor_unico": 27,
+      "monto_adjudicado_total": 2580092.62,
+      "share_postor_unico": 0.871
+    },
+    {
+      "comprador_nombre": "MINISTERIO DE RELACIONES EXTERIORES",
+      "procesos_adjudicados": 56,
+      "postor_unico": 47,
+      "monto_adjudicado_total": 4793446.54,
+      "share_postor_unico": 0.8393
+    },
+    {
+      "comprador_nombre": "UNIDAD EJECUTORA 012 - OFICINA GENERAL DE INVERSIONES Y PROYECTOS",
+      "procesos_adjudicados": 6,
+      "postor_unico": 5,
+      "monto_adjudicado_total": 443800.0,
+      "share_postor_unico": 0.8333
+    }
+  ],
+  "compradores_con_muestra_suficiente": 765,
+  "compradores_totales": 2079
+}

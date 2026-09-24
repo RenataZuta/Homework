@@ -5,4 +5,4 @@ En el siguiente repositorio se adjuntará todos los tareas que se realizarán du
 - **`Tarea Agosto/`** — tareas de agosto (`Hw1_2026_2/`: Tareas 1-3 del curso).
 - **`Tarea Septiembre/`** — tareas de septiembre.
   - **`Tarea 1/`** — asistente RAG sobre contrataciones públicas del Perú (issue [d2cml-ai/Data-Science-Python#187](https://github.com/d2cml-ai/Data-Science-Python/issues/187)). Ver [`Tarea Septiembre/Tarea 1/README.md`](Tarea%20Septiembre/Tarea%201/README.md).
-  - **`Tarea 2/`** — pendiente; reutilizará `rag_engine` de la Tarea 1.
+  - **`Tarea 2/`** — radar de contrataciones públicas (RAG híbrido + dashboard) sobre datos abiertos de OECE; reutiliza `rag_engine` de la Tarea 1. Ver [`Tarea Septiembre/Tarea 2/README.md`](Tarea%20Septiembre/Tarea%202/README.md).
