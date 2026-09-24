@@ -1,0 +1,28 @@
+# Dependencias de la Tarea 2. Probado con Python 3.12 en Windows 11.
+# Fases 1-2 (2026-09-23) + Fases 3-5 (2026-09-23).
+#
+# En Windows instala PyTorch para CPU ANTES que el resto (evita descargar la versión con CUDA, ~2 GB),
+# igual que en la Tarea 1 (sentence-transformers lo necesita):
+#   pip install torch --index-url https://download.pytorch.org/whl/cpu
+
+# Fases 1-2: datos
+PyYAML==6.0.3         # leer config.yaml
+requests==2.34.2      # descargas y API
+pandas==3.0.6         # tablas
+pyarrow==25.0.1       # formato Parquet
+
+# Fases 3-5: RAG híbrido, evaluación y dashboard
+python-dotenv==1.2.3   # leer .env (motor reutilizado de la Tarea 1)
+numpy==2.5.3
+sentence-transformers==6.1.0   # embeddings locales (mismo modelo que la Tarea 1: intfloat/multilingual-e5-small)
+chromadb==1.5.9                # almacén persistente de vectores + metadatos (departamento, monto, fecha, categoría, ocid)
+requests==2.34.2               # llamadas REST a la API de Gemini (ya está arriba; se repite para que quede explícito para el motor)
+anthropic==1.7.0                # cliente de Claude: proveedor alternativo conservado (llm.provider: anthropic)
+tzdata==2026.4                  # zonas horarias en Windows (precios por hora, reutiliza pricing.yaml de la Tarea 1)
+streamlit==1.64.0               # dashboard (Fase 4)
+plotly==6.2.0                   # mapa coroplético con tooltips y leyenda (Fase 4)
+seaborn==0.13.2                 # distribución de montos/procesos (Fase 4)
+matplotlib==3.11.2              # backend de seaborn
+
+# Pruebas
+pytest==8.4.2

@@ -1,0 +1,115 @@
+# =============================================================================
+# Regla explícita de mapeo territorial → 25 departamentos del Perú (24 + Callao)
+#
+# Orden de la regla (src/territory_mapping.py):
+#   0. Limpieza: MAYÚSCULAS, sin tildes (JUNÍN → JUNIN), Ñ se conserva, espacios colapsados,
+#      se quitan prefijos como "DEPARTAMENTO DE", "REGION", "PROVINCIA DE".
+#   1. ¿Es exactamente un departamento (o un alias de uno)?  → ese departamento.
+#   2. ¿Es una provincia?                                     → el departamento al que pertenece.
+#      (así se corrige una provincia mal puesta en el campo "departamento", p. ej. "HUAURA" → LIMA)
+#   3. Nada coincide                                          → NO_UBICADO (se reporta, no se inventa).
+#
+# El paso 1 va ANTES que el 2 a propósito: "UCAYALI" es un departamento y también una provincia
+# de LORETO; cuando alguien escribe "UCAYALI" como departamento, se respeta el departamento.
+#
+# Nombres de "Lima": SEACE usa un solo LIMA; INEI a veces separa "Lima Metropolitana" y
+# "Lima Provincias/Región Lima". Para tener 25 departamentos, ambos se agrupan en LIMA.
+# Fuente de provincias: INEI, división político-administrativa (196 provincias).
+# =============================================================================
+
+departamentos:
+  - AMAZONAS
+  - ANCASH
+  - APURIMAC
+  - AREQUIPA
+  - AYACUCHO
+  - CAJAMARCA
+  - CALLAO
+  - CUSCO
+  - HUANCAVELICA
+  - HUANUCO
+  - ICA
+  - JUNIN
+  - LA LIBERTAD
+  - LAMBAYEQUE
+  - LIMA
+  - LORETO
+  - MADRE DE DIOS
+  - MOQUEGUA
+  - PASCO
+  - PIURA
+  - PUNO
+  - SAN MARTIN
+  - TACNA
+  - TUMBES
+  - UCAYALI
+
+# Prefijos que se quitan antes de comparar (ya sin tildes y en mayúsculas).
+prefijos_a_quitar:
+  - "DEPARTAMENTO DE "
+  - "DEPARTAMENTO "
+  - "DPTO. "
+  - "DPTO "
+  - "GOBIERNO REGIONAL DE "
+  - "GOBIERNO REGIONAL "
+  - "REGION "
+  - "PROVINCIA CONSTITUCIONAL DEL "
+  - "PROVINCIA CONSTITUCIONAL DE "
+  - "PROV. CONST. DEL "
+  - "PROVINCIA DE "
+  - "PROVINCIA "
+  - "PROV. "
+
+# Último recurso: extraer el lugar del NOMBRE de la entidad compradora (texto ya limpio).
+# Solo entidades cuyo nombre dice su territorio; el grupo "lugar" se pasa por la misma regla de arriba.
+patrones_nombre_entidad:
+  - "GOBIERNO REGIONAL (?:DE |DEL )?(?:LA REGION |REGION )?(?P<lugar>[A-Z Ñ]+?)(?: SEDE| -|$)"
+  - "MUNICIPALIDAD PROVINCIAL (?:DE |DEL )?(?P<lugar>[A-Z Ñ]+?)(?: -|$)"
+
+# Alias → departamento (escritos ya limpios: sin tildes, en mayúsculas).
+alias:
+  LIMA METROPOLITANA: LIMA
+  LIMA PROVINCIAS: LIMA
+  LIMA REGION: LIMA
+  LIMA CALLAO: CALLAO
+  CUZCO: CUSCO
+  MADRE DIOS: MADRE DE DIOS
+  LIBERTAD: LA LIBERTAD
+  EL CALLAO: CALLAO
+
+# Provincia → departamento (196 provincias INEI + 2 grafías alternativas vistas en SEACE: NAZCA, ANTONIO RAYMONDI).
+provincias:
+  AMAZONAS: [CHACHAPOYAS, BAGUA, BONGARA, CONDORCANQUI, LUYA, RODRIGUEZ DE MENDOZA, UTCUBAMBA]
+  ANCASH: [HUARAZ, AIJA, ANTONIO RAIMONDI, ANTONIO RAYMONDI, ASUNCION, BOLOGNESI, CARHUAZ, CARLOS FERMIN FITZCARRALD, CASMA,
+           CORONGO, HUARI, HUARMEY, HUAYLAS, MARISCAL LUZURIAGA, OCROS, PALLASCA, POMABAMBA, RECUAY, SANTA,
+           SIHUAS, YUNGAY]
+  APURIMAC: [ABANCAY, ANDAHUAYLAS, ANTABAMBA, AYMARAES, COTABAMBAS, CHINCHEROS, GRAU]
+  AREQUIPA: [AREQUIPA, CAMANA, CARAVELI, CASTILLA, CAYLLOMA, CONDESUYOS, ISLAY, LA UNION]
+  AYACUCHO: [HUAMANGA, CANGALLO, HUANCA SANCOS, HUANTA, LA MAR, LUCANAS, PARINACOCHAS, PAUCAR DEL SARA SARA,
+             SUCRE, VICTOR FAJARDO, VILCAS HUAMAN]
+  CAJAMARCA: [CAJAMARCA, CAJABAMBA, CELENDIN, CHOTA, CONTUMAZA, CUTERVO, HUALGAYOC, JAEN, SAN IGNACIO,
+              SAN MARCOS, SAN MIGUEL, SAN PABLO, SANTA CRUZ]
+  CALLAO: [CALLAO]
+  CUSCO: [CUSCO, ACOMAYO, ANTA, CALCA, CANAS, CANCHIS, CHUMBIVILCAS, ESPINAR, LA CONVENCION, PARURO,
+          PAUCARTAMBO, QUISPICANCHI, URUBAMBA]
+  HUANCAVELICA: [HUANCAVELICA, ACOBAMBA, ANGARAES, CASTROVIRREYNA, CHURCAMPA, HUAYTARA, TAYACAJA]
+  HUANUCO: [HUANUCO, AMBO, DOS DE MAYO, HUACAYBAMBA, HUAMALIES, LEONCIO PRADO, MARAÑON, PACHITEA,
+            PUERTO INCA, LAURICOCHA, YAROWILCA]
+  ICA: [ICA, CHINCHA, NASCA, NAZCA, PALPA, PISCO]          # NAZCA: grafía antigua de NASCA
+  JUNIN: [HUANCAYO, CONCEPCION, CHANCHAMAYO, JAUJA, JUNIN, SATIPO, TARMA, YAULI, CHUPACA]
+  LA LIBERTAD: [TRUJILLO, ASCOPE, BOLIVAR, CHEPEN, JULCAN, OTUZCO, PACASMAYO, PATAZ, SANCHEZ CARRION,
+                SANTIAGO DE CHUCO, GRAN CHIMU, VIRU]
+  LAMBAYEQUE: [CHICLAYO, FERREÑAFE, LAMBAYEQUE]
+  LIMA: [LIMA, BARRANCA, CAJATAMBO, CANTA, CAÑETE, HUARAL, HUAROCHIRI, HUAURA, OYON, YAUYOS]
+  LORETO: [MAYNAS, ALTO AMAZONAS, LORETO, MARISCAL RAMON CASTILLA, REQUENA, UCAYALI, DATEM DEL MARAÑON, PUTUMAYO]
+  MADRE DE DIOS: [TAMBOPATA, MANU, TAHUAMANU]
+  MOQUEGUA: [MARISCAL NIETO, GENERAL SANCHEZ CERRO, ILO]
+  PASCO: [PASCO, DANIEL ALCIDES CARRION, OXAPAMPA]
+  PIURA: [PIURA, AYABACA, HUANCABAMBA, MORROPON, PAITA, SULLANA, TALARA, SECHURA]
+  PUNO: [PUNO, AZANGARO, CARABAYA, CHUCUITO, EL COLLAO, HUANCANE, LAMPA, MELGAR, MOHO, SAN ANTONIO DE PUTINA,
+         SAN ROMAN, SANDIA, YUNGUYO]
+  SAN MARTIN: [MOYOBAMBA, BELLAVISTA, EL DORADO, HUALLAGA, LAMAS, MARISCAL CACERES, PICOTA, RIOJA, SAN MARTIN,
+               TOCACHE]
+  TACNA: [TACNA, CANDARAVE, JORGE BASADRE, TARATA]
+  TUMBES: [TUMBES, CONTRALMIRANTE VILLAR, ZARUMILLA]
+  UCAYALI: [CORONEL PORTILLO, ATALAYA, PADRE ABAD, PURUS]
