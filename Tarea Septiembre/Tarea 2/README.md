@@ -138,6 +138,85 @@ tenderers, documents…). La API de datos es `/api/v1/records` (paginada con `li
 | Textos con mojibake (`BÂSICA`, `MUÃ¿OZ`) | 3 procesos |
 | ocid duplicado, sin monto, sin descripción, no ubicado, tildes | 0 |
 
+## Pipeline completo (Fases 1-5)
+
+Vista de punta a punta: de la descarga en SEACE a la respuesta en el dashboard. Las líneas punteadas son
+entradas secundarias. El detalle del motor de consulta (cada tipo de abstención) está en el diagrama de
+"Arquitectura (Fases 3-5)", más arriba.
+
+```mermaid
+flowchart TB
+    SEACE[("Portal OECE · SEACE V3.0<br/>datos abiertos OCDS")]
+
+    subgraph F1["Fase 1 · Adquisición"]
+        RAW[("data/raw/<br/>ZIP mensuales jun-jul-ago 2026<br/>22 CSV por mes")]
+        APIC[("data/raw/api_cache/<br/>muestra de /api/v1/records")]
+        P1[("procesos.parquet<br/>285.290 releases → 20.452 filas<br/>1 fila por ocid")]
+        RAW -->|"normalize_records.py<br/>base = records.csv · tablas com_* agregadas"| P1
+    end
+
+    SEACE -->|"acquisition_bulk.py<br/>no re-descarga · verifica tamaño + CRC"| RAW
+    SEACE -->|"acquisition_api.py<br/>1 pet/s · reintentos · caché"| APIC
+
+    subgraph F2["Fase 2 · Validación y territorio"]
+        TERR["territory_mapping.py + config/departamentos.yaml<br/>departamento → alias → provincia → nombre entidad → NO_UBICADO"]
+        VAL["validation.py · 9 reglas, marcar y nunca borrar<br/>R1 ocid duplicado · R2 monto faltante/cero · R3 sin descripción<br/>R4-R7 las 4 reglas OCP · R8 territorio · R9 tildes/encoding"]
+        PV[("procesos_validados.parquet<br/>25 departamentos + columnas flag_*")]
+        RC["reporte_calidad.md / .json<br/>una fila por regla"]
+        TERR --> VAL
+        VAL --> PV
+        VAL --> RC
+    end
+
+    P1 --> VAL
+    RAW -.->|"postores, contratos, documentos"| VAL
+    APIC -.->|"estado de contratos (OCP #2)"| VAL
+
+    subgraph F3["Fase 3 · Índice y evaluación"]
+        IDX[("Índice ChromaDB · data/index/<br/>1 ocid = 1 entrada + metadatos")]
+        PREGS["eval/preguntas_radar.csv<br/>15 dentro + 5 fuera de dominio"]
+        EVAL["run_eval_radar · sweep_threshold_radar<br/>Recall@k y umbral calibrado 0.870"]
+        EVO["eval_radar_resultados.json<br/>barrido_umbral_radar.csv"]
+        PREGS --> EVAL
+        IDX --> EVAL
+        EVAL --> EVO
+    end
+
+    PV -->|"build_index_radar.py<br/>idempotente · embeddings e5-small de la Tarea 1"| IDX
+
+    subgraph CONS["Consulta · radar_engine.consultar()"]
+        PREG["Pregunta + filtros del sidebar"]
+        FIL["filtros.py<br/>departamento, categoría, monto por reglas (sin LLM)"]
+        SEM["store.py<br/>filtra metadatos y luego coseno exacto"]
+        GATE{"¿hay candidatos y<br/>similitud ≥ umbral?"}
+        ABS["Abstención · costo 0"]
+        LLM["Gemini 3.5 Flash-Lite<br/>rag_engine reutilizado de la Tarea 1"]
+        RESP["Respuesta citando cada ocid<br/>(o abstención si el contexto no alcanza)"]
+        PREG --> FIL --> SEM --> GATE
+        GATE -- no --> ABS
+        GATE -- sí --> LLM --> RESP
+    end
+
+    IDX --> SEM
+
+    subgraph F5["Fase 5 · Riesgo"]
+        RR["reporte_riesgo.md / .json<br/>% de adjudicaciones con un solo postor"]
+    end
+
+    PV -->|"risk_indicator.py"| RR
+
+    subgraph F4["Fase 4 · Dashboard"]
+        DASH["app.py (Streamlit)<br/>Panorama · Consulta · Riesgo · Calidad<br/>solo lee: nunca descarga ni reindexa"]
+    end
+
+    PV --> DASH
+    RC --> DASH
+    RR --> DASH
+    EVO --> DASH
+    DASH -->|"pestaña Consulta"| PREG
+    RESP --> DASH
+```
+
 ## Decisiones de diseño (y por qué)
 
 **Adquisición**
