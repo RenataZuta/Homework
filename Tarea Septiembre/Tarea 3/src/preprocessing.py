@@ -27,7 +27,7 @@ import pandas as pd
 
 from src import utils as U
 from src.ocr_extraction import lines_to_text
-from src.ocr_quality import error_rates
+from src.ocr_quality import error_rates, years_in
 
 MASK = "[MASKED]"
 
@@ -120,12 +120,17 @@ def rebuild_text(lines: list[dict], threshold: float) -> str:
     return lines_to_text(kept)
 
 
-GLUED_RANGE_RE = re.compile(r"(?<!\d)((?:19|20)\d{2}\.\d{2})((?:19|20)\d{2}\.\d{2})(?!\d)")
+_DATE = r"(?:19|20)\d{2}\.\d{2}"
+DATE_RANGE_RE = re.compile(rf"(?<!\d)({_DATE})\s*[-–—]?\s*({_DATE})(?!\d)")
+TRUNCATED_RANGE_RE = re.compile(rf"(?<!\d)({_DATE})\s*[-–—]\s*(?:19|20)\d{{2}}\.?(?!\.?\d)")
 
 
-def repair_date_ranges(text: str) -> str:
-    """El OCR suele perder el guion largo de «2020.11–2023.01» y deja «2020.112023.01»: se reinserta, sin alterar fechas."""
-    return GLUED_RANGE_RE.sub(r"\1–\2", text)
+def normalize_date_ranges(text: str) -> str:
+    """Unifica «2020.11-2023.01», «2020.11—2023.01» y el pegado «2020.112023.01» como «2020.11–2023.01».
+
+    Solo toca el separador entre las dos fechas; ninguna fecha se elimina ni se modifica.
+    """
+    return DATE_RANGE_RE.sub(r"\1–\2", text)
 
 
 def fix_broken_lines(text: str) -> str:
@@ -145,14 +150,26 @@ def fix_broken_lines(text: str) -> str:
     return re.sub(r"[ \t]{2,}", " ", "\n".join(out))
 
 
+SECTION_RE = re.compile(r"^\s*(?:work history|experience|work experience|professional experience|employment history|"
+                        r"education|summary|profile|objective|skills)\s*:?\s*$", re.I)
+
+
+def drop_header_block(lines: list[str]) -> list[str]:
+    """Si la primera sección aparece en las primeras 4 líneas, lo anterior es la cabecera (nombre, ubicación,
+    contacto) y se elimina completo. En PopResume siempre es: NOMBRE / «ST, USA | teléfono | email»."""
+    for i, ln in enumerate(lines[:5]):
+        if SECTION_RE.match(ln):
+            return lines[i:]
+    return lines
+
+
 def remove_pii(text: str) -> str:
-    lines = [ln for ln in text.split("\n")]
-    # nombre: solo se evalúa la primera línea no vacía
-    for i, ln in enumerate(lines):
-        if ln.strip():
-            if looks_like_name(ln.strip()):
-                lines[i] = ""
-            break
+    raw = [ln for ln in text.split("\n") if ln.strip()]
+    lines = drop_header_block(raw)
+    if len(lines) == len(raw):  # no se encontró bloque de cabecera: heurístico de nombre en la 1.ª línea
+        first = next((i for i, ln in enumerate(lines) if ln.strip()), None)
+        if first is not None and not SECTION_RE.match(lines[first]) and looks_like_name(lines[first].strip()):
+            lines[first] = ""
     # línea de contacto («PA, USA | +1-356-988-1156 | katrina.kim@example.com»): se elimina completa
     lines = ["" if (EMAIL_RE.search(ln) or PHONE_RE.search(ln)) else ln for ln in lines]
     text = "\n".join(lines)
@@ -187,7 +204,7 @@ RESIDUAL_RE = re.compile(rf"{NUM}\s*\+?\s*{YRS}", re.I)
 
 def clean_one(lines: list[dict], threshold: float = CONF_THRESHOLD, counter: Counter | None = None) -> tuple[str, bool]:
     text = rebuild_text(lines, threshold)
-    text = repair_date_ranges(fix_broken_lines(text))
+    text = normalize_date_ranges(fix_broken_lines(text))
     text = remove_pii(text)
     masked = mask_leaks(text, counter)
     return tidy(masked), MASK in masked
@@ -211,7 +228,7 @@ def sample_read(n: int, seed: int) -> None:
         print(U.read_json(U.OCR_DIR / f"{cv_id}.json")["full_text"])
 
 
-def analyze_threshold(n: int = 300, thresholds=(0.0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8)) -> pd.DataFrame:
+def analyze_threshold(n: int = 300, thresholds=(0.0, 0.5, 0.8, 0.9, 0.95, 0.97, 0.98, 0.99)) -> pd.DataFrame:
     """Para cada umbral: % de líneas descartadas, % de las descartadas que SÍ eran correctas y CER resultante."""
     ref = pd.read_csv(U.REFERENCE_TEXTS_CSV, dtype={"id": str}).set_index("id")["text"]
     ids = [i for i in sorted(p.stem for p in U.OCR_DIR.glob("*.json")) if i in ref.index]
@@ -256,7 +273,7 @@ def main(argv: list[str] | None = None) -> int:
     meta = pd.read_csv(U.METADATA_CSV, dtype={"id": str})
     rows, examples = [], []
     counter: Counter = Counter()
-    residual = 0
+    residual = truncated = years_lost = 0
     n_lines = n_dropped = 0
     for cv_id in meta["id"]:
         p = U.OCR_DIR / f"{cv_id}.json"
@@ -268,6 +285,9 @@ def main(argv: list[str] | None = None) -> int:
         raw_text = fix_broken_lines(rebuild_text(lines, args.threshold))
         clean, was_masked = clean_one(lines, args.threshold, counter)
         residual += bool(RESIDUAL_RE.search(clean))
+        truncated += bool(TRUNCATED_RANGE_RE.search(clean))
+        body = "\n".join(drop_header_block([ln for ln in raw_text.split("\n") if ln.strip()]))
+        years_lost += sorted(years_in(body)) != sorted(years_in(clean))  # ninguna fecha debe perderse
         rows.append({"id": cv_id, "clean_text": clean, "was_masked": was_masked})
         if was_masked and len(examples) < 40:
             hit = _context(remove_pii(raw_text), AGE_PATTERNS + EXPERIENCE_PATTERNS)
@@ -285,6 +305,8 @@ def main(argv: list[str] | None = None) -> int:
         "pct_cvs_masked": round(100 * float(out["was_masked"].mean()), 2),
         "matches_by_pattern": dict(counter),
         "cvs_with_residual_n_years_phrase": int(residual),
+        "cvs_with_truncated_date_range": int(truncated),
+        "cvs_that_lost_a_year_in_cleaning": int(years_lost),
     }
     with open(U.METRICS_DIR / "preprocessing_report.json", "w", encoding="utf-8") as f:
         json.dump(report, f, indent=2, ensure_ascii=False)
