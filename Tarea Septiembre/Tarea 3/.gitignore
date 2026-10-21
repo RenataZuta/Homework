@@ -22,3 +22,6 @@ __pycache__/
 .env.*
 !.env.example
 .DS_Store
+
+# paquetes para compartir fuera de git
+*.zip

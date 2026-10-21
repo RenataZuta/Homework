@@ -1,0 +1,11 @@
+{
+  "cvs": 4000,
+  "conf_threshold": 0.5,
+  "pct_lines_dropped_by_confidence": 0.0,
+  "cvs_masked": 0,
+  "pct_cvs_masked": 0.0,
+  "matches_by_pattern": {},
+  "cvs_with_residual_n_years_phrase": 0,
+  "cvs_with_truncated_date_range": 13,
+  "cvs_that_lost_a_year_in_cleaning": 0
+}

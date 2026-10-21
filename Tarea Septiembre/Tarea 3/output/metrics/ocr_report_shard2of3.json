@@ -1,0 +1,26 @@
+{
+  "cvs_expected": 4000,
+  "cvs_processed": 3988,
+  "cvs_failed_or_pending": 12,
+  "failed_this_run": [],
+  "total_ocr_seconds": 122014.7,
+  "mean_seconds_per_cv": 30.595,
+  "median_seconds_per_cv": 29.948,
+  "mean_confidence": 0.9953,
+  "mean_lines_per_cv": 14.4,
+  "wall_seconds_this_run": 40695.9,
+  "ocr_profile": "default",
+  "hardware": {
+    "platform": "macOS-14.4-arm64-arm-64bit",
+    "machine": "arm64",
+    "python": "3.12.14",
+    "cpu": "Apple M2",
+    "ram_gb": 8.0,
+    "cpu_count": 8,
+    "paddle_version": "3.3.1",
+    "paddle_device": "cpu",
+    "paddle_compiled_with_cuda": false,
+    "paddleocr_version": "3.7.0"
+  },
+  "row_y_threshold_px": 15
+}

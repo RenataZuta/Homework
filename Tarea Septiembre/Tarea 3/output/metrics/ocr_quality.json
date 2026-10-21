@@ -1,0 +1,52 @@
+{
+  "n_cvs": 4000,
+  "cer": {
+    "n": 4000,
+    "mean": 0.0001,
+    "median": 0.0,
+    "p90": 0.0,
+    "max": 0.0075
+  },
+  "wer": {
+    "n": 4000,
+    "mean": 0.0004,
+    "median": 0.0,
+    "p90": 0.0,
+    "max": 0.0222
+  },
+  "years_accuracy_mean_per_cv": 1.0,
+  "years_accuracy_global": 1.0,
+  "years_total_in_reference": 24429,
+  "by_occupation": {
+    "accountants_auditors": {
+      "cer": 0.0,
+      "wer": 0.0,
+      "years_accuracy": 1.0,
+      "n": 800
+    },
+    "construction_laborers": {
+      "cer": 0.0,
+      "wer": 0.0,
+      "years_accuracy": 1.0,
+      "n": 800
+    },
+    "elementary_middle_school_teachers": {
+      "cer": 0.0001,
+      "wer": 0.0007,
+      "years_accuracy": 1.0,
+      "n": 800
+    },
+    "registered_nurses": {
+      "cer": 0.0,
+      "wer": 0.0,
+      "years_accuracy": 1.0,
+      "n": 800
+    },
+    "software_developers": {
+      "cer": 0.0002,
+      "wer": 0.0012,
+      "years_accuracy": 1.0,
+      "n": 800
+    }
+  }
+}
