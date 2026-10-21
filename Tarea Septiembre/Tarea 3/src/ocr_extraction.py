@@ -41,7 +41,16 @@ os.environ.setdefault("PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK", "True")
 ROW_Y_THRESHOLD = 15  # px: dos cajas con |Δ y_centro| menor que esto se consideran de la misma fila
 
 
-def build_ocr():
+# "default": configuración pedida en el enunciado (PaddleOCR 3.7 elige PP-OCRv6 medium).
+# "mobile": detector y reconocedor PP-OCRv5 móviles, más livianos para CPU.
+PROFILES = {
+    "default": {},
+    "mobile": {"text_detection_model_name": "PP-OCRv5_mobile_det",
+               "text_recognition_model_name": "en_PP-OCRv5_mobile_rec"},
+}
+
+
+def build_ocr(profile: str = "default"):
     from paddleocr import PaddleOCR
 
     return PaddleOCR(
@@ -49,6 +58,7 @@ def build_ocr():
         use_doc_orientation_classify=False,
         use_doc_unwarping=False,
         use_textline_orientation=False,
+        **PROFILES[profile],
     )
 
 
@@ -132,6 +142,17 @@ def ocr_one(ocr, image_path: Path, y_threshold: float = ROW_Y_THRESHOLD) -> dict
     }
 
 
+def interleave_by_occupation(meta: pd.DataFrame) -> list[str]:
+    """Ids en orden «ronda»: 1.º de cada ocupación, 2.º de cada ocupación, etc.
+
+    Así cualquier prefijo del procesamiento está balanceado por ocupación (los primeros 2000 equivalen a 400 por
+    ocupación): si el tiempo no alcanza, se puede detener y compartir lo hecho, y el resultado sigue siendo usable.
+    """
+    rank = meta.groupby("occupation").cumcount()
+    return meta.assign(_rank=rank, _occ=meta["occupation"].map({o: i for i, o in enumerate(U.OCCUPATIONS)})) \
+        .sort_values(["_rank", "_occ"], kind="stable")["id"].tolist()
+
+
 def hardware_description() -> dict:
     info = {"platform": platform.platform(), "machine": platform.machine(), "python": platform.python_version()}
     try:
@@ -158,7 +179,8 @@ def hardware_description() -> dict:
     return info
 
 
-def build_report(expected_ids: list[str], ocr_dir: Path, failed: list[dict], wall_seconds: float | None) -> dict:
+def build_report(expected_ids: list[str], ocr_dir: Path, failed: list[dict], wall_seconds: float | None,
+                 profile: str = "default") -> dict:
     times, confs, n_lines = [], [], []
     done_ids = set()
     for cv_id in expected_ids:
@@ -185,6 +207,7 @@ def build_report(expected_ids: list[str], ocr_dir: Path, failed: list[dict], wal
         "mean_confidence": round(statistics.fmean(confs), 4) if confs else None,
         "mean_lines_per_cv": round(statistics.fmean(n_lines), 1) if n_lines else None,
         "wall_seconds_this_run": round(wall_seconds, 1) if wall_seconds is not None else None,
+        "ocr_profile": profile,
         "hardware": hardware_description(),
         "row_y_threshold_px": ROW_Y_THRESHOLD,
     }
@@ -208,12 +231,13 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--shard", default=None, help="k/n: procesa solo los ids con índice %% n == k")
     ap.add_argument("--force", action="store_true", help="rehacer aunque ya exista el JSON")
     ap.add_argument("--report-only", action="store_true")
+    ap.add_argument("--profile", choices=sorted(PROFILES), default="default", help="modelos de PaddleOCR")
     ap.add_argument("--y-threshold", type=float, default=ROW_Y_THRESHOLD)
     args = ap.parse_args(argv)
 
     U.ensure_dirs()
     if U.METADATA_CSV.exists():
-        ids = pd.read_csv(U.METADATA_CSV, dtype={"id": str})["id"].tolist()
+        ids = interleave_by_occupation(pd.read_csv(U.METADATA_CSV, dtype={"id": str}))
     else:
         ids = sorted(p.stem for p in U.RAW_IMAGES_DIR.glob("*.png"))
     if not ids:
@@ -232,7 +256,7 @@ def main(argv: list[str] | None = None) -> int:
     wall = None
     if todo and not args.report_only:
         print(f"OCR de {len(todo)} CV (de {len(my_ids)} asignados); cargando modelos...", flush=True)
-        ocr = build_ocr()
+        ocr = build_ocr(args.profile)
         t_start = time.perf_counter()
         for n_done, cv_id in enumerate(todo, 1):
             img = U.RAW_IMAGES_DIR / f"{cv_id}.png"
@@ -247,7 +271,7 @@ def main(argv: list[str] | None = None) -> int:
                 print(f"  {n_done}/{len(todo)}  {el / n_done:.1f} s/CV  ETA {eta / 60:.0f} min", flush=True)
         wall = time.perf_counter() - t_start
 
-    report = build_report(ids, U.OCR_DIR, failed, wall)
+    report = build_report(ids, U.OCR_DIR, failed, wall, args.profile)
     suffix = f"_shard{args.shard.replace('/', 'of')}" if args.shard and not args.report_only else ""
     with open(U.METRICS_DIR / f"ocr_report{suffix}.json", "w", encoding="utf-8") as f:
         json.dump(report, f, indent=2, ensure_ascii=False)
