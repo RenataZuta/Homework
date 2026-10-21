@@ -5,6 +5,7 @@ Importar siempre desde aquí: ``from src.utils import RANDOM_SEED, OCR_DIR, set_
 from __future__ import annotations
 
 import json
+import math
 import os
 import random
 import re
@@ -96,12 +97,14 @@ def get_hf_token() -> str | None:
 
 
 def assign_band(exp_year: float) -> str:
-    """Banda de experiencia ('0-2', '3-5', '6-10', '11-20') para un valor de exp_year."""
-    if exp_year <= 2:
+    """Banda de experiencia ('0-2', '3-5', '6-10', '11-20'). exp_year es continuo: se usa su parte entera,
+    de modo que 2.7 años cae en '0-2' y 20.4 en '11-20' (la banda alta agrupa todo lo que supera 10)."""
+    years = math.floor(exp_year)
+    if years <= 2:
         return EXP_BAND_LABELS[0]
-    if exp_year <= 5:
+    if years <= 5:
         return EXP_BAND_LABELS[1]
-    if exp_year <= 10:
+    if years <= 10:
         return EXP_BAND_LABELS[2]
     return EXP_BAND_LABELS[3]
 
