@@ -1,0 +1,22 @@
+{
+  "sizes": {
+    "train": 2800,
+    "val": 600,
+    "test": 600
+  },
+  "fractions": {
+    "train": 0.7,
+    "val": 0.15,
+    "test": 0.15
+  },
+  "max_share_difference_across_splits": {
+    "band": 0.0033,
+    "occupation": 0.002,
+    "occupation x band": 0.0017
+  },
+  "exp_year_mean": {
+    "train": 6.519,
+    "val": 6.553,
+    "test": 6.533
+  }
+}

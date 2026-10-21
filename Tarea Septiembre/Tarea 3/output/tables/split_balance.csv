@@ -1,0 +1,30 @@
+level,group,train,val,test,max_abs_diff
+occupation,accountants_auditors,0.2,0.2,0.2,0.0
+occupation,construction_laborers,0.1996,0.2,0.2017,0.002
+occupation,elementary_middle_school_teachers,0.2004,0.2,0.1983,0.002
+occupation,registered_nurses,0.2,0.2,0.2,0.0
+occupation,software_developers,0.2,0.2,0.2,0.0
+band,0-2,0.25,0.2517,0.2483,0.0033
+band,11-20,0.16,0.16,0.16,0.0
+band,3-5,0.2857,0.285,0.2883,0.0033
+band,6-10,0.3043,0.3033,0.3033,0.001
+occupation x band,accountants_auditors | 0-2,0.0389,0.04,0.0383,0.0017
+occupation x band,accountants_auditors | 11-20,0.0407,0.0417,0.04,0.0017
+occupation x band,accountants_auditors | 3-5,0.0525,0.0517,0.0533,0.0017
+occupation x band,accountants_auditors | 6-10,0.0679,0.0667,0.0683,0.0017
+occupation x band,construction_laborers | 0-2,0.0696,0.07,0.07,0.0004
+occupation x band,construction_laborers | 11-20,0.0289,0.0283,0.03,0.0017
+occupation x band,construction_laborers | 3-5,0.0529,0.0533,0.0533,0.0005
+occupation x band,construction_laborers | 6-10,0.0482,0.0483,0.0483,0.0001
+occupation x band,elementary_middle_school_teachers | 0-2,0.0454,0.045,0.045,0.0004
+occupation x band,elementary_middle_school_teachers | 11-20,0.0364,0.0367,0.035,0.0017
+occupation x band,elementary_middle_school_teachers | 3-5,0.0596,0.06,0.06,0.0004
+occupation x band,elementary_middle_school_teachers | 6-10,0.0589,0.0583,0.0583,0.0006
+occupation x band,registered_nurses | 0-2,0.0446,0.045,0.045,0.0004
+occupation x band,registered_nurses | 11-20,0.0257,0.025,0.0267,0.0017
+occupation x band,registered_nurses | 3-5,0.0618,0.0617,0.0617,0.0001
+occupation x band,registered_nurses | 6-10,0.0679,0.0683,0.0667,0.0017
+occupation x band,software_developers | 0-2,0.0514,0.0517,0.05,0.0017
+occupation x band,software_developers | 11-20,0.0282,0.0283,0.0283,0.0001
+occupation x band,software_developers | 3-5,0.0589,0.0583,0.06,0.0017
+occupation x band,software_developers | 6-10,0.0614,0.0617,0.0617,0.0002
