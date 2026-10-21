@@ -1,0 +1,27 @@
+{
+  "total_cvs": 4000,
+  "n_per_occupation_requested": 800,
+  "per_occupation": {
+    "accountants_auditors": 800,
+    "construction_laborers": 800,
+    "elementary_middle_school_teachers": 800,
+    "registered_nurses": 800,
+    "software_developers": 800
+  },
+  "exp_year_min": 0.0030645279284353,
+  "exp_year_max": 25.453569820892525,
+  "exp_year_mean": 6.527,
+  "exp_year_median": 5.566842596306849,
+  "target_cap": 20,
+  "n_at_or_above_cap": 29,
+  "share_at_or_above_cap": 0.0073,
+  "share_at_or_above_25": 0.0003,
+  "share_at_or_above_30": 0.0,
+  "share_at_cap_by_occupation": {
+    "accountants_auditors": 0.0088,
+    "construction_laborers": 0.0112,
+    "elementary_middle_school_teachers": 0.0125,
+    "registered_nurses": 0.0012,
+    "software_developers": 0.0025
+  }
+}
