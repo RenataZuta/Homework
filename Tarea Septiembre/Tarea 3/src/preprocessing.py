@@ -120,6 +120,14 @@ def rebuild_text(lines: list[dict], threshold: float) -> str:
     return lines_to_text(kept)
 
 
+GLUED_RANGE_RE = re.compile(r"(?<!\d)((?:19|20)\d{2}\.\d{2})((?:19|20)\d{2}\.\d{2})(?!\d)")
+
+
+def repair_date_ranges(text: str) -> str:
+    """El OCR suele perder el guion largo de «2020.11–2023.01» y deja «2020.112023.01»: se reinserta, sin alterar fechas."""
+    return GLUED_RANGE_RE.sub(r"\1–\2", text)
+
+
 def fix_broken_lines(text: str) -> str:
     """Une palabras partidas con guion al final de línea y líneas cortadas a media oración."""
     text = re.sub(r"(?<=[A-Za-z])-[ \t]*\n[ \t]*(?=[a-z])", "", text)
@@ -145,6 +153,8 @@ def remove_pii(text: str) -> str:
             if looks_like_name(ln.strip()):
                 lines[i] = ""
             break
+    # línea de contacto («PA, USA | +1-356-988-1156 | katrina.kim@example.com»): se elimina completa
+    lines = ["" if (EMAIL_RE.search(ln) or PHONE_RE.search(ln)) else ln for ln in lines]
     text = "\n".join(lines)
     text = LABEL_LINE_RE.sub("", text)
     for rx in (EMAIL_RE, URL_RE, PHONE_RE, ADDRESS_RE, CITY_STATE_ZIP_RE):
@@ -177,7 +187,7 @@ RESIDUAL_RE = re.compile(rf"{NUM}\s*\+?\s*{YRS}", re.I)
 
 def clean_one(lines: list[dict], threshold: float = CONF_THRESHOLD, counter: Counter | None = None) -> tuple[str, bool]:
     text = rebuild_text(lines, threshold)
-    text = fix_broken_lines(text)
+    text = repair_date_ranges(fix_broken_lines(text))
     text = remove_pii(text)
     masked = mask_leaks(text, counter)
     return tidy(masked), MASK in masked
