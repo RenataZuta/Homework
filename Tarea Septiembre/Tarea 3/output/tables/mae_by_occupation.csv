@@ -1,0 +1,6 @@
+,accountants_auditors,construction_laborers,elementary_middle_school_teachers,registered_nurses,software_developers
+Mediana,3.758,3.887,3.451,3.255,3.155
+TF-IDF + Ridge,0.964,1.192,1.083,0.929,0.923
+MiniLM congelado + Ridge,1.293,1.609,1.26,1.448,1.346
+Regla de fechas (bonus),0.022,0.022,0.029,0.022,0.02
+BERT (minilm-l6),0.33,0.272,0.282,0.31,0.287

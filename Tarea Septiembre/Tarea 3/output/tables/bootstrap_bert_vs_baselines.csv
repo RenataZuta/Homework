@@ -1,0 +1,5 @@
+baseline,MAE_baseline,MAE_bert,delta_MAE,ci95_low,ci95_high,p_bert_better,n_boot
+Mediana,3.5019,0.2962,3.2058,2.988,3.4297,1.0,2000
+TF-IDF + Ridge,1.0184,0.2962,0.7223,0.6497,0.7983,1.0,2000
+MiniLM congelado + Ridge,1.3916,0.2962,1.0954,0.9993,1.1963,1.0,2000
+Regla de fechas (bonus),0.0229,0.2962,-0.2733,-0.2948,-0.2527,0.0,2000

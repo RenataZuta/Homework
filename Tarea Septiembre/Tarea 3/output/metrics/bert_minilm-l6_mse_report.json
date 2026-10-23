@@ -1,0 +1,106 @@
+{
+  "tag": "minilm-l6_mse",
+  "args": {
+    "model": "sentence-transformers/all-MiniLM-L6-v2",
+    "loss": "mse",
+    "epochs": 12,
+    "patience": 4,
+    "lr": 0.0001,
+    "batch_size": 16,
+    "max_len": 256,
+    "truncation": "head",
+    "source": "ocr",
+    "n_train": 0,
+    "tag": "minilm-l6_mse"
+  },
+  "best_epoch": 12,
+  "best_val_MAE": 0.29794954747491614,
+  "train_seconds": 31078.3,
+  "hardware": {
+    "cpu": "Intel64 Family 6 Model 142 Stepping 12, GenuineIntel",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "torch": "2.14.1+cpu",
+    "cuda": false,
+    "threads": 4
+  },
+  "token_length_report": {
+    "mean": 97.24794117647059,
+    "max": 161,
+    "pct_over_max_len_before_truncation": 0.0
+  },
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 0.02862536464950868,
+      "val_MAE": 0.6459771135590768,
+      "epoch_seconds": 405.8
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.0028141254635660777,
+      "val_MAE": 0.5315795020976579,
+      "epoch_seconds": 545.3
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.001596944735418739,
+      "val_MAE": 0.5464693346364877,
+      "epoch_seconds": 408.1
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.0009513401630933263,
+      "val_MAE": 0.4848829317984981,
+      "epoch_seconds": 427.1
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.0007089008795862485,
+      "val_MAE": 0.3935493898893505,
+      "epoch_seconds": 429.4
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.0005898261063599161,
+      "val_MAE": 0.5045034702575829,
+      "epoch_seconds": 25411.4
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.0004986361252875733,
+      "val_MAE": 0.33774097448755935,
+      "epoch_seconds": 501.5
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.0005031669951443161,
+      "val_MAE": 0.4848411929604754,
+      "epoch_seconds": 651.9
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.00045781013040271186,
+      "val_MAE": 0.40930992700783797,
+      "epoch_seconds": 619.1
+    },
+    {
+      "epoch": 10,
+      "train_loss": 0.000382772528433374,
+      "val_MAE": 0.318444576198208,
+      "epoch_seconds": 608.5
+    },
+    {
+      "epoch": 11,
+      "train_loss": 0.00034468483329484507,
+      "val_MAE": 0.39729307280011983,
+      "epoch_seconds": 528.5
+    },
+    {
+      "epoch": 12,
+      "train_loss": 0.00030005326985181976,
+      "val_MAE": 0.29794954747491614,
+      "epoch_seconds": 540.0
+    }
+  ],
+  "params_millions": 22.7
+}

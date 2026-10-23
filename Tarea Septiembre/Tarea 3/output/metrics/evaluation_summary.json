@@ -1,0 +1,9 @@
+{
+  "bert_tag": "minilm-l6_mse",
+  "n_test": 600,
+  "n_boot": 2000,
+  "causes_top10": {
+    "huecos de carrera": 5,
+    "aritmética de fechas con 4 empleos (sin causa de OCR)": 5
+  }
+}

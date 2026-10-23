@@ -1,0 +1,20 @@
+decisión,variante,modelo,val_MAE,test_MAE
+texto,"limpio (conf≥0.5, por defecto)",TF-IDF con números,0.9694,1.0184
+texto,"limpio (conf≥0.5, por defecto)",TF-IDF sin números,1.6711,1.7821
+texto,"limpio (conf≥0.5, por defecto)",Regla de fechas,0.0209,0.0229
+texto,crudo (sin limpiar ni quitar PII),TF-IDF con números,1.0283,1.0838
+texto,crudo (sin limpiar ni quitar PII),TF-IDF sin números,1.6838,1.7616
+texto,crudo (sin limpiar ni quitar PII),Regla de fechas,0.0209,0.0229
+texto,sin líneas de baja confianza (conf≥0.99),TF-IDF con números,1.3334,1.4294
+texto,sin líneas de baja confianza (conf≥0.99),TF-IDF sin números,1.8182,1.9811
+texto,sin líneas de baja confianza (conf≥0.99),Regla de fechas,1.8265,1.8716
+texto,"limpio (conf≥0.5, por defecto)","BERT (entrenado en limpio, sin reentrenar)",0.2979,0.2962
+texto,crudo (sin limpiar ni quitar PII),"BERT (entrenado en limpio, sin reentrenar)",1.7475,1.7495
+texto,sin líneas de baja confianza (conf≥0.99),"BERT (entrenado en limpio, sin reentrenar)",1.1764,1.1684
+texto largo (inferencia),max_len=256,BERT head,,0.2962
+texto largo (inferencia),max_len=256,BERT head_tail,,0.2962
+texto largo (inferencia),max_len=96,BERT head,,0.3444
+texto largo (inferencia),max_len=96,BERT head_tail,,1.4445
+texto largo (inferencia),max_len=64,BERT head,,1.5991
+texto largo (inferencia),max_len=64,BERT head_tail,,3.911
+pérdida,minilm-l6_mse,BERT,0.2979,0.2962

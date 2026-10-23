@@ -1,0 +1,30 @@
+{
+  "median": {
+    "median_train": 5.54406405583451
+  },
+  "rule_dates": {
+    "val_MAE_by_mode": {
+      "sum": 0.020939816338797428,
+      "union": 0.020939816338797428,
+      "span": 0.7492177414919058
+    },
+    "chosen": "sum"
+  },
+  "tfidf_ridge": {
+    "alpha": 0.1,
+    "val_MAE": 0.9694309537487326,
+    "fit_seconds": 10.5
+  },
+  "tfidf_ridge_nonum": {
+    "alpha": 1,
+    "val_MAE": 1.6710831493969165,
+    "fit_seconds": 9.3
+  },
+  "emb_minilm_ridge": {
+    "encoder": "sentence-transformers/all-MiniLM-L6-v2",
+    "chunk_max_tokens": 200,
+    "alpha": 0.03,
+    "val_MAE": 1.3779589083310793,
+    "seconds": 209.8
+  }
+}
