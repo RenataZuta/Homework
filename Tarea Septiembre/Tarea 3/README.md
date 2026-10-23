@@ -1,274 +1,359 @@
 # cv_experience_ocr_bert — Tarea 3 (HW_04_202602)
 
-Predicción de años de experiencia a partir de **imágenes de CVs** (dataset PopResume, `sumin-yu/PopResume`):
-OCR con PaddleOCR → texto limpio → modelos (baselines y BERT).
+Predicción de **años de experiencia laboral (0–20)** a partir de **imágenes de CVs** del dataset PopResume
+(`sumin-yu/PopResume`): OCR con PaddleOCR → texto limpio → BERT ajustado como regresor, comparado con tres baselines
+(mediana, TF-IDF + Ridge, embeddings congelados + Ridge) y una regla de fechas (bonus). Incluye un dashboard en Streamlit
+con un estimador interactivo.
 
-Este directorio contiene el repo del trabajo grupal. **Persona 1 (datos, OCR y calidad)** entrega `src/utils.py`,
-`src/download_data.py`, `src/ocr_extraction.py`, `src/ocr_quality.py`, `src/preprocessing.py` y `src/split.py`.
+Todos los números de este documento salen de los archivos de `output/` (métricas, tablas y predicciones de la corrida real).
+
+## Índice
+
+1. [Qué hace y para quién](#1-qué-hace-y-para-quién)
+2. [Muestreo y distribución de la variable objetivo](#2-muestreo-y-distribución-de-la-variable-objetivo)
+3. [OCR y orden de lectura](#3-ocr-y-orden-de-lectura)
+4. [Calidad del OCR](#4-calidad-del-ocr)
+5. [Limpieza y CVs enmascarados](#5-limpieza-y-cvs-enmascarados)
+6. [Split](#6-split)
+7. [Baselines](#7-baselines)
+8. [BERT y textos largos](#8-bert-y-textos-largos)
+9. [Métricas finales y ganancia de BERT con IC](#9-métricas-finales-y-ganancia-de-bert-con-ic)
+10. [Respuestas a las 4 preguntas analíticas](#10-respuestas-a-las-4-preguntas-analíticas)
+11. [Limitaciones y usos de negocio](#11-limitaciones-y-usos-de-negocio)
+12. [Reproducción paso a paso](#12-reproducción-paso-a-paso)
+13. [Cómo correr la app](#13-cómo-correr-la-app)
 
 ## Estructura
 
 ```
 app.py  README.md  requirements.txt
-src/        utils, download_data, ocr_extraction, ocr_quality, preprocessing, split (+ módulos de Personas 2 y 3)
-data/raw/        imágenes + metadata.csv + reference_texts.csv        (no se versiona)
-data/ocr/        un JSON por CV (texto, líneas, confianza, tiempos)    (no se versiona; se comparte aparte)
+src/
+  utils.py              constantes, rutas, semillas, bandas
+  download_data.py      muestreo por streaming de PopResume                       (Persona 1)
+  ocr_extraction.py     PaddleOCR + orden de lectura → data/ocr/{id}.json          (Persona 1)
+  ocr_quality.py        CER, WER y exactitud de años                               (Persona 1)
+  preprocessing.py      limpieza, PII y enmascarado → clean_texts.csv              (Persona 1)
+  split.py              train/val/test estratificado                               (Persona 1)
+  model_common.py       datos, métricas, predictores, perturbaciones               (Persona 2)
+  baselines.py  train_bert.py  evaluation.py  analysis_questions.py                (Persona 2)
+  visualization.py      figuras del informe/dashboard + equidad (Pregunta 4)       (Persona 3)
+scripts/
+  set_hf_token.py       guarda el token de Hugging Face en .env (oculto)
+  fetch_demographics.py baja id + sexo + raza para la Pregunta 4                   (Persona 3)
+data/raw/        imágenes, metadata.csv, reference_texts.csv, demographics.csv     (no se versiona)
+data/ocr/        un JSON por CV (texto, cajas, confianza, tiempos)                 (no se versiona)
 data/processed/  ocr_quality.csv, clean_texts.csv
-data/splits/     train.csv, val.csv, test.csv
-models/{baselines,bert}/   (no se versiona)
-output/{figures,tables,metrics}/   reportes de cada paso
-video/
+data/splits/     train.csv, val.csv, test.csv   (id, occupation, exp_year, band)
+models/baselines/  *.joblib                                                        (no se versiona)
+models/bert/       pesos del BERT ajustado                                         (no se versiona)
+output/figures/  output/tables/  output/metrics/  output/predictions/
 ```
 
-## Entorno
+---
 
-```bash
-conda create -n tarea3 python=3.12 && conda activate tarea3
-pip install paddlepaddle==3.3.1          # primero Paddle…
-pip install -r requirements.txt          # …luego el resto (paddleocr 3.x incluido)
-```
+## 1. Qué hace y para quién
 
-PopResume es un dataset **restringido (gated)**: aceptar las condiciones en
-<https://huggingface.co/datasets/sumin-yu/PopResume>, crear un token de lectura y guardarlo con
-`python scripts/set_hf_token.py` (entrada oculta; queda en `.env`, ignorado por git).
+Dado el CV de una persona en imagen (o PDF), el sistema estima **cuántos años de experiencia laboral tiene**, aunque el
+CV no lo diga en ninguna frase: la información está en las fechas de su historial (`2019.12–2022.01`).
 
-## Pipeline de Persona 1 (ejecutar desde `Tarea 3/`, en este orden)
+**Para quién:** equipos de reclutamiento y plataformas de empleo que reciben CVs escaneados o en PDF y necesitan
+**pre-llenar** el campo «años de experiencia» de un perfil o **priorizar la revisión** humana. **No** está pensado para
+filtrar candidatos automáticamente ni para decidir una contratación (ver [Pregunta 4](#pregunta-4--equidad-y-ética)).
 
-```bash
-python -m src.download_data            # 800 CVs sin foto por ocupación (--n 400 si falta cómputo)
-python -m src.ocr_extraction           # JSON por CV en data/ocr/  (reanudable; --shard k/n para paralelizar)
-python -m src.ocr_quality              # CER, WER, exactitud de años → data/processed/ocr_quality.csv
-python -m src.preprocessing --sample-read 50       # leer textos OCR antes de fijar los regex
-python -m src.preprocessing --analyze-threshold    # elegir el umbral de confianza con datos
-python -m src.preprocessing            # → data/processed/clean_texts.csv
-python -m src.split                    # → data/splits/{train,val,test}.csv
-```
+## 2. Muestreo y distribución de la variable objetivo
 
-## Decisiones de diseño
+* **Fuente:** PopResume, dataset **sintético** y **restringido (gated)** en Hugging Face.
+* **Muestreo** (`src/download_data.py`): streaming por ocupación, solo `has_photo == False`,
+  `shuffle(seed=42, buffer_size=5000)` y `take(800)`. La muestra es aleatoria dentro de la ventana del buffer (no sobre
+  todo el parquet): es la consecuencia de usar streaming.
+* **Tamaño:** 800 CVs por ocupación × 5 ocupaciones = **4000 CVs** (`accountants_auditors`, `construction_laborers`,
+  `elementary_middle_school_teachers`, `registered_nurses`, `software_developers`).
+* **Distribución** (`output/metrics/sampling_report.json`, figura `output/figures/exp_year_distribution.png`):
+  `exp_year` es **continuo**, de 0,003 a 25,45 años; media 6,53; mediana 5,57.
+* **Tope:** solo **29 CVs (0,73 %)** tienen 20 años o más (por ocupación: docentes 10, obreros 9, contadores 7,
+  desarrolladores 2, enfermeros 1), muy por debajo del 15 % que obligaría a replantearlo: **el tope de 20 se mantiene**
+  y los modelos recortan sus predicciones a [0, 20].
 
-- **Muestreo:** streaming por ocupación, solo `has_photo == False`, `shuffle(seed=42, buffer_size=5000)` y `take(n)`.
-  La muestra es aleatoria dentro de la ventana del buffer (no sobre todo el parquet): es la consecuencia de usar streaming.
-- **Orden de lectura del OCR:** cajas ordenadas de arriba a abajo; a la misma altura (|Δy del centro| < 15 px)
-  de izquierda a derecha. Cada línea guarda su índice de fila (`row`).
-- **Enmascarado:** `[MASKED]` para «X years of experience», «X+ years», variantes y edad / fecha de nacimiento.
-  Las fechas de trabajos y de graduación **no** se tocan. Se reporta cuántos CVs quedaron enmascarados y cuántos
-  conservan alguna frase residual «N years» (duraciones de empleo, que no se enmascaran). En la corrida real no
-  hubo coincidencias (ver Resultados).
-- **Semillas:** `RANDOM_SEED = 42` en `src/utils.py` (`set_all_seeds`).
+![Distribución de exp_year](output/figures/exp_year_distribution.png)
 
-## Resultados de Persona 1 (corrida real, 4000 CVs)
+## 3. OCR y orden de lectura
 
-Los reportes completos están en `output/metrics/` y `output/tables/`.
+* **Motor:** PaddleOCR 3.7.0 / PaddlePaddle 3.3.1, perfil por defecto (PP-OCRv6 medium), `lang="en"`, sin
+  clasificador de orientación ni *unwarping*. Solo CPU (Apple M2, 8 GB). 4000/4000 CVs procesados, **0 fallidos**.
+* **Tiempo:** 122 306 s de OCR en total (tres procesos en paralelo), **30,6 s por CV** de media (mediana 29,9 s).
+  Confianza media 0,9953; 14,4 líneas por CV (`output/metrics/ocr_report.json`).
+* **Salida:** un JSON por CV en `data/ocr/{id}.json` con `lines` (texto, confianza, caja `[x1, y1, x2, y2]`, fila),
+  `full_text`, `mean_confidence`, `ocr_time_seconds` e `image_size`.
+* **Orden de lectura** (`reading_order` en `src/ocr_extraction.py`): las cajas se ordenan por su centro vertical; dos
+  cajas cuyo centro difiere menos de **15 px** pertenecen a la misma fila y se leen de izquierda a derecha. Las cajas de
+  una fila se unen con espacio y las filas con salto de línea. Así un layout de dos columnas se recorre fila por fila.
 
-**Muestreo** (`sampling_report.json`): 800 CVs sin foto por ocupación (4000 en total). `exp_year` es **continuo**
-(0,003 a 25,45; media 6,53; mediana 5,57). Solo **29 CVs (0,73 %)** llegan a 20 años o más, muy por debajo del 15 %
-que obligaría a subir el tope: **el tope de 20 se mantiene**.
+## 4. Calidad del OCR
 
-**OCR** (`ocr_report.json`): PaddleOCR 3.7.0 / PaddlePaddle 3.3.1, perfil por defecto (PP-OCRv6 medium), solo CPU
-(Apple M2, 8 GB). 4000/4000 CVs procesados, **0 fallidos**. Tiempo total 122 306 s (suma de tres procesos en
-paralelo), **30,6 s por CV** de media (mediana 29,9 s). Confianza media 0,9953, 14,4 líneas por CV.
-
-**Calidad del OCR** (`ocr_quality.json`, frente al texto de referencia, textos normalizados):
+Comparación contra el texto de referencia del dataset, con ambos textos normalizados (minúsculas, sin puntuación)
+(`output/metrics/ocr_quality.json`, `output/tables/ocr_quality_summary.csv`):
 
 | Métrica | Media | Mediana | p90 | Máx. |
 |---|---|---|---|---|
 | CER | 0,0001 | 0 | 0 | 0,0075 |
 | WER | 0,0004 | 0 | 0 | 0,0222 |
 
-Los años (24 429 en la referencia) se leen **al 100 %**. Por ocupación, el peor caso es `software_developers`
-(CER 0,0002, WER 0,0012). Este OCR es casi perfecto porque los CVs de PopResume son plantillas limpias de una columna.
-Limitación: en 13 CVs el OCR cortó el final de la última fecha (p. ej. `2020.02–2023.` en lugar de `2020.02–2023.01`).
+* **Años leídos bien: 100 %** (24 429 años AAAA en la referencia).
+* **Por ocupación** (`output/figures/ocr_quality_by_occupation.png`): los pocos CVs con algún error de carácter se
+  concentran en desarrolladores (63/800; CER medio 0,017 %, WER 0,122 %) y docentes (42/800; CER 0,014 %, WER 0,065 %);
+  las otras tres ocupaciones tienen 1–2 CVs con error.
+* El OCR es casi perfecto porque PopResume son plantillas limpias de una columna. Única falla relevante: en **13 CVs**
+  el OCR cortó el mes final de la última fecha (`2020.02–2023.` en lugar de `2020.02–2023.01`).
 
-**Preprocesamiento** (`preprocessing_report.json`):
-- Umbral de confianza **0,5**: ninguna línea tiene confianza menor a 0,95, así que no descarta nada y funciona como red
-  de seguridad. Subirlo a 0,97 o más borra texto correcto (CER 0,0001 → 0,0018 con 0,97, 0,026 con 0,98 y 0,21 con
-  0,99; ver `confidence_threshold_analysis.csv`).
-- PII: se quita el bloque de cabecera (nombre, ciudad, teléfono, email). Tras limpiar no queda ningún email, teléfono
-  ni URL.
-- **Enmascarado: 0 CVs (0 %)**. Se leyeron textos OCR completos (más de 25 en detalle y unos 280 con revisión automática) y luego se escanearon los 4000 con los patrones: no contienen frases de
-  «years of experience», «X+ years», edad ni fecha de nacimiento, así que no hay nada que enmascarar
-  (`masking_examples.csv` queda vacío). Los patrones siguen activos por si otro dataset sí las trae.
-- Ningún CV perdió un año al limpiar (las fechas de empleo y graduación se conservan).
+![Calidad del OCR por ocupación](output/figures/ocr_quality_by_occupation.png)
 
-**Split** (`split_report.json`): train 2800 / val 600 / test 600 (70/15/15), estratificado por ocupación y banda
-(0-2, 3-5, 6-10, 11-20), seed 42. La diferencia máxima entre conjuntos es de 0,33 puntos porcentuales por banda,
-0,20 por ocupación y 0,17 por celda ocupación × banda. `exp_year` medio: 6,519 / 6,553 / 6,533.
+## 5. Limpieza y CVs enmascarados
 
-### Qué debe saber el resto del equipo
+`src/preprocessing.py` → `data/processed/clean_texts.csv` (`id, clean_text, was_masked`), reporte en
+`output/metrics/preprocessing_report.json`:
 
-1. **La experiencia está en las fechas.** Los textos no dicen cuántos años de experiencia hay, pero se deduce de los
-   rangos del historial (`2020.05–2023.01`). Un modelo solo-texto debe aprender aritmética sobre fechas: un baseline
-   con duraciones calculadas a mano (suma de rangos, años desde el primer empleo) probablemente será muy fuerte y
-   BERT lo tendrá más difícil.
-2. **`data/ocr/` no está en git.** Se comparte aparte en un zip junto con `data/raw/reference_texts.csv` y
-   `data/raw/metadata.csv` (necesarios para la Pregunta 2). Sí están en git `data/splits/*.csv`,
-   `data/processed/clean_texts.csv` y `data/processed/ocr_quality.csv`.
-3. Como el OCR es casi perfecto, se espera que el gap de MAE entre texto OCR y texto de referencia sea muy chico.
+1. **Umbral de confianza 0,5** por línea. Ninguna línea tiene confianza menor a 0,95, así que no descarta nada y queda
+   como red de seguridad. Subirlo borra texto correcto: CER 0,0001 → 0,0018 con 0,97, 0,026 con 0,98 y 0,21 con 0,99
+   (`output/tables/confidence_threshold_analysis.csv`).
+2. Unión de líneas rotas y palabras partidas; normalización del separador de los rangos de fechas.
+3. **PII:** se elimina el bloque de cabecera (nombre, «ST, USA | teléfono | email») y cualquier email, teléfono, URL o
+   dirección restante. Tras limpiar no queda ningún email, teléfono ni URL.
+4. **Enmascarado** con `[MASKED]` de «X years of experience», «X+ years», variantes en palabras, edad y fecha de
+   nacimiento. **Las fechas de empleo y graduación no se tocan** (ningún CV perdió un año al limpiar).
 
-## Pendiente
+**CVs enmascarados: 0 de 4000 (0 %).** Se leyeron textos OCR completos (más de 25 en detalle y unos 280 con revisión
+automática) y luego se escanearon los 4000: PopResume no contiene frases de «years of experience», edad ni fecha de
+nacimiento, así que no hubo nada que tapar (`output/tables/masking_examples.csv` queda vacío). Los patrones siguen
+activos por si se usa otro dataset; el estimador de la app avisa si enmascara algo.
 
-La Pregunta 2 ya tiene números calculados con los modelos de Persona 2 (ver más abajo, `output/tables/q2_ocr_noise.csv`);
-Persona 1 solo debe revisarla y redactar su conclusión final si quiere ampliarla.
+## 6. Split
 
----
+`src/split.py` → `data/splits/{train,val,test}.csv`: **2800 / 600 / 600** (70/15/15), estratificado por ocupación ×
+banda (0-2, 3-5, 6-10, 11-20), semilla 42. Diferencia máxima entre conjuntos: 0,33 puntos porcentuales por banda, 0,20
+por ocupación y 0,17 por celda ocupación × banda (`output/tables/split_balance.csv`). `exp_year` medio:
+6,519 / 6,553 / 6,533. Todos los modelos se entrenan solo con train, eligen hiperparámetros con val y se miden **una
+vez** en test.
 
-# Resultados de Persona 2 — baselines, BERT, evaluación y Preguntas 1, 2 y 3
+## 7. Baselines
 
-Scripts (desde `Tarea 3/`): `src/model_common.py` (datos, métricas, predictores, perturbaciones), `src/baselines.py`,
-`src/train_bert.py`, `src/evaluation.py`, `src/analysis_questions.py`. Orden de ejecución:
-
-```bash
-python -m src.baselines
-python -m src.train_bert --model sentence-transformers/all-MiniLM-L6-v2 --epochs 12 --patience 4 --lr 1e-4 --tag minilm-l6_mse
-python -m src.evaluation --bert-tag minilm-l6_mse
-python -m src.analysis_questions --bert-tag minilm-l6_mse        # Preguntas 1, 2 y 3
-```
-
-Todos los modelos se entrenan solo con `train` (texto OCR limpio), eligen hiperparámetros con `val` y se miden una vez
-en `test` (600 CVs). Entorno usado: Python 3.12, torch 2.14.1 (CPU), transformers 4.57.1, scikit-learn 1.9.1.
-Las predicciones de cada modelo están en `output/predictions/` y las tablas en `output/tables/`.
-
-## Modelos
+`src/baselines.py` (búsqueda de α en `output/tables/baselines_val_search.csv`):
 
 | Modelo | Detalle |
 |---|---|
 | Mediana | mediana de train (5,54 años) |
-| TF-IDF + Ridge | palabras 1-2 gramas, `sublinear_tf`, `min_df=2`. **Se mantienen números y años**: val MAE 0,969 con ellos vs. 1,671 sin ellos; α=0,1 elegido en val |
-| MiniLM congelado + Ridge | `all-MiniLM-L6-v2`, normalizado. Texto largo: el CV se parte en trozos de líneas completas de ≤200 tokens y se promedian los embeddings (en la práctica 1 trozo: el CV más largo mide 161 tokens). α=0,03 |
-| Regla de fechas (bonus) | suma de las duraciones de los rangos `AAAA.MM–AAAA.MM`. Variantes en val: `sum` y `union` MAE 0,0209, `span` (primer inicio → último fin) 0,749 → se elige `sum`. Si el OCR corta el mes final se asume enero |
-| BERT regresor | `all-MiniLM-L6-v2` (22,7 M parámetros, arquitectura BERT) con `num_labels=1`, pérdida **MSE**, target `y/20`, predicción desescalada y recortada a [0, 20] |
+| TF-IDF + Ridge | 1-2 gramas de palabras, `sublinear_tf`, `min_df=2`, α = 0,1. **Se conservan números y años**: val MAE 0,969 con ellos vs. 1,671 sin ellos |
+| MiniLM congelado + Ridge | `all-MiniLM-L6-v2` normalizado + Ridge (α = 0,03). Texto largo: trozos de líneas completas de ≤ 200 tokens promediados (en la práctica 1 trozo: el CV más largo mide 161 tokens) |
+| Regla de fechas (bonus) | suma de las duraciones de los rangos `AAAA.MM–AAAA.MM`; variantes en val: `sum` y `union` 0,021, `span` 0,749 → `sum` |
 
-**Hiperparámetros de BERT:** lr 1e-4 (AdamW, weight decay 0,01, calentamiento 10 % y decaimiento lineal), batch 16, hasta 12 épocas,
-`max_len=256`, early stopping con paciencia 4 sobre el MAE de val (años), semilla 42. **Hardware:** Intel Core i5-10210U
-(4 hilos), sin GPU, torch CPU. **Tiempo:** mediana de 534 s por época (~9 min), unas 1,8 h de entrenamiento efectivo (el
-reloj marca 518 min porque el equipo se suspendió durante una época). **Elección del modelo:** se probó DistilBERT en una
-corrida corta y era demasiado lento en CPU (decenas de minutos por época), por eso se usó MiniLM-L6.
-**Texto largo:** con la cabeza (`head`) a 256 tokens, 0 % de los CVs se trunca (máximo 161 tokens), así que `head`,
-`head_tail` y chunking dan exactamente lo mismo; se usa `head`. El mejor val MAE fue en la **última época (12)**: el early
-stopping no llegó a activarse y con más épocas BERT podría mejorar algo (no se probó).
+## 8. BERT y textos largos
 
-## Resultados en test (n = 600)
+`src/train_bert.py`: **`sentence-transformers/all-MiniLM-L6-v2`** (arquitectura BERT, 6 capas, 22,7 M de parámetros)
+con `num_labels=1`, pérdida **MSE**, target escalado `y/20`, predicción desescalada y recortada a [0, 20].
 
-| Modelo | MAE | RMSE | ±1 año | ±2 | ±3 | Acc. bandas | F1 macro bandas | R² |
-|---|---|---|---|---|---|---|---|---|
-| Mediana | 3,502 | 4,536 | 19,2 % | 34,0 % | 51,7 % | 28,8 % | 0,112 | −0,049 |
-| TF-IDF + Ridge | 1,018 | 1,361 | 57,8 % | 88,5 % | 96,8 % | 83,5 % | 0,843 | 0,906 |
-| MiniLM congelado + Ridge | 1,392 | 1,828 | 45,2 % | 76,3 % | 91,7 % | 76,5 % | 0,774 | 0,830 |
-| **BERT (MiniLM-L6 ajustado)** | **0,296** | **0,393** | **97,5 %** | **100 %** | **100 %** | **94,3 %** | **0,943** | **0,992** |
-| Regla de fechas (bonus) | **0,023** | 0,033 | 100 % | 100 % | 100 % | 99,0 % | 0,990 | 1,000 |
+* **Hiperparámetros:** AdamW, lr 1e-4, weight decay 0,01, calentamiento 10 % y decaimiento lineal, batch 16, hasta 12
+  épocas, `max_len=256`, early stopping (paciencia 4) sobre el MAE de val en años, semilla 42.
+* **Hardware y tiempo:** Intel Core i5-10210U (4 hilos), sin GPU; mediana de 534 s por época, ~1,8 h efectivas. Se
+  probó DistilBERT y era demasiado lento en CPU.
+* **Mejor época: la 12 (la última)**, val MAE 0,298: el early stopping no llegó a activarse; con más épocas podría
+  mejorar algo (no se probó).
+* **Textos largos:** media 97 tokens, máximo 161; con `max_len=256` **0 % de los CVs se trunca**, por lo que `head`,
+  `head_tail` y *chunking* dan exactamente lo mismo. Se usa `head`. En una prueba de estrés con topes artificiales
+  (96 y 64 tokens), `head` se degrada más despacio que `head_tail` (0,344 vs. 1,445 con 96 tokens), porque los empleos
+  recientes están arriba.
 
-Tabla completa: `output/tables/model_comparison.csv`. Gráficos: `output/figures/pred_vs_real.png` (con la línea de 45°),
-`mae_by_band.png`, `mae_by_occupation.png`. Matrices de confusión por banda: `output/tables/confusion_*.csv`.
+## 9. Métricas finales y ganancia de BERT con IC
 
-**Ganancia de BERT (bootstrap pareado, 2000 remuestreos, ΔMAE = MAE baseline − MAE BERT; Δ>0 = BERT mejor):**
+Test, n = 600 (`output/tables/model_comparison.csv`):
+
+| Modelo | MAE | RMSE | ±1 año | ±2 | ±3 | Acc. bandas | F1 macro | R² | Sesgo (pred − real) |
+|---|---|---|---|---|---|---|---|---|---|
+| Mediana | 3,502 | 4,536 | 19,2 % | 34,0 % | 51,7 % | 28,8 % | 0,112 | −0,049 | −0,983 |
+| TF-IDF + Ridge | 1,018 | 1,361 | 57,8 % | 88,5 % | 96,8 % | 83,5 % | 0,843 | 0,906 | +0,014 |
+| MiniLM congelado + Ridge | 1,392 | 1,828 | 45,2 % | 76,3 % | 91,7 % | 76,5 % | 0,774 | 0,830 | −0,049 |
+| **BERT (MiniLM-L6 ajustado)** | **0,296** | **0,393** | **97,5 %** | **100 %** | **100 %** | **94,3 %** | **0,943** | **0,992** | +0,215 |
+| Regla de fechas (bonus) | 0,023 | 0,033 | 100 % | 100 % | 100 % | 99,0 % | 0,990 | 1,000 | −0,002 |
+
+**Ganancia de BERT** (bootstrap pareado, 2000 remuestreos; ΔMAE = MAE baseline − MAE BERT; Δ > 0 = BERT mejor;
+`output/tables/bootstrap_bert_vs_baselines.csv`):
 
 | Frente a | ΔMAE | IC 95 % |
 |---|---|---|
-| Mediana | 3,206 | [2,988; 3,430] |
-| TF-IDF + Ridge | 0,722 | [0,650; 0,798] |
-| MiniLM congelado + Ridge | 1,095 | [0,999; 1,196] |
-| Regla de fechas | **−0,273** | [−0,295; −0,253] |
+| Mediana | +3,206 | [2,988; 3,430] |
+| TF-IDF + Ridge | +0,722 | [0,650; 0,798] |
+| MiniLM congelado + Ridge | +1,095 | [0,999; 1,196] |
+| Regla de fechas (bonus) | **−0,273** | [−0,295; −0,253] |
 
-BERT supera a los tres modelos aprendidos de forma significativa, pero **la regla de fechas lo supera a él** (también
-significativo). Esto no es un fallo: en PopResume `exp_year` es prácticamente la suma de las duraciones de los empleos
-(MAE de la regla 0,02 años), y la regla lo calcula de forma explícita.
+BERT supera de forma significativa a los tres baselines aprendidos, pero **la regla de fechas lo supera a él**: en
+PopResume `exp_year` es prácticamente la suma de las duraciones de los empleos y la regla la calcula de forma explícita.
 
-**MAE por banda (años):**
+**MAE por banda real:** BERT 0,180 / 0,191 / 0,289 / 0,678 (0-2 / 3-5 / 6-10 / 11-20) frente a TF-IDF 0,903 / 0,908 /
+0,933 / 1,559. **Por ocupación** el MAE de BERT es parejo (0,27–0,33). **Matriz de confusión:** BERT acierta la banda en
+el 94,3 % y sus 34 errores caen todos en la banda vecina, 33 de ellos hacia arriba (sobrestima levemente).
 
-| Modelo | 0-2 | 3-5 | 6-10 | 11-20 |
-|---|---|---|---|---|
-| TF-IDF + Ridge | 0,903 | 0,908 | 0,933 | 1,559 |
-| MiniLM congelado + Ridge | 1,274 | 1,249 | 1,282 | 2,040 |
-| BERT | 0,180 | 0,191 | 0,289 | 0,678 |
-| Regla de fechas | 0,024 | 0,024 | 0,022 | 0,021 |
+![Predicho vs. real](output/figures/pred_vs_real.png)
+![MAE por banda y ocupación](output/figures/mae_by_band_occupation.png)
+![Matrices de confusión](output/figures/confusion_bands.png)
+![Ganancia de BERT](output/figures/bert_gain_ci.png)
 
-Por ocupación el MAE de BERT es parejo (0,27–0,33; la mejor, obreros de construcción; la peor, contadores).
+**Mayores errores de BERT** (`output/tables/bert_top10_errors.csv`): los 10 son sobrestimaciones de 1,1 a 1,4 años en
+CVs con **4 empleos y 12–19 años** (banda 11-20, la más escasa en train); 5 tienen huecos de carrera y 5 son errores de
+aritmética sin causa de OCR. Ninguno se debe a fechas mal leídas, orden de lectura ni truncamiento. En todo test el MAE
+de BERT crece con el número de empleos (0,18 con 1 empleo, 0,19 con 2, 0,26 con 3, 0,64 con 4) y con los huecos
+(0,37 con huecos vs. 0,25 sin ellos).
 
-## 10 mayores errores de BERT (`output/tables/bert_top10_errors.csv`)
+## 10. Respuestas a las 4 preguntas analíticas
 
-Los 10 son **sobreestimaciones de 1,1 a 1,4 años** en CVs de **4 empleos y 12–19 años de experiencia**
-(la banda 11-20, que además es la más escasa en train). La regla acierta en los 10 (error < 0,05 años).
-Causas: **5 con huecos de carrera** entre empleos y **5 sin causa de OCR** (error de aritmética de fechas con 4 empleos).
-No hay ningún caso de fecha mal leída, orden de lectura, fechas faltantes, trabajos solapados ni truncamiento: el OCR es casi
-perfecto y ningún CV supera los 256 tokens. El error de BERT es de **aritmética**, no de lectura.
+### Pregunta 1 — ¿Qué aprende BERT que los baselines no?
 
-## Pregunta 1 — ¿Qué aprende BERT que los baselines no?
+BERT baja el MAE de 1,018 (TF-IDF) a **0,296** (−71 %) y ayuda en todas las bandas, sobre todo en 11-20 (0,68 vs. 1,56).
+La **prueba de perturbación** (`output/tables/q1_perturbation.csv`, 20 CVs de test con ≥ 2 empleos y una muestra de 200
+para confirmar) muestra qué aprendió:
 
-*Reducción de MAE:* BERT baja el MAE de 1,018 (TF-IDF) a 0,296 (−71 %, IC 95 % de la diferencia [0,65; 0,80]) y de 1,392
-(embeddings) a 0,296. Ayuda en **todas las bandas**, sobre todo en la alta: 0,68 vs. 1,56 (TF-IDF) en 11-20 años.
-
-*Prueba de perturbación* (`output/tables/q1_perturbation.csv`, 20 CVs de test con ≥2 empleos, semilla 42, y una muestra de 200 para
-confirmar). (a) **Fechas +5 años**: la duración real no cambia, así que un modelo que lee duraciones debería dar la misma predicción.
-(b) **Borrar el primer empleo**: la experiencia real baja justo lo que duraba; se mide cuánto sigue el modelo ese cambio
-(pendiente 1 = lo sigue perfecto).
-
-| Modelo (20 CVs) | Cambio medio de la predicción con fechas +5 | Pendiente al borrar un empleo | Correlación |
+| Modelo (20 CVs) | Cambio medio con fechas +5 años | Pendiente al borrar un empleo | Correlación |
 |---|---|---|---|
 | TF-IDF + Ridge | 1,99 años | −0,55 | −0,67 |
 | MiniLM + Ridge | 0,78 años | 1,04 | 0,65 |
 | **BERT** | **2,41 años** | **−0,01** | **−0,01** |
 | Regla de fechas | 0,00 | 1,00 | 1,00 |
 
-(200 CVs: BERT 2,16 años, pendiente 0,21; TF-IDF 1,93, pendiente −0,24; regla 0,00, pendiente 0,90.)
+Al desplazar todas las fechas 5 años (la duración real no cambia), BERT cambia su respuesta ~2,4 años; al borrar un
+empleo su predicción casi no se mueve (debería bajar ~2,8 años). **BERT no resta fechas: aprendió a reconocer años
+absolutos** (todos los CVs terminan en 2023.01). Por eso gana a TF-IDF pero queda lejos de la regla, y no se
+generalizaría a CVs con otra fecha de corte.
 
-**Conclusión: este BERT NO lee las fechas como una resta.** Con las fechas desplazadas cambia su respuesta unos 2 años, y al
-borrar un empleo su predicción casi no se mueve (cuando debería bajar unos 2,8 años). Aprendió a reconocer los **años absolutos**
-(probablemente el año del primer empleo, ya que todos los CVs terminan en 2023.01) y no a restar. Eso explica por qué gana a
-TF-IDF pero queda muy lejos de la regla. Es una limitación real: sirve en este dataset sintético, pero no se generalizaría
-a CVs con otra fecha de corte.
+### Pregunta 2 — ¿Cuánto cuesta el ruido del OCR?
 
-## Pregunta 2 — ¿Cuánto cuesta el ruido del OCR?
+Se evaluó cada modelo sobre el texto OCR y sobre el texto de referencia limpiado igual (`output/tables/q2_ocr_noise.csv`).
+**El ruido real de caracteres cuesta prácticamente nada** (≤ 0,003 años en todos los modelos; solo 14 de 600 CVs de
+test tienen CER > 0). Lo que sí pesa es el **formato**: el MAE de BERT sube de 0,296 a 0,358 si solo cambian viñetas y
+saltos de línea, porque se entrenó con el estilo exacto del OCR. TF-IDF y la mediana son robustos al formato; la regla de
+fechas es la única afectada por ruido real (+0,0012 años, por las fechas truncadas).
 
-Se evalúa cada modelo sobre el texto OCR limpio y sobre el texto de referencia limpiado con las mismas reglas
-(`output/tables/q2_ocr_noise.csv`). Como el OCR es casi perfecto (CER medio 0,0001; solo 14 de los 600 CVs de test tienen CER > 0),
-la brecha total mezcla dos cosas, así que se separó:
+### Pregunta 3 — Sensibilidad metodológica
 
-| Modelo | MAE OCR | MAE OCR con formato armonizado | MAE referencia | Brecha de formato | **Brecha por ruido real** (IC 95 %) |
-|---|---|---|---|---|---|
-| Mediana | 3,502 | 3,502 | 3,502 | 0 | 0 |
-| TF-IDF | 1,018 | 1,018 | 1,021 | 0 | −0,003 [−0,006; 0,001] |
-| MiniLM + Ridge | 1,392 | 1,411 | 1,410 | −0,019 | +0,001 [−0,004; 0,005] |
-| BERT | 0,296 | 0,358 | 0,359 | **−0,062** | −0,001 [−0,002; 0,000] |
-| Regla de fechas | 0,0229 | 0,0229 | 0,0217 | 0 | **+0,0012** [0,000; 0,003] |
+`output/tables/q3_sensitivity.csv`:
 
-* Los textos OCR traen fin de línea `\r\n` y viñetas «•», y la referencia `\n` y «-». *Armonizado* = el OCR con esos dos
-  cambios de formato, sin corregir ningún carácter mal leído.
-* **El ruido real de caracteres cuesta prácticamente nada** (≤ 0,003 años en todos los modelos), porque los CVs de PopResume
-  son plantillas limpias.
-* **BERT es el más sensible al formato**: su MAE sube de 0,296 a 0,358 si cambian solo las viñetas y los saltos de línea,
-  porque se entrenó con el estilo exacto del OCR. Por eso la brecha «OCR − referencia» da negativa (el OCR parece «mejor»:
-  es el formato con el que aprendió, no una mejora real).
-* **TF-IDF y la mediana son los más robustos** a esos cambios (ignoran la puntuación). **La regla de fechas es la única a la
-  que sí le afecta el ruido real** (5 % relativo; en los 14 CVs con CER > 0 su MAE sube de 0,021 a 0,070), por las fechas
-  truncadas tipo `2020.02–2023.`.
+* **Números en TF-IDF:** quitarlos empeora el MAE 75 % (1,018 → 1,782): los años son casi toda la señal.
+* **Limpieza:** texto crudo con cabecera → TF-IDF 1,084, BERT 1,750 (sin reentrenar); umbral de confianza 0,99 → la
+  regla pasa de 0,023 a 1,872 y BERT a 1,168, porque se borran líneas correctas. Se mantiene el umbral 0,5.
+* **Texto largo:** sin efecto en los CVs reales; con topes artificiales `head` > `head_tail`.
+* **MSE vs. Huber:** no se entrenó la variante Huber (`--loss huber` está implementado; ~2 h en CPU). Limitación.
 
-## Pregunta 3 — Sensibilidad metodológica (`output/tables/q3_sensitivity.csv`)
+### Pregunta 4 — Equidad y ética
 
-| Decisión | Variante | TF-IDF (reentrenado) | Regla | BERT (sin reentrenar) |
-|---|---|---|---|---|
-| Números en TF-IDF | con números | 1,018 | — | — |
-| | sin números | **1,782** | — | — |
-| Limpieza del OCR | limpio (por defecto) | 1,018 | 0,023 | 0,296 |
-| | crudo (sin limpiar, con cabecera) | 1,084 | 0,023 | 1,750 |
-| | solo líneas con confianza ≥ 0,99 | 1,429 | 1,872 | 1,168 |
-| Texto largo (BERT, solo inferencia) | `max_len` 256 cabeza / cabeza+cola | — | — | 0,296 / 0,296 |
-| | 96 tokens | — | — | 0,344 / 1,445 |
-| | 64 tokens | — | — | 1,599 / 3,911 |
+**Usuarios posibles y para qué.** Reclutadores y plataformas de empleo, para **pre-llenar** perfiles o **ordenar la cola
+de revisión** humana. Nunca para filtrar automáticamente ni decidir una contratación: la estimación es un apoyo que una
+persona confirma.
 
-* **Quitar los números empeora TF-IDF un 75 %** (1,02 → 1,78): los años son casi toda la señal.
-* **Descartar líneas con umbral alto destruye texto correcto** (el OCR casi nunca baja de 0,95 de confianza): la regla
-  pasa de 0,02 a 1,87. Por eso el umbral se mantiene en 0,5. El texto crudo apenas daña a TF-IDF (1,08) pero sí a BERT, que
-  no vio esa cabecera en el entrenamiento (1,75; esa celda es solo inferencia, no un reentrenamiento).
-* **Texto largo:** con los CVs reales no hay diferencia (ninguno se trunca). En la prueba de estrés con un tope artificial,
-  `head` se degrada más despacio que `head_tail`, porque los empleos recientes (los de arriba) pesan más; ninguna estrategia
-  es necesaria para este dataset.
-* **MSE vs. Huber:** no se corrió Huber (`--loss huber` está implementado en `train_bert.py`); entrenar otro BERT en CPU
-  costaba ~2 h. Queda como limitación. Tampoco se reentrenó BERT con cada variante de limpieza (solo se evaluó).
+**Costo de los errores.** Un error de **±2 años** rara vez cambia el tramo de un puesto y se corrige al revisar; uno de
+**±5 años** cambia de categoría (junior ↔ senior) y puede excluir a alguien o fijarle un salario equivocado.
+**Subestimar es peor** para el candidato: puede quedar fuera de la lista corta sin que nadie lo revise; sobrestimar se
+detecta en la entrevista, aunque crea expectativas falsas. BERT sobrestima levemente (sesgo +0,21 años) y ningún error
+en test supera ±2 años.
 
-## Mejoras posibles
+**Resultados de equidad.** MAE y error medio (predicho − real) de BERT en test por sexo y por raza, con n por grupo,
+unidos por `id` (`output/tables/fairness_by_sex.csv`, `output/tables/fairness_by_race.csv`, generados por
+`python -m src.visualization`). Sexo y raza **nunca** son features: solo se usan después de predecir.
 
-* Entrenar más épocas (el mejor val fue la última) o con GPU para probar DistilBERT/DeBERTa.
-* Ayudar a BERT a hacer aritmética real: darle duraciones ya calculadas o aumentar los datos desplazando fechas (el
-  desplazamiento +5 años fue justo lo que lo desorientó).
-* Entrenar con varios formatos de texto (viñetas, fin de línea) para eliminar la sensibilidad de formato.
-* Combinar BERT con la regla (como feature o como respaldo cuando las fechas están completas).
+> **[PENDIENTE: tablas de equidad por sexo y raza]** — `src/download_data.py` guardó solo `id, occupation, exp_year`, así
+> que las columnas sex/race de PopResume no están en `data/raw/metadata.csv`. Para calcularlas:
+> `python scripts/fetch_demographics.py` (requiere el token HF) y luego `python -m src.visualization`. La app y este
+> README toman las tablas automáticamente cuando existen.
+
+**Posibles causas de diferencias aunque sexo y raza no sean entradas.** El texto contiene **proxies**: ocupación,
+empleadores, universidad, huecos de carrera (más frecuentes, por ejemplo, por cuidado de hijos) y número de empleos.
+El error de BERT crece con los huecos (0,37 vs. 0,25) y con el número de empleos (0,64 con 4); si esos patrones son más
+comunes en un grupo, su error también lo será. Además, si la mezcla ocupación × grupo del dataset no es uniforme, las
+diferencias de error entre ocupaciones se trasladan a los grupos. Por eso la auditoría por grupo
+es obligatoria antes de cualquier uso.
+
+**Limitaciones.** Datos **sintéticos**, solo **5 ocupaciones**, población de **EE. UU.** y CVs **solo en inglés**, con
+plantillas limpias de una columna y una fecha de corte común (2023.01).
+
+## 11. Limitaciones y usos de negocio
+
+**Limitaciones**
+
+* Dataset sintético con plantillas limpias: el OCR es casi perfecto y no representa CVs reales escaneados, fotos de
+  baja calidad ni layouts complejos.
+* 5 ocupaciones, EE. UU., solo inglés, fechas en formato `AAAA.MM–AAAA.MM` y una fecha de corte común (2023.01).
+* BERT no aprendió aritmética de fechas (Pregunta 1) y es sensible al formato del texto (Pregunta 2); una regla
+  explícita es mucho mejor en este dataset.
+* No se entrenó la variante Huber ni más de 12 épocas; no se reentrenó BERT con cada variante de limpieza.
+* La auditoría de equidad está pendiente de los datos demográficos (ver Pregunta 4).
+
+**Usos de negocio**
+
+* **Pre-llenado de perfiles** en portales de empleo a partir de CVs subidos en imagen o PDF, con confirmación del
+  candidato.
+* **Priorización** de la cola de revisión de un reclutador (p. ej. mostrar primero perfiles que encajan con el tramo de
+  experiencia del puesto), siempre con revisión humana y sin descartes automáticos.
+* **Control de calidad** de datos de RR. HH.: marcar perfiles donde la experiencia declarada difiere mucho de la estimada.
+* En producción convendría combinar BERT con la regla de fechas (respaldo cuando las fechas son legibles) y monitorear
+  el error por grupo.
+
+## 12. Reproducción paso a paso
+
+### Entorno
+
+```bash
+conda create -n tarea3 python=3.12 && conda activate tarea3      # o: uv venv --python 3.12 .venv
+pip install paddlepaddle==3.3.1          # primero Paddle (paddlepaddle-gpu si hay GPU NVIDIA)…
+pip install -r requirements.txt          # …luego el resto
+```
+
+PopResume es **restringido**: aceptar las condiciones en <https://huggingface.co/datasets/sumin-yu/PopResume>, crear un
+token de lectura y guardarlo con `python scripts/set_hf_token.py` (queda en `.env`, ignorado por git).
+
+### Pipeline (desde `Tarea 3/`, en este orden)
+
+```bash
+python -m src.download_data            # 800 CVs sin foto por ocupación → data/raw/
+python -m src.ocr_extraction           # data/ocr/{id}.json (reanudable; --shard k/n para paralelizar)
+python -m src.ocr_quality              # CER, WER, años → data/processed/ocr_quality.csv
+python -m src.preprocessing            # → data/processed/clean_texts.csv
+python -m src.split                    # → data/splits/{train,val,test}.csv
+python -m src.baselines                # → models/baselines/*.joblib, output/predictions/
+python -m src.train_bert --model sentence-transformers/all-MiniLM-L6-v2 --epochs 12 --patience 4 --lr 1e-4 --tag minilm-l6_mse
+python -m src.evaluation --bert-tag minilm-l6_mse
+python -m src.analysis_questions --bert-tag minilm-l6_mse        # Preguntas 1, 2 y 3
+python scripts/fetch_demographics.py   # sexo y raza (solo para auditar, Pregunta 4)
+python -m src.visualization            # figuras en output/figures/ + fairness_by_{sex,race}.csv
+```
+
+`data/raw/` y `data/ocr/` no están en git (se comparten aparte en un zip). Sí están en git `data/splits/*.csv`,
+`data/processed/*.csv` y todo `output/`, así que `python -m src.visualization` y la app funcionan sin repetir el OCR.
+
+### Pesos de los modelos (no están en el repositorio)
+
+Los pesos **no se suben a git** (`.gitignore` excluye `models/**`, `*.safetensors`, `*.bin`, `*.pt`, `*.joblib`).
+
+* **BERT:** colocar los archivos del modelo ajustado (`config.json`, `model.safetensors`, `tokenizer.json`,
+  `tokenizer_config.json`, `special_tokens_map.json`, `vocab.txt`) en **`models/bert/`** (o en
+  `models/bert/minilm-l6_mse/`, que es donde los deja `src.train_bert`). Para regenerarlos, correr el comando
+  `python -m src.train_bert …` de arriba (~1,8 h en CPU de 4 hilos). Con los pesos de la corrida real, las predicciones
+  de test coinciden con `output/predictions/bert_minilm-l6_mse__ocr.csv` (diferencia máxima 5e-6 años).
+* **Baselines:** `python -m src.baselines` los regenera en `models/baselines/`. Si faltan, la app reentrena la mediana y
+  TF-IDF con train al arrancar (segundos) usando el mismo α elegido en val, y ofrece reentrenar MiniLM + Ridge (~4 min).
+
+## 13. Cómo correr la app
+
+```bash
+streamlit run app.py
+```
+
+Cuatro pestañas:
+
+1. **Problema y metodología.**
+2. **OCR y análisis exploratorio:** distribución de `exp_year`, calidad del OCR por ocupación, CV de ejemplo con las
+   cajas de PaddleOCR (si hay imágenes o JSON locales), limpieza y split.
+3. **Resultados de modelos:** tabla comparativa, dispersión predicho vs. real con selector de modelo, MAE por banda y
+   ocupación, matrices de confusión, ganancia de BERT con IC 95 %, sensibilidad (Pregunta 3), equidad (Pregunta 4) y
+   respuestas a las 4 preguntas.
+4. **Estimador interactivo:** subir una imagen (PNG/JPG) o un PDF → PaddleOCR → texto limpio (misma limpieza del
+   pipeline) → predicción de cada modelo disponible. Incluye un explorador de los CVs de test (por ocupación, años reales
+   y tamaño del error) y ejemplos de aciertos y errores.
+
+La app no se rompe si falta algún archivo: muestra un aviso en esa sección y sigue. En Windows con CPU, PaddlePaddle 3.3
+falla con oneDNN; la app crea PaddleOCR con la misma configuración y `enable_mkldnn=False`. El OCR tarda ~30 s por CV en
+CPU (la primera vez descarga los modelos de PaddleOCR).
