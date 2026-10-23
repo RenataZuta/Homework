@@ -1,0 +1,11 @@
+muestra,model,MAE_original,shift+5_mean_|Δpred|,shift+5_MAE_vs_real,drop_job_MAE_vs_new_real,drop_job_Δpred_medio,drop_job_Δreal_medio,drop_job_pendiente(Δpred/Δreal),drop_job_corr
+20 CVs,median,3.925,0.0,3.925,2.566,0.0,-2.775,0.0,0.0
+20 CVs,tfidf_ridge,0.658,1.991,2.212,1.226,-1.522,-2.775,-0.554,-0.668
+20 CVs,emb_minilm_ridge,1.008,0.78,1.335,1.205,-2.333,-2.775,1.041,0.654
+20 CVs,rule_dates,0.025,0.0,0.025,0.025,-2.775,-2.775,1.0,1.0
+20 CVs,bert_minilm-l6_mse,0.354,2.412,2.101,1.371,-1.747,-2.775,-0.01,-0.007
+200 CVs,median,3.521,0.0,3.521,2.769,0.0,-2.682,0.0,0.0
+200 CVs,tfidf_ridge,1.071,1.934,2.482,1.324,-1.651,-2.682,-0.243,-0.253
+200 CVs,emb_minilm_ridge,1.485,0.775,1.756,1.436,-2.279,-2.682,0.614,0.401
+200 CVs,rule_dates,0.021,0.0,0.021,0.042,-2.661,-2.682,0.901,0.977
+200 CVs,bert_minilm-l6_mse,0.325,2.163,1.917,1.394,-1.637,-2.682,0.208,0.141

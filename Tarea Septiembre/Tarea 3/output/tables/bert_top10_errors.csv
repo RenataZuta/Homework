@@ -1,0 +1,11 @@
+id,split,occupation,y_true,y_pred,error,abs_error,rule_pred,n_jobs,cause
+06580,test,accountants_auditors,14.322,15.767,1.445,1.445,14.333,4,huecos de carrera
+06678,test,accountants_auditors,16.623,17.881,1.257,1.257,16.583,4,huecos de carrera
+61179,test,registered_nurses,18.461,19.708,1.247,1.247,18.5,4,huecos de carrera
+03252,test,registered_nurses,14.375,15.565,1.191,1.191,14.333,4,huecos de carrera
+25908,test,registered_nurses,18.764,19.943,1.179,1.179,18.75,4,aritmética de fechas con 4 empleos (sin causa de OCR)
+58556,test,accountants_auditors,15.002,16.127,1.126,1.126,15.0,4,aritmética de fechas con 4 empleos (sin causa de OCR)
+48372,test,construction_laborers,18.815,19.916,1.101,1.101,18.833,4,aritmética de fechas con 4 empleos (sin causa de OCR)
+10860,test,software_developers,12.358,13.458,1.1,1.1,12.333,4,huecos de carrera
+40829,test,accountants_auditors,15.168,16.267,1.099,1.099,15.167,4,aritmética de fechas con 4 empleos (sin causa de OCR)
+48991,test,registered_nurses,14.313,15.389,1.076,1.076,14.333,4,aritmética de fechas con 4 empleos (sin causa de OCR)

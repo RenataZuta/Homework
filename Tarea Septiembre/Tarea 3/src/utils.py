@@ -133,3 +133,8 @@ def write_json_atomic(path: Path, obj: dict) -> None:
     with open(tmp, "w", encoding="utf-8") as f:
         json.dump(obj, f, ensure_ascii=False)
     os.replace(tmp, path)
+
+# ── Persona 2: modelos y evaluación ──────────────────────────────────────────
+PREDICTIONS_DIR = OUTPUT_DIR / "predictions"
+BASELINES_DIR = MODELS_DIR / "baselines"
+BERT_DIR = MODELS_DIR / "bert"
