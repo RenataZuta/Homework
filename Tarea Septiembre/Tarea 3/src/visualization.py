@@ -457,7 +457,7 @@ def fig_fairness() -> plt.Figure | None:
         ax.invert_yaxis()
         ax.axvline(0, color=MUTED, lw=1)
         ax.set(title=f"BERT en test por {'sexo' if col == 'sex' else 'raza'}", xlabel="años")
-        ax.legend(loc="lower right", fontsize=8)
+        ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.2), ncol=2, fontsize=8)
     fig.tight_layout()
     return fig
 

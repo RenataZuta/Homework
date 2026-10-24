@@ -1,7 +1,8 @@
 """Descarga SOLO id + sexo + raza de los CVs muestreados (para la Pregunta 4, equidad).
 
-``src.download_data`` guardó id, occupation y exp_year, pero no los atributos demográficos. Este script lee el config
-"text" de PopResume (sin imágenes), detecta las columnas de sexo y raza y guarda data/raw/demographics.csv
+``src.download_data`` guardó id, occupation y exp_year, pero no los atributos demográficos. Este script lee de los
+parquet de texto de PopResume (``data/text/{ocupación}.parquet``) únicamente las columnas id, sex, race y exp_year
+(sin el texto ni las imágenes), comprueba que exp_year coincida con data/splits y guarda data/raw/demographics.csv
 (id, sex, race; no se versiona). Sexo y raza NUNCA se usan como features: solo para auditar errores después de predecir.
 
 Requiere el token de Hugging Face (``python scripts/set_hf_token.py``).
@@ -12,41 +13,45 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from src import utils as U  # noqa: E402
 
-SEX_NAMES = ("sex", "gender")
-RACE_NAMES = ("race", "ethnicity", "race_ethnicity")
+COLUMNS = ["id", "sex", "race", "exp_year"]
 
 
 def main() -> int:
-    from datasets import load_dataset
+    import pyarrow.parquet as pq
+    from huggingface_hub import HfFileSystem
 
     token = U.get_hf_token()
     if not token:
         print("ERROR: falta el token de Hugging Face (python scripts/set_hf_token.py).", file=sys.stderr)
         return 2
-    ids = set()
-    for s in ("train", "val", "test"):
-        ids |= set(pd.read_csv(U.SPLITS_DIR / f"{s}.csv", dtype={"id": str})["id"])
+    splits = pd.concat([pd.read_csv(U.SPLITS_DIR / f"{s}.csv", dtype={"id": str}) for s in ("train", "val", "test")])
 
-    dd = load_dataset(U.HF_DATASET, "text", token=token)
-    df = pd.concat([dd[s].to_pandas() for s in dd], ignore_index=True)
-    cols = {c.lower(): c for c in df.columns}
-    sex = next((cols[n] for n in SEX_NAMES if n in cols), None)
-    race = next((cols[n] for n in RACE_NAMES if n in cols), None)
-    if not sex and not race:
-        print(f"ERROR: el config 'text' no trae sexo ni raza. Columnas: {list(df.columns)}", file=sys.stderr)
-        return 1
+    fs = HfFileSystem(token=token)
+    parts = []
+    for occ in U.OCCUPATIONS:
+        with fs.open(f"datasets/{U.HF_DATASET}/data/text/{occ}.parquet") as fh:
+            parts.append(pq.read_table(fh, columns=COLUMNS).to_pandas())
+        print(f"  {occ}: {len(parts[-1])} filas")
+    df = pd.concat(parts, ignore_index=True)
     df["id"] = df["id"].astype(str)
-    keep = ["id"] + [c for c in (sex, race) if c]
-    out = df.loc[df["id"].isin(ids), keep].drop_duplicates("id")
-    out = out.rename(columns={sex: "sex", race: "race"} if race else {sex: "sex"})
+    df = df[df["id"].isin(set(splits["id"]))].drop_duplicates("id")
+
+    check = splits.merge(df, on="id", how="left", suffixes=("", "_hf"))
+    missing = int(check["sex"].isna().sum())
+    mismatch = int((~np.isclose(check["exp_year"], check["exp_year_hf"])).sum() - missing)
+    print(f"Unidos {len(df)} de {len(splits)} CVs; sin datos: {missing}; exp_year distinto: {mismatch}")
+    if mismatch:
+        print("AVISO: exp_year no coincide en algunos ids; revisar antes de usar.", file=sys.stderr)
+
     U.RAW_DIR.mkdir(parents=True, exist_ok=True)
-    out.to_csv(U.RAW_DIR / "demographics.csv", index=False)
-    print(f"data/raw/demographics.csv: {len(out)} de {len(ids)} CVs, columnas {list(out.columns)}")
+    df[["id", "sex", "race"]].to_csv(U.RAW_DIR / "demographics.csv", index=False)
+    print("data/raw/demographics.csv guardado")
     return 0
 
 
