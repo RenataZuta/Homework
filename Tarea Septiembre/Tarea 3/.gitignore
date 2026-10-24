@@ -25,3 +25,11 @@ __pycache__/
 
 # paquetes para compartir fuera de git
 *.zip
+
+# Pesos de modelos en cualquier carpeta (además de models/**) y entorno virtual
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.joblib
+.venv/
