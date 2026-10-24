@@ -384,9 +384,8 @@ with tab3:
     with st.expander("Pregunta 4 — Equidad y ética", expanded=True):
         sex, race = V.compute_fairness(save=False)
         if sex is None and race is None:
-            st.warning("**[PENDIENTE]** Las tablas `fairness_by_sex.csv` y `fairness_by_race.csv` necesitan las "
-                       "columnas sex/race de PopResume, que no se guardaron en `data/raw/metadata.csv`. Para "
-                       "calcularlas: `python scripts/fetch_demographics.py` (token HF) y `python -m src.visualization`.")
+            st.warning("Faltan `output/tables/fairness_by_sex.csv` y `fairness_by_race.csv`. Para generarlas: "
+                       "`python scripts/fetch_demographics.py` (token HF) y `python -m src.visualization`.")
         else:
             c1, c2 = st.columns(2)
             with c1:
@@ -405,14 +404,30 @@ al revisar; uno de **±5 años** sí cambia de categoría y puede excluir a algu
 sobrestimar se detecta en la entrevista, aunque crea expectativas falsas. BERT tiene un sesgo medio de
 **+0,21 años** (sobrestima levemente) y ningún error en test supera 2 años.
 
-**Por qué puede haber diferencias aunque sexo y raza no sean entradas.** El texto contiene **proxies**: ocupación, tipo
-de empleador, universidad, huecos de carrera (más frecuentes, por ejemplo, por cuidado de hijos) o número de empleos.
-Los 10 mayores errores de BERT son CVs con huecos de carrera o 4 empleos en la banda alta; si esos patrones son más
-comunes en un grupo, el error también lo será. Por eso la auditoría por grupo es obligatoria antes de cualquier uso.
+**Resultados de equidad (BERT, test).** IC 95 % por bootstrap de la diferencia entre grupos (2000 remuestreos).
+- **Sexo: no hay diferencia.** MAE 0,299 en mujeres (n = 299) y 0,294 en hombres (n = 301); ΔMAE +0,005, IC
+  [−0,039; 0,048]. A ambos grupos se los **sobrestima** lo mismo (~+0,21 años, unos 2,6 meses).
+- **Raza: Asian/Pacific Islander tiene más error.** MAE 0,361 (n = 91) frente a 0,282 en White (n = 462): **+0,079 años
+  (~1 mes)**, IC [0,016; 0,147], la única diferencia significativa. También es el grupo **más sobrestimado** (+0,288 vs.
+  +0,208; Δ +0,080, IC [−0,003; 0,163], en el límite de la significancia).
+- **Black es el grupo menos sobrestimado** (+0,134) y su MAE (0,307) es parecido al de White (Δ +0,025, IC
+  [−0,049; 0,099]), pero con n = 47 la estimación es poco estable.
+- **Ningún grupo se subestima en promedio**: BERT sobrestima a todos. Las brechas son de semanas a ~1 mes, muy lejos de
+  los ±2 años que cambiarían una decisión.
+
+**Por qué hay diferencias aunque sexo y raza no sean entradas.** El texto trae **proxies** del tipo de CV en que BERT
+falla más: su error crece con el número de empleos (0,18 con 1, 0,64 con 4) y con los huecos de carrera (0,37 vs.
+0,25). En test, el grupo Asian/Pacific Islander tiene más CVs en la banda 11-20 (25 % vs. 14 % en White), más empleos
+(2,65 vs. 2,37), algo más de huecos (43 % vs. 39 %) y un 54 % son desarrolladores. Dentro de cada banda su MAE es
+parecido al de White; si se reponderan sus bandas con la distribución de White, su MAE baja de 0,361 a ~0,310. Es decir,
+**cerca de dos tercios de la brecha se debe a la composición** (CVs más largos y senior), no a que el modelo «vea» la
+raza. Con datos reales los proxies (nombres, universidades, huecos por cuidado de hijos) pueden pesar más, así que la
+auditoría por grupo debe repetirse antes de cualquier uso.
 
 **Limitaciones.** Datos **sintéticos** (PopResume), solo **5 ocupaciones**, CVs de **EE. UU.** y solo en **inglés**, con
-plantillas limpias de una columna y una fecha de corte común (2023.01). Los resultados no se pueden extrapolar a CVs
-reales escaneados, de otros países, idiomas o formatos.
+plantillas limpias de una columna y una fecha de corte común (2023.01). La muestra solo trae tres categorías de raza
+(White, Asian/Pacific Islander, Black) y sexo binario, con grupos chicos en test. Los resultados no se pueden extrapolar
+a CVs reales escaneados, de otros países, idiomas o formatos.
 """)
 
 # ════════════════════════════════════════════════════════════════════════════

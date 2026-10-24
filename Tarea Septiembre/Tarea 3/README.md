@@ -251,20 +251,52 @@ persona confirma.
 detecta en la entrevista, aunque crea expectativas falsas. BERT sobrestima levemente (sesgo +0,21 años) y ningún error
 en test supera ±2 años.
 
-**Resultados de equidad.** MAE y error medio (predicho − real) de BERT en test por sexo y por raza, con n por grupo,
-unidos por `id` (`output/tables/fairness_by_sex.csv`, `output/tables/fairness_by_race.csv`, generados por
-`python -m src.visualization`). Sexo y raza **nunca** son features: solo se usan después de predecir.
+**Resultados de equidad.** MAE y error medio (predicho − real) de BERT en los 600 CVs de test, por sexo y por raza,
+unidos por `id` con las columnas `sex` y `race` de PopResume (`scripts/fetch_demographics.py`: los 4000 ids se unieron
+y `exp_year` coincide en todos). Sexo y raza **nunca** son features: solo se usan después de predecir. Tablas:
+`output/tables/fairness_by_sex.csv` y `output/tables/fairness_by_race.csv`; figura `output/figures/fairness_bert.png`.
 
-> **[PENDIENTE: tablas de equidad por sexo y raza]** — `src/download_data.py` guardó solo `id, occupation, exp_year`, así
-> que las columnas sex/race de PopResume no están en `data/raw/metadata.csv`. Para calcularlas:
-> `python scripts/fetch_demographics.py` (requiere el token HF) y luego `python -m src.visualization`. La app y este
-> README toman las tablas automáticamente cuando existen.
+| Grupo | n | MAE | Error medio (pred − real) | Años reales medios |
+|---|---|---|---|---|
+| Female | 299 | 0,299 | +0,218 | 6,85 |
+| Male | 301 | 0,294 | +0,212 | 6,21 |
+| Asian/Pacific Islander | 91 | **0,361** | **+0,288** | 7,47 |
+| Black | 47 | 0,307 | +0,134 | 6,62 |
+| White | 462 | 0,282 | +0,208 | 6,33 |
+| **Total** | 600 | 0,296 | +0,215 | 6,53 |
 
-**Posibles causas de diferencias aunque sexo y raza no sean entradas.** El texto contiene **proxies**: ocupación,
-empleadores, universidad, huecos de carrera (más frecuentes, por ejemplo, por cuidado de hijos) y número de empleos.
-El error de BERT crece con los huecos (0,37 vs. 0,25) y con el número de empleos (0,64 con 4); si esos patrones son más
-comunes en un grupo, su error también lo será. Además, si la mezcla ocupación × grupo del dataset no es uniforme, las
-diferencias de error entre ocupaciones se trasladan a los grupos. Por eso la auditoría por grupo
+IC 95 % por bootstrap de la diferencia entre grupos (2000 remuestreos, semilla 42; cálculo hecho para este análisis y no
+guardado como tabla):
+
+* **Sexo: no hay diferencia.** ΔMAE mujeres − hombres = +0,005 años, IC [−0,039; 0,048]; Δ error medio +0,006,
+  IC [−0,047; 0,056]. Ambos grupos se **sobrestiman** lo mismo (~+0,21 años, unos 2,6 meses).
+* **Raza: el grupo Asian/Pacific Islander tiene más error.** Su MAE supera al del grupo White en **+0,079 años
+  (~1 mes)**, IC [0,016; 0,147]: es la única diferencia significativa. También es el grupo **más sobrestimado**
+  (+0,288 vs. +0,208; Δ +0,080, IC [−0,003; 0,163], en el límite de la significancia).
+* El grupo **Black es el menos sobrestimado** (+0,134), con un MAE parecido al de White (Δ +0,025, IC [−0,049; 0,099]).
+  Pero con n = 47 la estimación es poco estable.
+* **Ningún grupo se subestima en promedio.** BERT sobrestima a todos; solo subestima levemente en la banda 0-2
+  (−0,06 en mujeres, −0,04 en hombres). Todas las diferencias son de semanas a ~1 mes, muy por debajo del umbral de
+  ±2 años que cambiaría una decisión.
+
+![Equidad de BERT](output/figures/fairness_bert.png)
+
+**Posibles causas, aunque sexo y raza no sean entradas.** El texto contiene **proxies** que se relacionan con el grupo
+y con el error:
+
+* El error de BERT crece con la experiencia y el número de empleos (MAE 0,18 con 1 empleo y 0,64 con 4) y con los huecos
+  de carrera (0,37 vs. 0,25).
+* En test, el grupo Asian/Pacific Islander tiene más CVs en la banda 11-20 (25 % vs. 14 % en White), más empleos
+  (2,65 vs. 2,37), algo más de huecos (43 % vs. 39 %) y un 54 % son desarrolladores de software (15 % en White).
+* Dentro de cada banda su MAE es parecido al de White: 0,20 / 0,19 / 0,33 / 0,72 frente a 0,17 / 0,19 / 0,28 / 0,68.
+  Si se reponderan sus bandas con la distribución de White, su MAE baja de 0,361 a ~0,310. Así, **cerca de dos tercios (~65 %) de la
+  brecha se explica por la composición** (más CVs largos y senior) y el resto por un error algo mayor en 6-10 y 11-20.
+* La brecha no viene de que el modelo «vea» la raza, sino de que el tipo de CV en el que BERT falla más (4 empleos,
+  muchos años, huecos) es más frecuente en ese grupo. Un modelo con aritmética de fechas real (la regla) no mostraría
+  ese patrón.
+
+Igual hay que repetir esta auditoría con datos reales antes de cualquier uso: allí los proxies (nombres, universidades,
+huecos por cuidado de hijos) pueden pesar mucho más que en un dataset sintético. Por eso la auditoría por grupo
 es obligatoria antes de cualquier uso.
 
 **Limitaciones.** Datos **sintéticos**, solo **5 ocupaciones**, población de **EE. UU.** y CVs **solo en inglés**, con
@@ -280,7 +312,7 @@ plantillas limpias de una columna y una fecha de corte común (2023.01).
 * BERT no aprendió aritmética de fechas (Pregunta 1) y es sensible al formato del texto (Pregunta 2); una regla
   explícita es mucho mejor en este dataset.
 * No se entrenó la variante Huber ni más de 12 épocas; no se reentrenó BERT con cada variante de limpieza.
-* La auditoría de equidad está pendiente de los datos demográficos (ver Pregunta 4).
+* La auditoría de equidad usa grupos chicos en test (Black n = 47, Asian/Pacific Islander n = 91), así que los IC son anchos. Además, la muestra de 4000 CVs solo trae tres categorías de raza (White 3107, Asian/Pacific Islander 616, Black 277) y sexo binario (Female 2031, Male 1969).
 
 **Usos de negocio**
 
