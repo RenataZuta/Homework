@@ -341,9 +341,39 @@ def find_example_cv() -> str | None:
     return None
 
 
-def draw_ocr_boxes(lines: list[dict], image=None, image_size=None, title: str = "") -> plt.Figure:
+def pii_line_indices(lines: list[dict]) -> set[int]:
+    """Índices de las cajas con datos personales, con las mismas reglas que ``preprocessing.remove_pii``: todo lo
+    anterior a la primera sección si aparece en las primeras 5 filas (nombre, ciudad, teléfono, email) y cualquier
+    caja con email, teléfono, URL o dirección."""
+    from src import preprocessing as P
+
+    rows = sorted({ln["row"] for ln in lines})
+    first_section = next((r for r in rows[:5]
+                          if P.SECTION_RE.match(" ".join(ln["text"] for ln in lines if ln["row"] == r))), None)
+    out = {i for i, ln in enumerate(lines) if first_section is not None and ln["row"] < first_section}
+    pii_res = (P.EMAIL_RE, P.PHONE_RE, P.URL_RE, P.ADDRESS_RE, P.CITY_STATE_ZIP_RE)
+    out |= {i for i, ln in enumerate(lines) if any(rx.search(ln["text"]) for rx in pii_res)}
+    return out
+
+
+def redact_image(image, boxes, pad: int = 4):
+    """Copia de la imagen con un rectángulo sólido sobre cada caja (los píxeles originales quedan tapados)."""
+    from PIL import ImageDraw
+
+    out = image.copy()
+    draw = ImageDraw.Draw(out)
+    for x1, y1, x2, y2 in boxes:
+        draw.rectangle((x1 - pad, y1 - pad, x2 + pad, y2 + pad), fill=(40, 40, 40))
+    return out
+
+
+def draw_ocr_boxes(lines: list[dict], image=None, image_size=None, title: str = "", redact: bool = True) -> plt.Figure:
     """Dibuja las cajas de PaddleOCR (``lines`` con text/confidence/box/row) sobre la imagen o, sin imagen, sobre un
-    lienzo en blanco con el texto reconocido dentro de cada caja. El número es el orden de lectura."""
+    lienzo en blanco con el texto reconocido dentro de cada caja. El número es el orden de lectura.
+    Con ``redact`` las cajas con datos personales se tapan con un rectángulo y su texto no se muestra."""
+    hidden = pii_line_indices(lines) if redact else set()
+    if image is not None and hidden:
+        image = redact_image(image, [lines[i]["box"] for i in hidden])
     if image is not None:
         w, h = image.size
     elif image_size:
@@ -360,7 +390,11 @@ def draw_ocr_boxes(lines: list[dict], image=None, image_size=None, title: str = 
         x1, y1, x2, y2 = ln["box"]
         ax.add_patch(plt.Rectangle((x1, y1), x2 - x1, y2 - y1, fill=False, edgecolor=COLORS[BERT_KEY], lw=1))
         ax.text(x1 - 4, y1 + (y2 - y1) / 2, str(i + 1), ha="right", va="center", fontsize=5, color="#e34948")
-        if image is None:
+        if i in hidden:
+            if image is None:  # sin imagen: rectángulo en lugar del texto
+                ax.add_patch(plt.Rectangle((x1, y1), x2 - x1, y2 - y1, facecolor="#282828", edgecolor="none"))
+            ax.text(x1 + 6, y1 + (y2 - y1) / 2, "dato personal oculto", va="center", fontsize=5, color="white")
+        elif image is None:
             ax.text(x1 + 2, y1 + (y2 - y1) / 2, ln["text"], va="center", fontsize=4.5, color=INK, clip_on=True)
     ax.set_xlim(0, w)
     ax.set_ylim(h, 0)

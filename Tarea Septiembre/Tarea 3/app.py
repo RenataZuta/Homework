@@ -282,7 +282,7 @@ with tab2:
 
     st.subheader("CV de ejemplo con las cajas de PaddleOCR")
     show_fig(V.fig_example_cv(),
-             "Cada caja es una línea detectada; el número es el orden de lectura (arriba→abajo, izquierda→derecha).",
+             "Cada caja es una línea detectada; el número es el orden de lectura (arriba→abajo, izquierda→derecha). La cabecera con datos personales se tapa.",
              missing="No hay imágenes (`data/raw/images/`) ni JSON de OCR (`data/ocr/`) en este equipo: se comparten "
                      "fuera de git. Sube un CV en la pestaña 4 para ver sus cajas.")
 
@@ -471,7 +471,7 @@ with tab4:
                     show_fig(V.draw_ocr_boxes(res["lines"], Image.open(png).convert("RGB"),
                                               title=f"{len(res['lines'])} cajas · confianza media "
                                                     f"{res['mean_confidence']:.3f} · {res['ocr_time_seconds']} s"),
-                             "Cajas detectadas por PaddleOCR y su orden de lectura.")
+                             "Cajas detectadas por PaddleOCR y su orden de lectura (datos personales de la cabecera tapados).")
                 with c2:
                     st.markdown("**Texto limpio que reciben los modelos** (sin PII; las fechas se conservan)")
                     if was_masked:
