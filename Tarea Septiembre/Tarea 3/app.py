@@ -215,7 +215,7 @@ with tab1:
     st.header("Problema")
     st.markdown(
         "Predecir, a partir de la **imagen de su CV**, los **años de experiencia laboral** de una persona "
-        "(variable objetivo: `exp_year`, continua entre 0 y 20), sin que el CV diga explícitamente cuántos años "
+        "(la variable objetivo, continua entre 0 y 20), sin que el CV diga explícitamente cuántos años "
         "tiene. Un sistema así sirve para "
         "**pre-llenar perfiles** o **priorizar la revisión** de CVs en reclutamiento; **nunca** para decidir una "
         "contratación (ver Pregunta 4).")
@@ -255,7 +255,7 @@ with tab1:
 with tab2:
     st.header("Distribución de la variable objetivo")
     show_fig(V.fig_exp_distribution(),
-             "Histograma de `exp_year` en los 4000 CVs y caja por ocupación. La mayoría tiene menos de 10 años y la "
+             "Histograma de los años de experiencia de los 4000 CVs y caja por ocupación. La mayoría tiene menos de 10 años y la "
              "cola llega a 25,5; como menos del 1 % supera 20, el tope de 20 casi no recorta información.")
 
     st.header("Calidad del OCR")
@@ -319,7 +319,7 @@ with tab3:
                                   "band_accuracy": "acc. bandas %", "band_macro_f1": "F1 macro bandas",
                                   "bias": "sesgo (pred−real)"})
         show_table(cmp, "MAE = error absoluto medio en años (menor es mejor). BERT es el mejor modelo aprendido; la "
-                        "regla de fechas (bonus, sin aprendizaje) es aún mejor porque `exp_year` es casi la suma de "
+                        "regla de fechas (bonus, sin aprendizaje) es aún mejor porque los años de experiencia son casi la suma de "
                         "las duraciones de los empleos.")
     else:
         st.warning("Falta output/tables/model_comparison.csv")

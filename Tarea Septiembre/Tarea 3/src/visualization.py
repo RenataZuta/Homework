@@ -137,7 +137,7 @@ def fig_exp_distribution() -> plt.Figure | None:
     ax.annotate(f"tope = {U.TARGET_CAP}\n{n_cap} CVs ≥ {U.TARGET_CAP} ({n_cap / len(exp):.1%})",
                 xy=(U.TARGET_CAP, ax.get_ylim()[1] * 0.75), xytext=(8, 0), textcoords="offset points",
                 color=INK, fontsize=9)
-    ax.set(title=f"exp_year en los {len(exp)} CVs muestreados", xlabel="años de experiencia (exp_year)",
+    ax.set(title=f"Años de experiencia en los {len(exp)} CVs muestreados", xlabel="años de experiencia",
            ylabel="CVs")
     ax = axes[1]
     occs = [o for o in U.OCCUPATIONS if o in set(meta["occupation"])]
@@ -149,7 +149,7 @@ def fig_exp_distribution() -> plt.Figure | None:
     ax.set_yticks(range(1, len(occs) + 1), [f"{OCC_SHORT[o]} ({int((d >= U.TARGET_CAP).sum())} en tope)"
                                             for o, d in zip(occs, data)])
     ax.axvline(U.TARGET_CAP, color="#e34948", ls="--", lw=1.2)
-    ax.set(title="Por ocupación (800 CVs cada una)", xlabel="exp_year")
+    ax.set(title="Por ocupación (800 CVs cada una)", xlabel="años de experiencia")
     fig.tight_layout()
     return fig
 
