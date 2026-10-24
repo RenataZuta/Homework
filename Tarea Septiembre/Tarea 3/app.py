@@ -214,15 +214,19 @@ with tab1:
     samp, ocr_rep, split = metrics("sampling_report.json"), metrics("ocr_report.json"), metrics("split_report.json")
     st.header("Problema")
     st.markdown(
-        "Predecir los **años de experiencia laboral** (0–20, variable continua `exp_year`) de una persona a partir "
-        "de la **imagen de su CV**, sin que el CV diga explícitamente cuántos años tiene. Un sistema así sirve para "
+        "Predecir, a partir de la **imagen de su CV**, los **años de experiencia laboral** de una persona "
+        "(variable objetivo: `exp_year`, continua entre 0 y 20), sin que el CV diga explícitamente cuántos años "
+        "tiene. Un sistema así sirve para "
         "**pre-llenar perfiles** o **priorizar la revisión** de CVs en reclutamiento; **nunca** para decidir una "
         "contratación (ver Pregunta 4).")
-    c = st.columns(4)
+    c = st.columns(3)
     c[0].metric("CVs muestreados", f"{samp.get('total_cvs', '—')}")
     c[1].metric("Ocupaciones", len(samp.get("per_occupation", {})) or "—")
-    c[2].metric("Train / val / test", "/".join(str(v) for v in split.get("sizes", {}).values()) or "—")
-    c[3].metric("MAE de BERT en test", f"{fmt(mae_of(BERT_KEY))} años")
+    c[2].metric("MAE de BERT en test", f"{fmt(mae_of(BERT_KEY))} años")
+    sizes = split.get("sizes", {})
+    c = st.columns(3)
+    for col, name in zip(c, ("train", "val", "test")):
+        col.metric(f"CVs en {name}", sizes.get(name, "—"))
 
     st.header("Metodología")
     st.markdown(f"""
