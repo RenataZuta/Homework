@@ -1,0 +1,5 @@
+# El file watcher de Streamlit recorre sys.modules buscando archivos que vigilar; con los módulos «lazy» de
+# transformers eso fuerza imports opcionales (p. ej. zoedepth → torchvision) que llenan la terminal de
+# ModuleNotFoundError y frenan la app. Sin watcher, tras editar el código hay que reiniciar `streamlit run app.py`.
+[server]
+fileWatcherType = "none"

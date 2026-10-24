@@ -389,3 +389,8 @@ Cuatro pestañas:
 La app no se rompe si falta algún archivo: muestra un aviso en esa sección y sigue. En Windows con CPU, PaddlePaddle 3.3
 falla con oneDNN; la app crea PaddleOCR con la misma configuración y `enable_mkldnn=False`. El OCR tarda ~30 s por CV en
 CPU (la primera vez descarga los modelos de PaddleOCR).
+
+`.streamlit/config.toml` desactiva el *file watcher* de Streamlit (`fileWatcherType = "none"`). Ese watcher recorre
+todos los módulos cargados y, con los módulos «lazy» de transformers, fuerza imports opcionales (p. ej. `zoedepth` →
+`torchvision`) que llenan la terminal de `ModuleNotFoundError` y frenan la app. Consecuencia: tras editar el código hay
+que detener y volver a lanzar `streamlit run app.py` (no se recarga sola).
