@@ -17,5 +17,8 @@ streamlit==1.66.0
 torch==2.14.1
 jiwer==4.0.0
 plotly==7.1.0
+# App (Persona 3): leer PDFs subidos en el estimador y cargar los baselines guardados
+pymupdf==2.0
+joblib==1.6.0
 accelerate==1.15.0
 evaluate==0.4.6
