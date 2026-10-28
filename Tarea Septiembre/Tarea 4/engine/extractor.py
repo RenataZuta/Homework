@@ -12,7 +12,7 @@ import json
 import os
 import re
 
-from .validator import normalize_spoken_numbers, sin_acentos
+from .validator import normalize_spoken_numbers, sin_acentos, verify_record
 
 FLAGS = re.IGNORECASE
 
@@ -98,7 +98,7 @@ _ROLES = (r"analista|desarrolladora?|asistente|coordinador[a]?|practicante|geren
           r"dise[ñn]ador[a]?|administrador[a]?|contador[a]?|vendedor[a]?|ejecutiv[oa]|supervisor[a]?|especialista|"
           r"consultor[a]?|auxiliar|t[eé]cnic[oa]|programador[a]?|community manager|l[ií]der|director[a]?|encargad[oa]|"
           r"reclutador[a]?|secretari[oa]|cajer[oa]")
-_FIN_PUESTO = r"(?=\s+en\s+(?:una?|la|el|mi|las|los)\b|\s+(?:pero|donde)\b|[.,;:?!]|$)"
+_FIN_PUESTO = r"(?=\s+en\s+(?:una?|la|el|mi|las|los)\b|\s+(?:pero|donde|durante|desde|hasta|por\s+\d|hace)\b|[.,;:?!]|$)"
 
 
 def _ultimo_puesto(t):
@@ -133,7 +133,33 @@ def _tecnologias(t, glosario):
         pos = [m.start() for v in variantes for m in re.finditer(rf"(?<![\w.]){re.escape(v)}(?![\w])", t, FLAGS)]
         if pos:
             encontrados.append((min(pos), termino))
+    for pos, termino in _tecnologias_en_listas(t):
+        if not any(termino.lower() == c.lower() for _, c in encontrados):
+            encontrados.append((pos, termino))
     return [c for _, c in sorted(encontrados)]
+
+
+_DISPARA_TECNOLOGIAS = (r"(?:manejo|manejaba|conozco|domino|dominio|utilizo|uso|trabajo\s+con|trabajaba\s+con|"
+                        r"trabajé\s+con|experiencia\s+(?:en|con))")
+_CORTA_LISTA = r"\b(?:pero|aunque|adem[aá]s|durante|desde|hace|para|porque|y\s+tambi[eé]n)\b"
+
+
+def _tecnologias_en_listas(t):
+    """Herramientas fuera del glosario: lista tras 'manejo/conozco/trabajo con…' ("Python, SQL y Power BI").
+
+    Solo acepta ítems de hasta 3 palabras que empiecen en mayúscula o lleven dígito/punto (nombres propios de
+    herramienta), para no tomar frases comunes. Devuelve (posición, nombre).
+    """
+    out = []
+    for m in re.finditer(rf"\b{_DISPARA_TECNOLOGIAS}\s+(?P<l>[^.;?!]+)", t, FLAGS):
+        lista = re.split(_CORTA_LISTA, m.group("l"), maxsplit=1, flags=FLAGS)[0]
+        base = m.start("l")
+        for it in re.finditer(r"[^,]+", re.sub(r"\s+(?:y|e)\s+(?=[A-ZÁÉÍÓÚ\d])", ", ", lista)):
+            nombre = it.group().strip()
+            nombre = re.sub(r"^(?:tambi[eé]n\s+|el\s+|la\s+|los\s+|las\s+|de\s+)", "", nombre, flags=FLAGS).strip()
+            if nombre and len(nombre.split()) <= 3 and re.match(r"[A-ZÁÉÍÓÚ]|.*[\d.]", nombre):
+                out.append((base + it.start(), nombre))
+    return out
 
 
 _POS_SUELDO = ("pretensi", "buscand", "busco", "esper", "expectativa", "sueldo", "salario", "ganar", "alrededor",
@@ -443,6 +469,18 @@ class RuleExtractor:
         if schema == "sales":
             return _extraer_ventas(t, self.config)
         raise ValueError(f"schema desconocido: {schema!r} (usa 'interview' o 'sales')")
+
+    def extract_verified(self, transcript, schema):
+        """Extrae y verifica cada campo contra la transcripción.
+
+        Devuelve {"fields": {campo: valor}, "verificado": {campo: bool}, "estado": {campo: str}, "detalles": {...}}.
+        `verificado` es True solo si el valor aparece literalmente en lo dicho (ver validator.verify_literal);
+        un campo sin valor o con valor no hallado es False. `estado` conserva el matiz verificado/sin_verificar/sin_valor.
+        """
+        campos = self.extract(transcript, schema)
+        estado, detalles = verify_record(campos, transcript)
+        return {"fields": campos, "verificado": {k: v == "verificado" for k, v in estado.items()},
+                "estado": estado, "detalles": detalles}
 
 
 class LLMExtractor:
