@@ -106,8 +106,8 @@ menu:
   - {name: arroz chaufa especial, aliases: [arroz chaufa especial, chaufa especial], category: plato}
   - {name: arroz chaufa de pollo, aliases: [arroz chaufa de pollo, chaufa de pollo], category: plato}
   - {name: ceviche mixto, aliases: [ceviche mixto, ceviche], category: plato}
-  - {name: arroz con mariscos, aliases: [arroces con mariscos, arroz con mariscos], category: plato}
-  - {name: Inca Kola, aliases: [inca kolas, inca kola], category: bebida}
+  - {name: arroz con mariscos, aliases: [arroces con mariscos, arroz con mariscos, arroz con marisco], category: plato}
+  - {name: Inca Kola, aliases: [inca kolas, inca kola, inca colas, inca cola], category: bebida}
   - {name: Coca-Cola, aliases: [gaseosa de litro y medio, coca-cola, coca cola], category: bebida, size_in_name: true}
   - {name: cuarto de pollo brasa, aliases: [cuartos de pollo a la brasa, cuarto de pollo a la brasa, cuartos de pollo, cuarto de pollo], category: plato, variants: [pecho, pierna]}
   - {name: ensalada, aliases: [ensaladas, ensalada], category: plato}

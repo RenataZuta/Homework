@@ -37,6 +37,8 @@ python tasks/task2_sales/degradation/build_ladder.py --input_dir tasks/task2_sal
 
 Genera `L0/` (original), `L1/` (Opus 24 kbps mono, estilo nota de voz de WhatsApp), `L2/` (pasa-banda 300–3400 Hz a 8 kHz, estilo llamada) y `L3/` (L1 + ruido ambiente a SNR 10 dB) y el manifiesto `ladder_l0_l3_manifest.csv` con el SNR real de cada archivo. Opus usa `ffmpeg` si está en el PATH y, si no, PyAV con el mismo códec. Sin `--preset` se genera la escalera de 12 niveles de siempre; para transcribir L0–L3 con el benchmark hay que pedirlos: `--ladder-dir ... --levels L0 L1 L2 L3`.
 
+Las transcripciones de L0–L3 (`medium` y `large-v3`, `float16`, GPU) están en `tasks/task2_sales/transcriptions_cache/` y los resultados en `tasks/task2_sales/metrics/l0_l3_*.csv` (`wer_*`: WER por nivel; `detail/summary/validation`: extracción por reglas y aritmética del pedido por nivel). Para regenerar estos últimos sin ASR: `python -m engine.evaluate_ladder --levels L0 L1 L2 L3 --prefix l0_l3`.
+
 ## Interfaz (Streamlit)
 
 ```bash
