@@ -1,10 +1,13 @@
-"""From Voice to Record — interfaz de la Tarea 4.
+"""From Voice to Record — interfaz de la Tarea 4 (HW05).
 
 Cuatro pestañas:
-  1. Probador: sube un audio y obtén transcripción, campos extraídos, verificación y (en ventas) aritmética del pedido.
-  2. Benchmark: WER/CER, tiempo y VRAM por modelo × precisión × dispositivo, con y sin glosario.
-  3. Escalera de degradación: cuánto sube el WER al degradar el audio (ruido, banda telefónica, MP3, volumen).
-  4. Ejemplos: un clip a la vez, con guion, ground truth y transcripciones lado a lado.
+  1. Problema y Método: qué resuelve el proyecto, qué existe y qué falta, y el pipeline.
+  2. Resultados Task 1 (Entrevistas): extracción por campo contra el ground truth, WER/CER y exactitud por campo.
+  3. Resultados Task 2 (Ventas): lo mismo, más la aritmética del pedido y la comparación por nivel de degradación L0-L3.
+  4. Demo en vivo: sube un audio, se transcribe con faster-whisper (modelo medium), se extrae y se verifica.
+
+Los resultados salen de tasks/*/metrics/*.csv y de las transcripciones cacheadas con el motor de engine/; no hay datos de
+ejemplo inventados. Si falta algún CSV, la pestaña lo avisa en lugar de rellenarlo.
 
 Uso (desde la carpeta de la Tarea 4):  streamlit run app.py
 """
@@ -29,10 +32,11 @@ from engine import load_config, task_dir  # noqa: E402
 from engine.benchmark import (  # noqa: E402
     field_accuracy, load_ground_truth, load_ladder_meta, load_references, normalize_for_wer,
 )
+from engine.compare_extractors import ClienteSimulado  # noqa: E402
 from engine.core import process_audio  # noqa: E402
 from engine.extractor import RuleExtractor  # noqa: E402
 from engine.transcriber import cuda_available, supported_compute_types  # noqa: E402
-from engine.validator import normalize_spoken_numbers  # noqa: E402
+from engine.validator import normalize_spoken_numbers, validate_order_arithmetic  # noqa: E402
 
 st.set_page_config(page_title="From Voice to Record", page_icon="🎙️", layout="wide")
 
@@ -40,6 +44,13 @@ TAREAS = {"Entrevistas laborales": ("task1_interview", "interview"), "Llamadas d
 EXT_AUDIO = ["m4a", "wav", "mp3", "ogg", "opus", "flac"]
 ICONO = {"verificado": "✅ verificado", "sin_verificar": "⚠️ sin verificar", "sin_valor": "— sin valor"}
 ORDEN_FAMILIA = {"original": 0, "ruido": 1, "telefono": 2, "compresion": 3, "volumen": 4}
+NIVELES_L = {"L0": "L0 · original", "L1": "L1 · WhatsApp (Opus 24 kbps)", "L2": "L2 · teléfono (300–3400 Hz, 8 kHz)",
+             "L3": "L3 · ruido (restaurante, SNR 10 dB)"}
+EXTRACTORES = {"rules": "Reglas (regex)", "llm_sim": "LLM — respuestas simuladas (no mide un modelo)",
+               "llm_api": "LLM — API de Anthropic (de pago)"}
+RESPUESTAS_SIMULADAS = RAIZ / "tasks" / "comparison" / "llm_answers_simulado.json"
+CAMPOS = {"interview": ["anios_experiencia", "ultimo_puesto", "tecnologias", "pretension_salarial", "disponibilidad", "nivel_ingles"],
+          "sales": ["items", "promocion", "direccion_entrega", "metodo_pago", "total_dicho"]}
 
 st.markdown(
     "<style>mark.del{background:#fecaca;color:#111;padding:0 2px;border-radius:3px}"
@@ -232,64 +243,11 @@ def mostrar_resultado(res):
 TAREAS_POR_TASK = {t: s for t, s in TAREAS.values()}
 
 
-# ── Pestaña 1: Probador ───────────────────────────────────────────────────────
-
-def pestana_probador():
-    cfg = config()
-    hay_gpu = cuda_available()
-    st.caption("Sube un audio (o usa uno del repositorio), elige el modelo y se transcribe, extrae y verifica todo. "
-               "En CPU `tiny` y `base` son rápidos pero menos precisos; `medium` y `large-v3` tardan bastante.")
-    izq, der = st.columns(2)
-    with izq:
-        archivo = st.file_uploader("Audio", type=EXT_AUDIO)
-        ejemplos = {p.name: p for t in TAREAS.values() for p in sorted(task_dir(cfg, t[0], "audio").glob("*")) if p.suffix[1:] in EXT_AUDIO}
-        ejemplo = st.selectbox("…o un audio del repositorio", ["—"] + list(ejemplos))
-    with der:
-        etiqueta_tipo = st.radio("Tipo de audio", list(TAREAS), horizontal=True)
-        task, schema = TAREAS[etiqueta_tipo]
-        modelos = list(dict.fromkeys(["tiny", "base", "small"] + cfg["asr"]["models"]))
-        defecto = cfg["asr"]["default_model"] if hay_gpu else "tiny"
-        modelo = st.selectbox("Modelo", modelos, index=modelos.index(defecto))
-        c1, c2 = st.columns(2)
-        dispositivo = c1.selectbox("Dispositivo", ["auto", "cpu"] + (["cuda"] if hay_gpu else []))
-        real = "cuda" if (dispositivo == "cuda" or (dispositivo == "auto" and hay_gpu)) else "cpu"
-        precision = c2.selectbox("Precisión", ["auto"] + sorted(supported_compute_types(real)))
-        glosario = st.checkbox("Usar el glosario de dominio (initial_prompt)")
-        opciones_ext = ["rules"] + (["llm", "both"] if os.environ.get("ANTHROPIC_API_KEY") else [])
-        extractor = st.selectbox("Extractor", opciones_ext, help="rules = sin API ni clave. llm/both solo aparecen si hay ANTHROPIC_API_KEY (de pago).")
-
-    if archivo is not None:
-        nombre, datos = archivo.name, archivo.getvalue()
-    elif ejemplo != "—":
-        nombre, datos = ejemplo, ejemplos[ejemplo].read_bytes()
-    else:
-        nombre, datos = None, None
-    if st.button("Transcribir y extraer", type="primary", disabled=datos is None, width="stretch"):
-        with tempfile.NamedTemporaryFile(suffix=Path(nombre).suffix, delete=False) as f:
-            f.write(datos)
-            ruta = f.name
-        try:
-            with st.spinner(f"Transcribiendo con {modelo} en {real}… (la primera vez descarga el modelo)"):
-                r = process_audio(ruta, schema, extractor=extractor, model=modelo, device=dispositivo,
-                                  compute_type=precision, glossary=glosario)
-            st.session_state["ultimo"] = {"r": r, "schema": schema, "nombre": nombre}
-        finally:
-            os.unlink(ruta)
-    if datos is None:
-        st.info("Sube un audio o elige uno del repositorio para empezar.")
-    if "ultimo" in st.session_state:
-        st.divider()
-        st.subheader(f"Resultado: {st.session_state['ultimo']['nombre']}")
-        mostrar_resultado(st.session_state["ultimo"])
-
-
 # ── Pestaña 2: Benchmark ──────────────────────────────────────────────────────
 
-def pestana_benchmark():
+def pestana_benchmark(task):
     st.caption("WER = porcentaje de palabras mal transcritas respecto al guion (textos normalizados: minúsculas y sin puntuación). "
                "Los intervalos son bootstrap al 95 % sobre los clips; con 5 clips por tarea son anchos.")
-    tarea = st.radio("Tarea", list(TAREAS), horizontal=True, key="bench_tarea")
-    task = TAREAS[tarea][0]
     resumen = csv_metricas(task, "benchmark_summary.csv")
     if resumen is None:
         st.info("Aún no hay resultados del benchmark para esta tarea (ver `engine/benchmark.py`).")
@@ -377,13 +335,11 @@ def pestana_escalera():
 
 # ── Pestaña 4: Ejemplos ───────────────────────────────────────────────────────
 
-def pestana_ejemplos():
+def pestana_ejemplos(task):
     cfg = config()
-    c1, c2 = st.columns(2)
-    tarea = c1.radio("Tarea", list(TAREAS), horizontal=True, key="ej_tarea")
-    task, schema = TAREAS[tarea]
+    schema = TAREAS_POR_TASK[task]
     refs = referencias(task)
-    clip = c2.selectbox("Clip", sorted(refs), key="ej_clip")
+    clip = st.selectbox("Clip", sorted(refs), key=f"ej_clip_{task}")
     idx = indice_transcripciones(task)
     idx = idx[idx["clip"] == clip]
     if idx.empty:
@@ -393,10 +349,10 @@ def pestana_ejemplos():
     meta = load_ladder_meta(escalera) if escalera else {}
     niveles = sorted(idx["level"].unique(), key=lambda n: (n != "", ORDEN_FAMILIA.get(meta.get(n, ("", 0))[0], 9), meta.get(n, ("", 0))[1]))
     etiqueta = {n: ("(audio original, sin degradar)" if n == "" else n) for n in niveles}
-    nivel = st.selectbox("Nivel de degradación", niveles, format_func=etiqueta.get, key="ej_nivel")
+    nivel = st.selectbox("Nivel de degradación", niveles, format_func=etiqueta.get, key=f"ej_nivel_{task}")
     sub = idx[idx["level"] == nivel].copy()
     sub["cfg"] = sub["model"] + " · " + sub["compute_type"] + " · " + sub["device"] + " · glosario " + sub["glossary"].map({True: "sí", False: "no"})
-    elegida = st.selectbox("Configuración", sub["cfg"].tolist(), key="ej_cfg")
+    elegida = st.selectbox("Configuración", sub["cfg"].tolist(), key=f"ej_cfg_{task}")
     fila = sub[sub["cfg"] == elegida].iloc[0]
 
     audio = task_dir(cfg, task, "audio") / next(iter([p.name for p in task_dir(cfg, task, "audio").glob(f"{clip}.*")]), "")
@@ -440,18 +396,369 @@ def pestana_ejemplos():
                    f"¿hubo corrección del cliente? {gt['tiene_correccion']}")
 
 
+# ── Datos de resultados (compartidos por los tabs 2 y 3) ──────────────────────
+
+def configs_asr(task):
+    """Configuraciones de ASR con transcripciones del audio original: [(model, compute_type, device, glossary)]."""
+    idx = indice_transcripciones(task)
+    idx = idx[idx["level"] == ""]
+    return sorted(idx[["model", "compute_type", "device", "glossary"]].drop_duplicates().itertuples(index=False, name=None))
+
+
+def config_principal(task):
+    """La de menor WER normalizado del benchmark (la misma que usan el notebook y los scripts de métricas)."""
+    resumen = csv_metricas(task, "benchmark_summary.csv")
+    if resumen is None:
+        return None
+    m = resumen[resumen["task"] == task].sort_values("wer_numnorm").iloc[0]
+    return (m["model"], m["compute_type"], m["device"], m["glossary"] == "on")
+
+
+def etiqueta_cfg(c):
+    return f"{c[0]} · {c[1]} · {c[2]} · glosario {'sí' if c[3] else 'no'}"
+
+
+def selector_asr(task, clave):
+    configs = {etiqueta_cfg(c): c for c in configs_asr(task)}
+    if not configs:
+        st.warning("No hay transcripciones cacheadas de esta tarea (ver `engine/benchmark.py`).")
+        return None
+    etiquetas = list(configs)
+    principal = config_principal(task)
+    pos = etiquetas.index(etiqueta_cfg(principal)) if principal and etiqueta_cfg(principal) in configs else 0
+    elegida = st.selectbox("Configuración de ASR (transcripciones cacheadas del audio original)", etiquetas, index=pos, key=f"asr_{clave}",
+                           help="Por defecto, la de menor WER del benchmark. Las demás permiten ver cómo cambian los campos con el ASR.")
+    return configs[elegida]
+
+
+def selector_extractor(clave, n_llamadas):
+    """Radio de método de extracción. Devuelve el método listo para usar, o None si aún no se puede (sin clave o sin confirmar)."""
+    ext = st.radio("Método de extracción", list(EXTRACTORES), format_func=EXTRACTORES.get, horizontal=True, key=f"ext_{clave}")
+    if ext == "llm_sim":
+        st.warning("Respuestas LLM **simuladas**: escritas a mano viendo el ground truth. Sirven para probar el flujo sin clave, "
+                   "pero **no miden a ningún modelo**; no las cites como resultado del LLM.")
+        return ext if RESPUESTAS_SIMULADAS.exists() else None
+    if ext == "llm_api":
+        if not os.environ.get("ANTHROPIC_API_KEY"):
+            st.info("No hay `ANTHROPIC_API_KEY` en el entorno: el camino LLM con la API real no está disponible. "
+                    "La API es de pago; con la clave en `.env` o en el entorno aparecería aquí.")
+            return None
+        if not st.session_state.get(f"api_ok_{clave}"):
+            if st.button(f"Ejecutar con la API ({n_llamadas} llamadas, de pago)", key=f"api_btn_{clave}"):
+                st.session_state[f"api_ok_{clave}"] = True
+                st.rerun()
+            return None
+    return ext
+
+
+def valor_gt(task, clip, campo):
+    fila = ground_truth(task)[clip]
+    if campo == "items":
+        return items_txt(json.loads(fila["items_json"]))
+    v = fila[campo]
+    return "—" if v in ("", "null") else v
+
+
+@st.cache_data(show_spinner="Extrayendo y verificando…")
+def extraer(task, extractor, model, compute_type, device, glossary):
+    """(tabla larga, aritmética, error). Una fila por clip y campo con lo extraído, el ground truth, si coincide y si
+    el valor aparece literalmente en la transcripción."""
+    cfg, schema, gt = config(), TAREAS_POR_TASK[task], ground_truth(task)
+    idx = indice_transcripciones(task)
+    idx = idx[(idx["level"] == "") & (idx["model"] == model) & (idx["compute_type"] == compute_type)
+              & (idx["device"] == device) & (idx["glossary"] == glossary)]
+    cliente = ClienteSimulado(json.loads(RESPUESTAS_SIMULADAS.read_text(encoding="utf-8"))) if extractor == "llm_sim" else None
+    motor = "rules" if extractor == "rules" else "llm"
+    filas, aritmetica = [], []
+    for clip, texto in sorted(zip(idx["clip"], idx["transcript"])):
+        if cliente:
+            cliente.clip = clip
+        r = process_audio(None, schema, config_path=str(RAIZ / "config.yaml"), extractor=motor, transcript=texto, llm_client=cliente)
+        if r["error"]:
+            return None, None, f"{clip}: {r['error']}"
+        acc = field_accuracy(cfg, task, clip, r["fields"], gt)
+        for campo in CAMPOS[schema]:
+            valor = r["fields"].get(campo)
+            filas.append({"clip": clip, "campo": campo,
+                          "valor_extraido": items_txt(valor) if campo == "items" else valor_txt(valor),
+                          "valor_ground_truth": valor_gt(task, clip, campo), "match": "✅" if acc[campo] else "❌",
+                          "verified": ICONO.get(r["verified_fields"].get(campo, "sin_valor"), "—").split(" ")[0],
+                          "_ok": bool(acc[campo])})
+        if schema == "sales":
+            fila_gt = gt[clip]
+            a = validate_order_arithmetic(r["fields"], ground_truth={
+                "items": json.loads(fila_gt["items_json"]), "total_dicho": fila_gt["total_dicho"], "total_correcto": fila_gt["total_correcto"]})
+            b = a["breakdown"]
+            aritmetica.append({"clip": clip, "Σ cantidad × precio": b.get("subtotal"), "− promoción": b.get("descuento") or 0,
+                               "+ paquete promocional": b.get("paquete") or 0, "total esperado": a["expected_total"], "total dicho": a["total_dicho"], "diferencia": a["difference"],
+                               "estado": a["status"], "diagnóstico": a["diagnosis"], "trampa en el ground truth": fila_gt["total_es_incorrecto"]})
+    return pd.DataFrame(filas), (pd.DataFrame(aritmetica) if aritmetica else None), None
+
+
+def metricas_asr(task, cfg_asr):
+    """Promedio de WER, WER con números normalizados y CER de la configuración elegida (benchmark_detail.csv)."""
+    d = csv_metricas(task, "benchmark_detail.csv")
+    if d is None:
+        return None
+    m, ct, dev, gl = cfg_asr
+    d = d[(d["model"] == m) & (d["compute_type"] == ct) & (d["device"] == dev) & (d["glossary"] == ("on" if gl else "off"))]
+    return d if len(d) else None
+
+
+def bloque_resultados(task, clave):
+    """Tabla clip × campo, métricas de transcripción y exactitud por campo, con selector de ASR y de método de extracción."""
+    schema = TAREAS_POR_TASK[task]
+    cfg_asr = selector_asr(task, clave)
+    if cfg_asr is None:
+        return None
+    n = len(referencias(task))
+    metodo = selector_extractor(clave, n)
+    if metodo is None:
+        return None
+    tabla, aritmetica, error = extraer(task, metodo, *cfg_asr)
+    if error:
+        st.error(f"El extractor falló: {error}")
+        return None
+    if tabla is None or tabla.empty:
+        st.warning("No hay transcripciones para esa configuración.")
+        return None
+
+    st.markdown("**Campos extraídos frente al ground truth**")
+    st.caption("`match`: coincide con el ground truth (números con tolerancia, listas como conjunto). "
+               "`verified`: el valor aparece literalmente en la transcripción (✅), no aparece (⚠️) o no hay valor (—). "
+               "Un valor puede estar verificado y aun así ser incorrecto, y al revés.")
+    st.dataframe(tabla.drop(columns="_ok"), width="stretch", hide_index=True, height=min(740, 38 * (len(tabla) + 1)))
+
+    st.markdown("**Métricas**")
+    wer = metricas_asr(task, cfg_asr)
+    c1, c2, c3, c4 = st.columns(4)
+    if wer is not None:
+        c1.metric("WER promedio", f"{wer['wer'].mean():.1%}", help="Capa transcripción: palabras mal transcritas frente al guion.")
+        c2.metric("WER (números normalizados)", f"{wer['wer_numnorm'].mean():.1%}")
+        c3.metric("CER promedio", f"{wer['cer'].mean():.1%}")
+    else:
+        st.info("No hay `benchmark_detail.csv` para esta configuración: sin WER/CER.")
+    c4.metric("Campos correctos (registro)", f"{tabla['_ok'].mean():.0%}", help="Capa registro: fracción de campos que coinciden con el ground truth.")
+    por_campo = tabla.groupby("campo", sort=False)["_ok"].mean().reset_index().rename(columns={"_ok": "exactitud"})
+    grafico = alt.Chart(por_campo).mark_bar().encode(
+        y=alt.Y("campo:N", sort=None, title=None), x=alt.X("exactitud:Q", title="Exactitud por campo", axis=alt.Axis(format="%"),
+                                                           scale=alt.Scale(domain=[0, 1])),
+        tooltip=["campo", alt.Tooltip("exactitud:Q", format=".0%")]).properties(height=34 * len(por_campo) + 30)
+    izq, der = st.columns([3, 2])
+    izq.altair_chart(grafico, width="stretch")
+    der.dataframe(por_campo.assign(exactitud=por_campo["exactitud"].map(lambda x: f"{x:.0%}")), width="stretch", hide_index=True)
+    return tabla, aritmetica, cfg_asr
+
+
+# ── Pestaña 1: Problema y método ──────────────────────────────────────────────
+
+def pestana_problema():
+    st.header("Del audio a un registro verificado")
+    st.markdown(
+        "Una entrevista laboral o una llamada de pedidos contiene datos valiosos (sueldo pretendido, años de experiencia, "
+        "platos, cantidades, dirección, total) que hoy quedan encerrados en un audio. Este proyecto los **convierte en un registro "
+        "estructurado** y, sobre todo, **verifica cada campo contra lo que realmente se dijo**: un campo solo se marca como "
+        "verificado si su valor aparece literalmente en la transcripción, y en las ventas se comprueba además que "
+        "`cantidad × precio − promoción` cuadre con el total.")
+    st.subheader("Lo que existe y lo que falta")
+    st.caption("Resumen de las funciones de transcripción de uso general; lo que se compara es el tipo de resultado, no su calidad.")
+    st.dataframe(pd.DataFrame([
+        {"Herramienta": "WhatsApp", "Qué entrega": "Transcripción de notas de voz (texto)", "Campos estructurados": "❌", "Verificación contra lo dicho": "❌"},
+        {"Herramienta": "YouTube", "Qué entrega": "Subtítulos automáticos (texto con tiempos)", "Campos estructurados": "❌", "Verificación contra lo dicho": "❌"},
+        {"Herramienta": "Zoom", "Qué entrega": "Transcripción y resúmenes de la reunión", "Campos estructurados": "❌ (resumen libre, no un esquema fijo)", "Verificación contra lo dicho": "❌"},
+        {"Herramienta": "Este proyecto", "Qué entrega": "Registro con campos de un esquema + bandera por campo", "Campos estructurados": "✅", "Verificación contra lo dicho": "✅ literal, y aritmética en ventas"},
+    ]), width="stretch", hide_index=True)
+    st.markdown("Transcribir no basta: falta pasar del texto a **campos** y saber **cuáles son de fiar**.")
+
+    st.subheader("El pipeline")
+    st.graphviz_chart('''digraph G { rankdir=LR; node [shape=box, style="rounded,filled", fillcolor="#eef2ff", color="#6366f1", fontname="Helvetica"];
+        audio [label="Audio\\n(entrevista o llamada)"]; asr [label="Transcripción\\nfaster-whisper"]; txt [label="Texto", shape=note, fillcolor="#fff"];
+        ext [label="Extracción\\nreglas (regex) o LLM"]; cam [label="Campos del esquema", shape=note, fillcolor="#fff"];
+        ver [label="Verificación\\nliteral + aritmética", fillcolor="#dcfce7", color="#16a34a"]; reg [label="Registro verificado\\n(bandera por campo)", fillcolor="#dcfce7", color="#16a34a"];
+        audio -> asr -> txt -> ext -> cam -> ver -> reg; }''')
+    st.markdown(
+        "1. **Transcribir** con `faster-whisper` (modelos `medium` y `large-v3`, GPU o CPU).\n"
+        "2. **Extraer** los campos del esquema con expresiones regulares en español o con un LLM (ambos implementan `extract(texto, esquema)`).\n"
+        "3. **Verificar** cada valor: primero de forma literal, luego con los números hablados pasados a dígitos; en ventas, la aritmética del pedido "
+        "con un diagnóstico de quién se equivocó (el hablante o el ASR).\n"
+        "4. **Medir en dos capas**: la transcripción (WER, CER) y el registro (exactitud por campo). Se miden por separado porque no van de la mano.")
+
+    contrastes = csv_metricas("task1_interview", "extraction_metrics_contrasts.csv")
+    if contrastes is not None and len(contrastes):
+        st.subheader("Por qué dos capas: WER y registro no van de la mano")
+        cols = st.columns(len(contrastes))
+        for col, (_, f) in zip(cols, contrastes.iterrows()):
+            col.metric(f["contraste"], f"{f['clip']}")
+            col.markdown(f"{f['palabras_erradas']} palabras mal transcritas · {f['campos_correctos']} campos correctos")
+        st.caption("Medidos sobre las entrevistas con el extractor por reglas (detalle en la pestaña de Task 1). "
+                   "Una sola palabra mal transcrita en un campo crítico rompe el registro; muchas palabras de relleno mal transcritas no lo tocan.")
+    with st.expander("Diagrama del pipeline (imagen)"):
+        ruta = RAIZ / "docs" / "pipeline_diagram.png"
+        st.image(str(ruta)) if ruta.exists() else st.caption("`docs/pipeline_diagram.png` no está disponible.")
+
+
+# ── Pestaña 2: Resultados Task 1 ──────────────────────────────────────────────
+
+def pestana_task1():
+    task = "task1_interview"
+    st.caption("5 entrevistas laborales · 6 campos por entrevista · transcripciones cacheadas de Whisper (sin volver a transcribir).")
+    bloque_resultados(task, "t1")
+    with st.expander("Benchmark completo del ASR (modelo × precisión × dispositivo)"):
+        pestana_benchmark(task)
+    with st.expander("Ver un clip en detalle: guion frente a transcripción"):
+        pestana_ejemplos(task)
+
+
+# ── Pestaña 3: Resultados Task 2 ──────────────────────────────────────────────
+
+def comparacion_por_nivel():
+    """WER (transcripción) frente a exactitud del registro en L0-L3: el WER sube, la exactitud no siempre baja."""
+    wer = csv_metricas("task2_sales", "l0_l3_wer_summary.csv")
+    reg = csv_metricas("task2_sales", "l0_l3_summary.csv")
+    det = csv_metricas("task2_sales", "l0_l3_detection.csv")
+    if wer is None or reg is None:
+        st.info("Aún no hay resultados de L0-L3 (`python -m engine.evaluate_ladder --levels L0 L1 L2 L3 --prefix l0_l3`).")
+        return
+    st.caption("L0 es el audio sin tocar; L1 simula una nota de voz de WhatsApp (Opus 24 kbps mono); L2, una llamada telefónica "
+               "(300–3400 Hz a 8 kHz); L3, un restaurante ruidoso (Opus + ruido ambiente real a SNR 10 dB). Registro medido con el extractor por reglas.")
+    modelo = st.radio("Modelo de ASR", sorted(wer["model"].unique()), horizontal=True, key="nivel_modelo", index=0)
+    w = wer[wer["model"] == modelo].set_index("level")
+    r = reg[reg["model"] == modelo].set_index("level")
+    niveles = [n for n in NIVELES_L if n in w.index and n in r.index]
+    if not niveles:
+        st.info("Sin datos para ese modelo.")
+        return
+    orden = [NIVELES_L[n] for n in niveles]
+    wer_df = pd.DataFrame({"nivel": orden, "valor": [w.loc[n, "wer_numnorm"] for n in niveles]})
+    reg_df = pd.DataFrame({"nivel": orden, "valor": [r.loc[n, "todos_los_campos"] for n in niveles]})
+
+    def panel(df, titulo, color, tope):
+        base = alt.Chart(df, title=titulo).encode(
+            x=alt.X("nivel:N", sort=orden, title=None, axis=alt.Axis(labelAngle=-15, labelLimit=260)),
+            y=alt.Y("valor:Q", title=None, axis=alt.Axis(format="%"), scale=alt.Scale(domain=[0, tope])))
+        return (base.mark_line(point=True, color=color) + base.mark_text(dy=-12, fontSize=12, color=color).encode(text=alt.Text("valor:Q", format=".1%"))
+                ).properties(height=170)
+    # cada panel con su propia escala, ambas desde 0: así se ve cuánto sube el WER sin que el registro lo tape
+    st.altair_chart(alt.vconcat(panel(wer_df, "Capa transcripción: WER (palabras mal transcritas)", "#d97706", max(0.3, float(wer_df["valor"].max()) * 1.6)),
+                                panel(reg_df, "Capa registro: campos correctos", "#1d4ed8", 1.0)).resolve_scale(x="shared"), width="stretch")
+    w0, w3 = w.loc[niveles[0], "wer_numnorm"], w.loc[niveles[-1], "wer_numnorm"]
+    r0, r3 = r.loc[niveles[0], "todos_los_campos"], r.loc[niveles[-1], "todos_los_campos"]
+    sube_wer = w3 > w0
+    st.markdown(f"**Lectura ({modelo}):** del audio original a {niveles[-1]} el WER pasa de {w0:.1%} a {w3:.1%} "
+                f"({'sube' if sube_wer else 'no sube'}) y la exactitud del registro de {r0:.0%} a {r3:.0%}. "
+                + ("En los niveles intermedios el registro se mantiene aunque el WER suba." if
+                   any(w.loc[n, "wer_numnorm"] > w0 and r.loc[n, "todos_los_campos"] >= r0 for n in niveles[1:-1]) else ""))
+    tabla = pd.DataFrame({"Nivel": [NIVELES_L[n] for n in niveles], "WER %": [round(w.loc[n, "wer_numnorm"] * 100, 1) for n in niveles],
+                          "CER %": [round(w.loc[n, "cer"] * 100, 1) for n in niveles],
+                          "Campos correctos %": [round(r.loc[n, "todos_los_campos"] * 100) for n in niveles]})
+    if det is not None:
+        d = det[det["model"] == modelo].set_index("level")
+        tabla["Trampas detectadas"] = [f"{int(d.loc[n, 'detectadas'])}/{int(d.loc[n, 'trampas'])}" if n in d.index else "—" for n in niveles]
+        tabla["…por la razón correcta"] = [f"{int(d.loc[n, 'detectadas_como_hablante'])}/{int(d.loc[n, 'trampas'])}" if n in d.index else "—" for n in niveles]
+    st.dataframe(tabla, width="stretch", hide_index=True)
+    st.caption("«Trampas»: totales mal dichos a propósito (ground truth `total_es_incorrecto`). «Por la razón correcta»: el diagnóstico atribuye el error "
+               "al hablante; si no, se detectó porque el ASR perdió una cifra. Con 5 clips las diferencias son ilustrativas, no estadísticas.")
+
+
+def pestana_task2():
+    task = "task2_sales"
+    st.caption("5 llamadas de ventas a un restaurante · 5 campos por llamada · incluye correcciones del cliente y totales mal dichos a propósito.")
+    res = bloque_resultados(task, "t2")
+    if res is not None and res[1] is not None:
+        st.markdown("**Validación aritmética del pedido** (`Σ cantidad × precio − promoción (+ precio del paquete, si la promoción es un paquete)` frente al total dicho)")
+        st.dataframe(res[1], width="stretch", hide_index=True,
+                     column_config={c: st.column_config.NumberColumn(format="%g") for c in ("Σ cantidad × precio", "− promoción", "+ paquete promocional", "total esperado", "total dicho", "diferencia")})
+        st.caption("`diagnóstico` usa el total correcto del ground truth: **hablante** = los ítems cuadran con el total correcto y el operador dijo otro; "
+                   "**asr** = el total calculado no coincide con ninguno (se perdió o leyó mal una cifra); **indeterminado** = faltan precios.")
+    st.subheader("Comparación por nivel de degradación")
+    comparacion_por_nivel()
+    with st.expander("Benchmark completo del ASR (modelo × precisión × dispositivo)"):
+        pestana_benchmark(task)
+    with st.expander("Escalera de degradación completa (12 niveles: ruido, banda telefónica, MP3, volumen)"):
+        pestana_escalera()
+    with st.expander("Ver una llamada en detalle: guion frente a transcripción"):
+        pestana_ejemplos(task)
+
+
+# ── Pestaña 4: Demo en vivo ───────────────────────────────────────────────────
+
+TAMANIO_MODELO = {"medium": "~1.5 GB", "small": "~480 MB", "base": "~145 MB", "tiny": "~75 MB"}
+
+
+def modelo_descargado(modelo):
+    """True/False si los pesos del modelo están en la caché local de Hugging Face; None si no se puede saber."""
+    try:
+        from huggingface_hub import try_to_load_from_cache
+
+        return isinstance(try_to_load_from_cache(f"Systran/faster-whisper-{modelo}", "model.bin"), str)
+    except Exception:
+        return None
+
+
+def pestana_demo():
+    cfg = config()
+    st.caption("Sube un audio (WAV recomendado), elige el tipo y se transcribe con `faster-whisper`, se extraen los campos con las "
+               "reglas y se verifican literalmente. El modelo por defecto es **medium**, que corre en CPU pero tarda: "
+               "transcribir un minuto de audio puede tomar varios minutos. Con `small`, `base` o `tiny` es más rápido y menos preciso.")
+    izq, der = st.columns(2)
+    with izq:
+        archivo = st.file_uploader("Audio", type=EXT_AUDIO, key="demo_audio")
+        ejemplos = {p.name: p for t in TAREAS.values() for p in sorted(task_dir(cfg, t[0], "audio").glob("*")) if p.suffix[1:] in EXT_AUDIO}
+        ejemplo = st.selectbox("…o un audio del repositorio", ["—"] + list(ejemplos), key="demo_ejemplo")
+    with der:
+        etiqueta_tipo = st.radio("Tipo de audio", ["Entrevista", "Venta"], horizontal=True, key="demo_tipo")
+        schema = "interview" if etiqueta_tipo == "Entrevista" else "sales"
+        modelo = st.selectbox("Modelo", list(TAMANIO_MODELO), index=0, key="demo_modelo",
+                              format_func=lambda m: f"{m} ({TAMANIO_MODELO[m]})" + (" · recomendado" if m == "medium" else ""))
+        glosario = st.checkbox("Usar el glosario de dominio (initial_prompt)", key="demo_glosario")
+        st.caption("Extractor: reglas · Verificación: literal (con números hablados normalizados)")
+    descargado = modelo_descargado(modelo)
+    if descargado is False:
+        st.warning(f"El modelo `{modelo}` aún no está descargado: la primera ejecución bajará {TAMANIO_MODELO[modelo]} "
+                   "(puede tardar varios minutos según tu conexión) y la pantalla se verá en gris mientras tanto. Es normal; solo ocurre la primera vez.")
+    if archivo is not None:
+        nombre, datos = archivo.name, archivo.getvalue()
+    elif ejemplo != "—":
+        nombre, datos = ejemplo, ejemplos[ejemplo].read_bytes()
+    else:
+        nombre, datos = None, None
+    if st.button("Transcribir, extraer y verificar", type="primary", disabled=datos is None, width="stretch", key="demo_run"):
+        with tempfile.NamedTemporaryFile(suffix=Path(nombre).suffix, delete=False) as f:
+            f.write(datos)
+            ruta = f.name
+        try:
+            with st.status(f"Procesando «{nombre}» con {modelo}…", expanded=True) as estado:
+                if descargado is False:
+                    st.write(f"⬇️ Descargando el modelo {modelo} ({TAMANIO_MODELO[modelo]}); solo la primera vez…")
+                st.write("🎧 Transcribiendo, extrayendo campos y verificando…")
+                r = process_audio(ruta, schema, extractor="rules", model=modelo, device="auto", compute_type="auto", glossary=glosario)
+                if r["error"]:
+                    estado.update(label="Terminó con un error", state="error", expanded=True)
+                else:
+                    estado.update(label=f"Listo en {r['pipeline_seconds']} s", state="complete", expanded=False)
+            st.session_state["ultimo"] = {"r": r, "schema": schema, "nombre": nombre}
+        finally:
+            os.unlink(ruta)
+    if datos is None:
+        st.info("Sube un audio o elige uno del repositorio para empezar.")
+    if "ultimo" in st.session_state:
+        st.divider()
+        st.subheader(f"Resultado: {st.session_state['ultimo']['nombre']}")
+        mostrar_resultado(st.session_state["ultimo"])
+
+
 # ── Página ────────────────────────────────────────────────────────────────────
 
 st.title("🎙️ From Voice to Record")
 modo = config().get("pipeline", {}).get("extractor", "auto")
 st.caption(f"Whisper (faster-whisper) convierte entrevistas laborales y llamadas de ventas en registros estructurados y verificables. "
            f"GPU: {'sí' if cuda_available() else 'no (CPU)'} · extractor por defecto: {modo}")
-t1, t2, t3, t4 = st.tabs(["🧪 Probador", "📊 Benchmark", "📉 Escalera de degradación", "🔎 Ejemplos"])
+t1, t2, t3, t4 = st.tabs(["📖 Problema y Método", "🧑‍💼 Resultados Task 1 (Entrevistas)", "🍽️ Resultados Task 2 (Ventas Restaurante)", "🎙️ Demo en Vivo"])
 with t1:
-    pestana_probador()
+    pestana_problema()
 with t2:
-    pestana_benchmark()
+    pestana_task1()
 with t3:
-    pestana_escalera()
+    pestana_task2()
 with t4:
-    pestana_ejemplos()
+    pestana_demo()
