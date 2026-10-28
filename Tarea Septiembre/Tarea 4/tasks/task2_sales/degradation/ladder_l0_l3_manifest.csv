@@ -2,20 +2,20 @@ level,family,severity,param,clip,input_file,output_file,duration_s,rms_dbfs,peak
 L0,original,0,copia sin cambios,llamada_01,llamada_01.m4a,L0/llamada_01.wav,61.55,-22.2,0.8382,,,16000,decode (16 kHz mono)
 L1,whatsapp,1,Opus 24 kbps mono,llamada_01,llamada_01.m4a,L1/llamada_01.wav,61.55,-22.34,0.8345,20.49,,16000,pyav-libopus
 L2,telefono,2,"300-3400 Hz, 8 kHz",llamada_01,llamada_01.m4a,L2/llamada_01.wav,61.55,-23.64,0.7806,5.65,,8000,scipy
-L3,whatsapp_ruido,3,Opus 24 kbps + ruido ambiente SNR 10 dB,llamada_01,llamada_01.m4a,L3/llamada_01.wav,61.55,-21.92,0.8572,9.6,10.0,16000,pyav-libopus+numpy
+L3,whatsapp_ruido,3,Opus 24 kbps + ruido ambiente SNR 10 dB,llamada_01,llamada_01.m4a,L3/llamada_01.wav,61.55,-21.93,0.8394,9.59,10.0,16000,pyav-libopus+numpy (ruido: Restaurant_ambience.ogg)
 L0,original,0,copia sin cambios,llamada_02,llamada_02.m4a,L0/llamada_02.wav,49.85,-22.74,0.8138,,,16000,decode (16 kHz mono)
 L1,whatsapp,1,Opus 24 kbps mono,llamada_02,llamada_02.m4a,L1/llamada_02.wav,49.85,-22.89,0.7963,19.26,,16000,pyav-libopus
 L2,telefono,2,"300-3400 Hz, 8 kHz",llamada_02,llamada_02.m4a,L2/llamada_02.wav,49.85,-24.17,0.7345,5.82,,8000,scipy
-L3,whatsapp_ruido,3,Opus 24 kbps + ruido ambiente SNR 10 dB,llamada_02,llamada_02.m4a,L3/llamada_02.wav,49.85,-22.48,0.7881,9.47,9.99,16000,pyav-libopus+numpy
+L3,whatsapp_ruido,3,Opus 24 kbps + ruido ambiente SNR 10 dB,llamada_02,llamada_02.m4a,L3/llamada_02.wav,49.85,-22.47,0.8211,9.47,10.01,16000,pyav-libopus+numpy (ruido: Restaurant_ambience.ogg)
 L0,original,0,copia sin cambios,llamada_03,llamada_03.m4a,L0/llamada_03.wav,46.55,-24.99,0.5526,,,16000,decode (16 kHz mono)
 L1,whatsapp,1,Opus 24 kbps mono,llamada_03,llamada_03.m4a,L1/llamada_03.wav,46.55,-25.15,0.5523,20.09,,16000,pyav-libopus
 L2,telefono,2,"300-3400 Hz, 8 kHz",llamada_03,llamada_03.m4a,L2/llamada_03.wav,46.55,-26.07,0.4968,7.09,,8000,scipy
-L3,whatsapp_ruido,3,Opus 24 kbps + ruido ambiente SNR 10 dB,llamada_03,llamada_03.m4a,L3/llamada_03.wav,46.55,-24.74,0.5622,9.55,10.0,16000,pyav-libopus+numpy
+L3,whatsapp_ruido,3,Opus 24 kbps + ruido ambiente SNR 10 dB,llamada_03,llamada_03.m4a,L3/llamada_03.wav,46.55,-24.72,0.5452,9.57,10.02,16000,pyav-libopus+numpy (ruido: Restaurant_ambience.ogg)
 L0,original,0,copia sin cambios,llamada_04,llamada_04.m4a,L0/llamada_04.wav,35.09,-21.17,0.8312,,,16000,decode (16 kHz mono)
 L1,whatsapp,1,Opus 24 kbps mono,llamada_04,llamada_04.m4a,L1/llamada_04.wav,35.09,-21.33,0.8244,19.76,,16000,pyav-libopus
 L2,telefono,2,"300-3400 Hz, 8 kHz",llamada_04,llamada_04.m4a,L2/llamada_04.wav,35.09,-22.55,0.7465,5.74,,8000,scipy
-L3,whatsapp_ruido,3,Opus 24 kbps + ruido ambiente SNR 10 dB,llamada_04,llamada_04.m4a,L3/llamada_04.wav,35.09,-20.92,0.8295,9.51,9.99,16000,pyav-libopus+numpy
+L3,whatsapp_ruido,3,Opus 24 kbps + ruido ambiente SNR 10 dB,llamada_04,llamada_04.m4a,L3/llamada_04.wav,35.09,-20.91,0.835,9.51,10.0,16000,pyav-libopus+numpy (ruido: Restaurant_ambience.ogg)
 L0,original,0,copia sin cambios,llamada_05,llamada_05.m4a,L0/llamada_05.wav,38.59,-22.21,0.8523,,,16000,decode (16 kHz mono)
 L1,whatsapp,1,Opus 24 kbps mono,llamada_05,llamada_05.m4a,L1/llamada_05.wav,38.59,-22.36,0.7595,19.41,,16000,pyav-libopus
 L2,telefono,2,"300-3400 Hz, 8 kHz",llamada_05,llamada_05.m4a,L2/llamada_05.wav,38.59,-24.1,0.7511,3.94,,8000,scipy
-L3,whatsapp_ruido,3,Opus 24 kbps + ruido ambiente SNR 10 dB,llamada_05,llamada_05.m4a,L3/llamada_05.wav,38.59,-21.94,0.7468,9.48,10.0,16000,pyav-libopus+numpy
+L3,whatsapp_ruido,3,Opus 24 kbps + ruido ambiente SNR 10 dB,llamada_05,llamada_05.m4a,L3/llamada_05.wav,38.59,-21.95,0.7989,9.48,10.0,16000,pyav-libopus+numpy (ruido: Restaurant_ambience.ogg)
