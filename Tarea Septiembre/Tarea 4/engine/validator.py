@@ -32,10 +32,19 @@ def sin_acentos(s):
 
 
 def normalize_spoken_numbers(text):
-    """Convierte números hablados en español a dígitos: "seis mil quinientos" -> 6500, "tres mil" -> 3000.
+    """Convierte números hablados en español a dígitos: "seis mil quinientos" -> 6500, "tres mil" -> 3000, "veinte" -> 20.
 
-    Además: "un año ocho meses" -> "1 año 8 meses" y "4,500" / "4.500" -> "4500".
-    No toca palabras que text2num confunde con números: "unas dos semanas" (unas), "cuartos de pollo" (ordinal).
+    Reglas de normalización (las usa verify_literal: primero compara literal y luego con esta forma):
+      1. Cardinales compuestos -> un solo número: "ciento diez" -> 110, "mil doscientos cincuenta" -> 1250
+         (librería text2num, `alpha2digit(texto, "es")`).
+      2. "dos" y "tres" sueltos -> 2 y 3 (text2num los deja como palabra cuando están solos).
+      3. "un/una" + unidad de tiempo -> 1: "un año ocho meses" -> "1 año 8 meses". Fuera de ese contexto "un" no se toca.
+      4. Separador de miles: "4,500" y "4.500" -> "4500". Los decimales ("1.5") se conservan.
+      5. Palabras que text2num confunde con números y se protegen: "unas/unos" (no son 1) y "cuartos de pollo"
+         (ordinal 4º, no cantidad).
+      6. Mayúsculas y acentos NO se alteran aquí; eso lo hace normalize_text (minúsculas, sin acentos ni puntuación,
+         "Av." -> "avenida", "Jr." -> "jiron", "depto" -> "departamento").
+    Límite conocido: variantes poco habituales como "veintiún" no las resuelve text2num y quedan como palabra.
     """
     if not text:
         return text
@@ -207,12 +216,45 @@ def _ajuste_promocion(items, promocion, menu):
     return 0.0, None, set(), "promoción no interpretada: no se ajustó el total"
 
 
-def validate_order_arithmetic(record, transcript=None, menu=None, tolerance=0.5):
+def _diferencias_con_ground_truth(items, total_dicho, ground_truth):
+    """Lista de diferencias entre el registro extraído y el ground truth (vacía si coinciden).
+
+    Los ítems se emparejan por cantidad y precio (los nombres varían: "cuarto de pollo" vs "cuarto de pollo brasa
+    pecho"); un precio extraído en None solo se compara por cantidad (ítems dentro de un paquete promocional).
+    """
+    gt_items = ground_truth.get("items") or []
+    if isinstance(gt_items, str):
+        import json
+        gt_items = json.loads(gt_items)
+    difs = []
+    gt_total = ground_truth.get("total_dicho")
+    if gt_total not in (None, "") and not math.isclose(float(gt_total), total_dicho, abs_tol=0.5):
+        difs.append(f"total dicho {total_dicho:g} vs {float(gt_total):g}")
+    libres = list(gt_items)
+    for it in items:
+        cant, precio = int(it.get("cantidad", 1)), _precio(it)
+        for g in libres:
+            if int(g.get("cantidad", 1)) == cant and (precio is None or _precio(g) is None
+                                                       or math.isclose(_precio(g), precio, abs_tol=0.5)):
+                libres.remove(g)
+                break
+        else:
+            difs.append(f"{_nombre_item(it)}: {cant} × {precio if precio is not None else '?'} no está en el ground truth")
+    difs += [f"falta en el registro: {_nombre_item(g)} ({g.get('cantidad')} × {g.get('precio_unitario')})" for g in libres]
+    return difs
+
+
+def validate_order_arithmetic(record, transcript=None, menu=None, tolerance=0.5, ground_truth=None):
     """Calcula el total esperado de un pedido y lo compara con `total_dicho`.
 
     `record`: {"items": [{"plato", "cantidad", "precio_unitario", ...}], "promocion": str|None, "total_dicho": número}.
     Total esperado = Σ cantidad × precio − descuento de la promo (2x1, paquete por N; "mitad de precio" no ajusta).
-    Diagnóstico cuando no coinciden (requiere `transcript`):
+    Diagnóstico cuando no coinciden. Con `ground_truth` ({"items", "total_dicho"}: lo que realmente se dijo), se
+    compara el registro extraído contra él:
+      - "asr": el registro difiere del ground truth (total, cantidades o precios distintos) -> la extracción o la
+        transcripción leyó mal una cifra;
+      - "hablante": el registro coincide con el ground truth y aun así no cuadra -> el hablante se equivocó.
+    Sin `ground_truth`, se usa `transcript` (requerido):
       - "asr": algún número usado (total, precios, cantidades) NO aparece en la transcripción -> el ASR o la
         extracción se equivocaron al leer una cifra;
       - "hablante": todos los números aparecen tal cual en la transcripción y aun así no cuadran -> el hablante
@@ -253,6 +295,14 @@ def validate_order_arithmetic(record, transcript=None, menu=None, tolerance=0.5)
         return res
 
     res["status"] = "discrepancia"
+    if ground_truth is not None:
+        difs = _diferencias_con_ground_truth(items, total_dicho, ground_truth)
+        res["diagnosis"] = "asr" if difs else "hablante"
+        res["explanation"] = (f"difiere del ground truth: {'; '.join(difs)} (error del ASR o de la extracción)" if difs else
+                              f"el registro coincide con el ground truth pero el total dicho ({total_dicho:g}) no "
+                              f"coincide con el esperado ({esperado:g}): error del hablante")
+        res["diagnosis_source"] = "ground_truth"
+        return res
     if not transcript:
         res["explanation"] = "no coincide y no hay transcripción para diagnosticar"
         return res
@@ -265,6 +315,7 @@ def validate_order_arithmetic(record, transcript=None, menu=None, tolerance=0.5)
         numeros.append((f"cantidad de {it.get('plato')}", it.get("cantidad", 1)))
     if paquete is not None:
         numeros.append(("precio del paquete", paquete))
+    res["diagnosis_source"] = "transcripcion"
     ausentes = [n for n, v in numeros if verify_literal(v, transcript)["status"] != VERIFICADO]
     if ausentes:
         res["diagnosis"] = "asr"
