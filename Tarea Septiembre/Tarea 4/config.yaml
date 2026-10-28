@@ -119,7 +119,7 @@ menu:
 
 # Extractor con LLM (API de Anthropic). La clave va en ANTHROPIC_API_KEY (ver .env.example).
 llm:
-  model: "claude-opus-5-5"
+  model: "claude-sonnet-5-5"          # de pago (API): Sonnet 5.5 cuesta ~la mitad que Opus 5.5; claude-haiku-5-5 es aún más barato
   max_tokens: 2048
   effort: "low"                       # low | medium | high ... (control de profundidad de razonamiento)
   use_fallbacks: true                 # reintenta en otro modelo si un clasificador de seguridad rechaza la petición
