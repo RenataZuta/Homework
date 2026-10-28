@@ -17,7 +17,9 @@ Preset --preset l0-l3 (escenarios de canal; salida en L0/ L1/ L2/ L3/ y ladder_l
   L0   copia del original sin cambios (16 kHz mono)
   L1   Opus 24 kbps mono (nota de voz de WhatsApp): ffmpeg por subprocess si está en el PATH; si no, PyAV (libopus)
   L2   filtro pasa-banda 300-3400 Hz + remuestreo a 8 kHz con scipy (llamada telefónica); el WAV se guarda a 8 kHz
-  L3   L1 + ruido ambiente a SNR 10 dB (restaurante ruidoso): ruido rosa (1/f) mezclado con numpy respecto a la potencia de L1
+  L3   L1 + ruido ambiente a SNR 10 dB (restaurante ruidoso), mezclado con numpy respecto a la potencia de L1. Con
+       --noise-file ARCHIVO se usa una grabación real de ruido de calle o cafetería (se repite o recorta al largo de la
+       llamada, desde un punto aleatorio reproducible); sin él, ruido rosa (1/f) sintético
 
   El manifiesto del preset añade `snr_etapa_db` (SNR de la última etapa: en L3, ruido frente a L1), `sample_rate` y
   `herramienta` (qué se usó realmente). `snr_db_measured` es siempre contra el original (L0).
@@ -174,18 +176,30 @@ def _ruido_rosa(n, rng):
     return np.fft.irfft(espectro / np.sqrt(f), n=n).astype(np.float32)
 
 
-def ruido_ambiente(snr_db):
+def _ruido_de_archivo(ruta, n, rng):
+    """Ruido real de un archivo, a 16 kHz mono, repetido o recortado a `n` muestras desde un punto aleatorio."""
+    ruido = decode_audio(str(ruta), sampling_rate=SR)
+    if len(ruido) < SR:  # menos de 1 s no sirve como ambiente
+        raise SystemExit(f"El archivo de ruido es demasiado corto ({len(ruido) / SR:.2f} s): {ruta}")
+    if float(np.mean(ruido**2)) == 0.0:
+        raise SystemExit(f"El archivo de ruido es silencio: {ruta}")
+    ruido = np.tile(ruido, int(np.ceil(n / len(ruido))) + 1)  # repetir si es más corto que la llamada
+    inicio = int(rng.integers(0, len(ruido) - n + 1))
+    return ruido[inicio:inicio + n].astype(np.float32)
+
+
+def ruido_ambiente(snr_db, archivo=None):
     def aplicar(x, rng):
-        r = _ruido_rosa(len(x), rng)
+        r = _ruido_de_archivo(archivo, len(x), rng) if archivo else _ruido_rosa(len(x), rng)
         r *= np.sqrt(float(np.mean(x**2)) / (10 ** (snr_db / 10)) / float(np.mean(r**2)))
         return _normalizar_pico(x + r)
 
     return aplicar
 
 
-def opus_mas_ruido(kbps, snr_db):
+def opus_mas_ruido(kbps, snr_db, archivo=None):
     def aplicar(x, rng):
-        return ruido_ambiente(snr_db)(opus(kbps)(x, rng), rng)
+        return ruido_ambiente(snr_db, archivo)(opus(kbps)(x, rng), rng)
 
     return aplicar
 
@@ -277,8 +291,10 @@ def construir_escalera(input_dir, output_dir, niveles=None, seed=0, progreso=pri
     return filas
 
 
-def construir_l0_l3(input_dir, output_dir, niveles=None, seed=0, progreso=print):
-    """Preset l0-l3: genera L0/ L1/ L2/ L3/ y ladder_l0_l3_manifest.csv; devuelve las filas del manifiesto."""
+def construir_l0_l3(input_dir, output_dir, niveles=None, seed=0, progreso=print, ruido_archivo=None):
+    """Preset l0-l3: genera L0/ L1/ L2/ L3/ y ladder_l0_l3_manifest.csv; devuelve las filas del manifiesto.
+
+    `ruido_archivo`: grabación de ruido ambiente real para L3 (por defecto, ruido rosa sintético)."""
     input_dir, output_dir = Path(input_dir), Path(output_dir)
     audios = sorted(p for p in input_dir.iterdir() if p.is_file() and p.suffix.lower() in EXT_AUDIO)
     if not audios:
@@ -288,6 +304,15 @@ def construir_l0_l3(input_dir, output_dir, niveles=None, seed=0, progreso=print)
     if desconocidos:
         raise SystemExit(f"Niveles desconocidos: {desconocidos}. Opciones: {list(NIVELES_L0_L3)}")
     progreso(f"L1/L3: Opus con {herramienta_opus()}" + ("" if shutil.which("ffmpeg") else " (ffmpeg no está en el PATH)"))
+    tabla = dict(NIVELES_L0_L3)
+    if ruido_archivo:
+        ruido_archivo = Path(ruido_archivo)
+        if not ruido_archivo.is_file():
+            raise SystemExit(f"--noise-file no es un archivo: {ruido_archivo}")
+        fam, sev, par, _, sr3, _ = tabla["L3"]
+        tabla["L3"] = (fam, sev, par, opus_mas_ruido(24, 10, ruido_archivo), sr3,
+                       lambda: herramienta_opus() + f"+numpy (ruido: {ruido_archivo.name})")
+        progreso(f"L3: ruido ambiente de {ruido_archivo.name}")
 
     filas = []
     for audio in audios:
@@ -295,7 +320,7 @@ def construir_l0_l3(input_dir, output_dir, niveles=None, seed=0, progreso=print)
         progreso(f"{audio.name}: {len(x) / SR:.1f} s")
         l1 = None
         for nivel in elegidos:
-            familia, severidad, parametro, funcion, sr, herramienta = NIVELES_L0_L3[nivel]
+            familia, severidad, parametro, funcion, sr, herramienta = tabla[nivel]
             rng = np.random.default_rng([seed, zlib.crc32(f"{audio.stem}|{nivel}".encode())])
             y = funcion(x, rng)
             destino = output_dir / nivel / f"{audio.stem}.wav"
@@ -305,7 +330,7 @@ def construir_l0_l3(input_dir, output_dir, niveles=None, seed=0, progreso=print)
             if nivel == "L1":
                 l1 = y
             if nivel == "L3":
-                l1 = l1 if l1 is not None else NIVELES_L0_L3["L1"][3](x, rng)
+                l1 = l1 if l1 is not None else tabla["L1"][3](x, rng)
             filas.append({"level": nivel, "family": familia, "severity": severidad, "param": parametro,
                           "clip": audio.stem, "input_file": audio.name,
                           "output_file": destino.relative_to(output_dir).as_posix(),
@@ -330,6 +355,8 @@ def main():
     p.add_argument("--output_dir", type=Path, default=Path(__file__).resolve().parent,
                    help="carpeta de salida (por defecto, la de este script)")
     p.add_argument("--preset", choices=["l0-l3"], help="escenarios de canal L0-L3 (ver el docstring); sin esto, la escalera original")
+    p.add_argument("--noise-file", type=Path, help="con --preset l0-l3: grabación de ruido de calle o cafetería para L3 "
+                   "(por defecto, ruido rosa sintético)")
     p.add_argument("--levels", nargs="+", metavar="NIVEL",
                    help=f"subconjunto de niveles; opciones: {', '.join(NIVELES)} (con --preset l0-l3: {', '.join(NIVELES_L0_L3)})")
     p.add_argument("--seed", type=int, default=0, help="semilla del ruido (por defecto 0)")
@@ -337,8 +364,10 @@ def main():
     if not a.input_dir.is_dir():
         sys.exit(f"--input_dir no es una carpeta: {a.input_dir}")
     if a.preset == "l0-l3":
-        construir_l0_l3(a.input_dir, a.output_dir, a.levels, a.seed)
+        construir_l0_l3(a.input_dir, a.output_dir, a.levels, a.seed, ruido_archivo=a.noise_file)
     else:
+        if a.noise_file:
+            sys.exit("--noise-file solo se usa con --preset l0-l3")
         construir_escalera(a.input_dir, a.output_dir, a.levels, a.seed)
 
 
