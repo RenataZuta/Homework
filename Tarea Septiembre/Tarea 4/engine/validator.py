@@ -264,11 +264,19 @@ def validate_order_arithmetic(record, transcript=None, menu=None, tolerance=0.5,
 
     `record`: {"items": [{"plato", "cantidad", "precio_unitario", ...}], "promocion": str|None, "total_dicho": número}.
     Total esperado = Σ cantidad × precio − descuento de la promo (2x1, paquete por N; "mitad de precio" no ajusta).
-    Diagnóstico cuando no coinciden. Con `ground_truth` ({"items", "total_dicho"}: lo que realmente se dijo), se
-    compara el registro extraído contra él:
-      - "asr": el registro difiere del ground truth (total, cantidades o precios distintos) -> la extracción o la
-        transcripción leyó mal una cifra;
-      - "hablante": el registro coincide con el ground truth y aun así no cuadra -> el hablante se equivocó.
+    Diagnóstico cuando no coinciden. Con `ground_truth` hay dos reglas, según lo que traiga:
+      a) Si trae `total_correcto` (la regla por total correcto), con el total calculado desde los ítems extraídos:
+           1. si `total_dicho` del ground truth también viene y el total dicho extraído no lo coincide -> "asr": el ASR
+              (o la extracción) leyó mal el total que se dijo;
+           2. si el total calculado coincide con `total_correcto` (pero no con el total dicho) -> "hablante": los
+              ítems están bien y el hablante dijo un total que no corresponde;
+           3. si el total calculado no coincide ni con el total dicho ni con `total_correcto` -> "asr": se malinterpretó
+              una cifra de los ítems (precio o cantidad).
+         (El paso 1 evita atribuir al hablante un error de lectura del total: si el ASR cambió 86 por 80, el calculado
+         coincidiría con el correcto y sin él se diría "hablante".)
+      b) Si solo trae {"items", "total_dicho"} (lo que realmente se dijo), se compara el registro extraído contra él:
+           - "asr": el registro difiere del ground truth (total, cantidades o precios distintos);
+           - "hablante": el registro coincide con el ground truth y aun así no cuadra.
     Sin `ground_truth`, se usa `transcript` (requerido):
       - "asr": algún número usado (total, precios, cantidades) NO aparece en la transcripción -> el ASR o la
         extracción se equivocaron al leer una cifra;
@@ -310,6 +318,22 @@ def validate_order_arithmetic(record, transcript=None, menu=None, tolerance=0.5,
         return res
 
     res["status"] = "discrepancia"
+    if ground_truth is not None and ground_truth.get("total_correcto") not in (None, ""):
+        correcto, dicho_gt = float(ground_truth["total_correcto"]), ground_truth.get("total_dicho")
+        if dicho_gt not in (None, "") and not math.isclose(float(dicho_gt), total_dicho, abs_tol=tolerance):
+            res["diagnosis"] = "asr"
+            res["explanation"] = (f"el total dicho extraído ({total_dicho:g}) difiere del realmente dicho ({float(dicho_gt):g}): "
+                                  "el ASR o la extracción leyó mal el total")
+        elif math.isclose(esperado, correcto, abs_tol=tolerance):
+            res["diagnosis"] = "hablante"
+            res["explanation"] = (f"el total calculado desde los ítems ({esperado:g}) coincide con el total correcto "
+                                  f"({correcto:g}) y no con el dicho ({total_dicho:g}): error del hablante")
+        else:
+            res["diagnosis"] = "asr"
+            res["explanation"] = (f"el total calculado ({esperado:g}) no coincide ni con el dicho ({total_dicho:g}) ni con "
+                                  f"el correcto ({correcto:g}): se malinterpretó una cifra de los ítems")
+        res["diagnosis_source"] = "ground_truth (total_correcto)"
+        return res
     if ground_truth is not None:
         difs = _diferencias_con_ground_truth(items, total_dicho, ground_truth)
         res["diagnosis"] = "asr" if difs else "hablante"
