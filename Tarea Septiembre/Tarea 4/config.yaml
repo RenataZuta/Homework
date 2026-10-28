@@ -170,7 +170,7 @@ llm:
 
 # Flujo de process_audio
 pipeline:
-  extractor: "auto"                   # auto = llm si hay ANTHROPIC_API_KEY, si no rules | rules | llm | both
+  extractor: "rules"                  # rules = sin API ni clave (por defecto) | llm | both | auto (llm si hay ANTHROPIC_API_KEY)
 
 # Benchmark (engine/benchmark.py)
 benchmark:

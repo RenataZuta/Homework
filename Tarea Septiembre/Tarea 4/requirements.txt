@@ -11,6 +11,6 @@ pandas==3.1.0
 text2num==3.1.0
 pyyaml==6.0.3
 python-dotenv==1.2.4
-# Extractor con LLM (engine/extractor.py)
+# Opcional: solo para el extractor LLM (de pago). Con pipeline.extractor: rules en config.yaml no se usa.
 anthropic==2.3.0
 # Opcional: torch solo se usa para medir la VRAM con torch.cuda.max_memory_allocated() (Colab ya lo trae).
