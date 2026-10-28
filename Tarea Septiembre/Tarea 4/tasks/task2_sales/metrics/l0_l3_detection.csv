@@ -1,0 +1,9 @@
+model,level,n,trampas,detectadas,detectadas_como_hablante,detectadas_como_asr,escapadas,escapadas_ok,escapadas_incompleto,rotos_por_asr_detectados,falsas_alarmas,sin_trampa_incompleto
+large-v3,L0,5,3,3,2,1,0,0,0,0,0,0
+large-v3,L1,5,3,3,2,1,0,0,0,0,0,0
+large-v3,L2,5,3,3,2,1,0,0,0,0,0,0
+large-v3,L3,5,3,3,2,1,0,0,0,0,0,0
+medium,L0,5,3,3,2,1,0,0,0,0,0,2
+medium,L1,5,3,3,2,1,0,0,0,0,0,2
+medium,L2,5,3,3,2,1,0,0,0,1,0,1
+medium,L3,5,3,3,2,1,0,0,0,1,0,1

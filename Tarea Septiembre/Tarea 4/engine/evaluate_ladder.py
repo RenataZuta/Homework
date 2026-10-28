@@ -4,10 +4,14 @@ Lee `tasks/task2_sales/transcriptions_cache/{clip}@{nivel}__{modelo}_{precisión
 corre `process_audio(..., transcript=...)` con el extractor por reglas y puntúa contra el ground truth. Para cada
 transcripción guarda la exactitud por campo, la aritmética del pedido (total esperado vs. dicho) y su diagnóstico:
   - `diagnostico`: por transcripción (¿las cifras usadas aparecen en el texto?), ver validator.validate_order_arithmetic;
-  - `diagnostico_gt`: contra el ground truth (¿el registro difiere de lo realmente dicho?).
+  - `diagnostico_gt`: contra el ground truth con la regla del total correcto (ver validator.validate_order_arithmetic).
+
+También reporta, por modelo y nivel, cuántas trampas del ground truth (`total_es_incorrecto = Sí`: el operador dice un
+total que no cuadra) detectó la aritmética y cuántas se le escaparon, en {prefix}_detection.csv.
 
 Salidas en --out-dir (con el prefijo --prefix): {prefix}_detail.csv (campo por campo), {prefix}_summary.csv (exactitud
-media por modelo × nivel) y {prefix}_validation.csv (aritmética por transcripción).
+media por modelo × nivel), {prefix}_validation.csv (aritmética por transcripción) y {prefix}_detection.csv (trampas
+detectadas y escapadas por modelo × nivel).
 
 Uso:  python -m engine.evaluate_ladder --levels L0 L1 L2 L3 --prefix l0_l3
 """
@@ -44,7 +48,8 @@ def evaluar(config, levels, cache_dir=None, task="task2_sales"):
         a = r["diagnostics"]["arithmetic"]
         fila_gt = gt[clip]
         con_gt = validate_order_arithmetic(r["fields"], ground_truth={"items": json.loads(fila_gt["items_json"]),
-                                                                      "total_dicho": fila_gt["total_dicho"]})
+                                                                      "total_dicho": fila_gt["total_dicho"],
+                                                                      "total_correcto": fila_gt["total_correcto"]})
         incorrecto = fila_gt["total_es_incorrecto"] == "Sí"
         validacion.append({**base, "total_dicho": a["total_dicho"], "total_esperado": a["expected_total"],
                            "aritmetica": a["status"], "diagnostico": a["diagnosis"], "diagnostico_gt": con_gt["diagnosis"],
@@ -64,6 +69,36 @@ def resumen(detalle, validacion):
     return exactitud.join(aritmetica).reset_index()
 
 
+def deteccion_por_nivel(validacion):
+    """Trampas (total dicho que no cuadra, según el ground truth) detectadas y escapadas, por modelo y nivel.
+
+    - trampas: registros con `total_es_incorrecto = Sí` en el ground truth;
+    - detectadas: trampas que la aritmética marcó como `discrepancia`; de ellas, `detectadas_como_hablante` (el
+      diagnóstico esperado: los ítems están bien y el operador dijo un total que no cuadra) y `detectadas_como_asr` (se
+      marcaron, pero porque la extracción perdió o leyó mal una cifra, no por el total mal dicho);
+    - escapadas: el resto de las trampas, separadas en `escapadas_ok` (la aritmética dio `ok`) y `escapadas_incompleto`
+      (faltaban precios y no se pudo calcular);
+    - registros sin trampa marcados como `discrepancia`: `rotos_por_asr_detectados` si el diagnóstico es `asr` (la
+      aritmética cazó un registro roto por el ASR) y `falsas_alarmas` si se atribuyeron al hablante;
+    - `sin_trampa_incompleto`: registros sin trampa que no se pudieron calcular (precios que faltan).
+    """
+    filas = []
+    for (modelo, nivel), g in validacion.groupby(["model", "level"]):
+        trampa = g["gt_total_incorrecto"].astype(bool)
+        disc = g["aritmetica"] == "discrepancia"
+        det = trampa & disc
+        sin = ~trampa & disc
+        filas.append({"model": modelo, "level": nivel, "n": len(g), "trampas": int(trampa.sum()), "detectadas": int(det.sum()),
+                      "detectadas_como_hablante": int((det & (g["diagnostico_gt"] == "hablante")).sum()),
+                      "detectadas_como_asr": int((det & (g["diagnostico_gt"] == "asr")).sum()),
+                      "escapadas": int((trampa & ~disc).sum()), "escapadas_ok": int((trampa & (g["aritmetica"] == "ok")).sum()),
+                      "escapadas_incompleto": int((trampa & (g["aritmetica"] == "incompleto")).sum()),
+                      "rotos_por_asr_detectados": int((sin & (g["diagnostico_gt"] == "asr")).sum()),
+                      "falsas_alarmas": int((sin & (g["diagnostico_gt"] != "asr")).sum()),
+                      "sin_trampa_incompleto": int((~trampa & (g["aritmetica"] == "incompleto")).sum())})
+    return pd.DataFrame(filas)
+
+
 def main(argv=None):
     p = argparse.ArgumentParser(description="Extracción y validación aritmética por nivel de la escalera de degradación")
     p.add_argument("--config", default="config.yaml")
@@ -80,11 +115,15 @@ def main(argv=None):
     out = Path(a.out_dir) if a.out_dir else task_dir(config, "task2_sales", "metrics")
     out.mkdir(parents=True, exist_ok=True)
     resumen_df = resumen(detalle, validacion)
-    for nombre, df in (("detail", detalle), ("summary", resumen_df.round(3)), ("validation", validacion)):
+    deteccion = deteccion_por_nivel(validacion)
+    for nombre, df in (("detail", detalle), ("summary", resumen_df.round(3)), ("validation", validacion),
+                       ("detection", deteccion)):
         df.to_csv(out / f"{a.prefix}_{nombre}.csv", index=False, encoding="utf-8")
     pd.set_option("display.width", 220)
     print(resumen_df.round(2).to_string(index=False))
-    print(f"\nCSV en {out}: {a.prefix}_detail / _summary / _validation")
+    print("\nDETECCIÓN DE TRAMPAS POR NIVEL (aritmética del pedido)")
+    print(deteccion.to_string(index=False))
+    print(f"\nCSV en {out}: {a.prefix}_detail / _summary / _validation / _detection")
 
 
 if __name__ == "__main__":
