@@ -39,3 +39,13 @@ Tarea Septiembre/Tarea 1/data/index_cmp/
 *.db
 # Caché de respuestas del LLM para la evaluación de punta a punta (regenerable; se invalida sola si cambia el prompt, el contexto o el modelo).
 Tarea Septiembre/Tarea 1/eval/cache_llm/
+
+# ── Tarea 4: audio y modelos (pesados, se regeneran o se descargan) ──
+*.wav
+*.mp3
+*.ogg
+*.opus
+models/
+
+# Tarea 4: audios grabados (se copian con scripts/organize_audio.py; no se commitean)
+Tarea Septiembre/Tarea 4/tasks/*/audio/

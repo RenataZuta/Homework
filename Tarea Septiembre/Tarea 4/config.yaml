@@ -1,0 +1,63 @@
+# Configuración base del sistema ASR (Tarea 4 — From Voice to Record).
+# Todos los paths son relativos a tasks/ (raíz de cada tarea: task1_interview/, task2_sales/).
+
+asr:
+  language: "es"
+  models: ["medium", "large-v3"]
+  precisions: ["float16", "int8"]   # compute_type de faster-whisper
+  default_model: "medium"
+  default_precision: "int8"
+
+paths:
+  root: "tasks"
+  task1_interview:
+    scripts: "task1_interview/scripts"
+    ground_truth: "task1_interview/ground_truth"
+    transcriptions_cache: "task1_interview/transcriptions_cache"
+    metrics: "task1_interview/metrics"
+  task2_sales:
+    scripts: "task2_sales/scripts"
+    ground_truth: "task2_sales/ground_truth"
+    transcriptions_cache: "task2_sales/transcriptions_cache"
+    degradation: "task2_sales/degradation"
+    metrics: "task2_sales/metrics"
+
+# Campos que el extractor debe devolver por cada tipo de audio.
+schemas:
+  interview:
+    anios_experiencia: int
+    ultimo_puesto: str
+    tecnologias: list[str]
+    pretension_salarial: float
+    disponibilidad: str
+    nivel_ingles: str
+  sales:
+    items: list[str]
+    promocion: str
+    direccion_entrega: str
+    metodo_pago: str
+    total_dicho: float
+
+# Glosario de ejemplo: términos de dominio que Whisper suele transcribir mal.
+# Se usa para sesgar la transcripción (initial_prompt) y corregir tras el ASR.
+domain_glossary:
+  tecnologias:
+    - Python
+    - SQL
+    - Power BI
+    - Docker
+    - Kubernetes
+    - TensorFlow
+    - PostgreSQL
+    - GitHub
+  ventas:
+    - Yape
+    - Plin
+    - contraentrega
+    - delivery
+    - boleta
+    - combo
+  correcciones:
+    "pai zon": "Python"
+    "escuele": "SQL"
+    "yap": "Yape"
