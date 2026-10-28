@@ -6,7 +6,7 @@
 Acepta también nombres como "Entrevista 1.m4a" o "Llamada 01.m4a" (mayúsculas, espacio o guion)
 y los copia normalizados: entrevista_01.m4a, llamada_01.m4a. Los originales no se tocan.
 
-Los audios no se commitean (tasks/*/audio/ está en el .gitignore del repo).
+Los audios se versionan en el repo (son las grabaciones del corpus de la tarea).
 
 Uso:  python scripts/organize_audio.py <carpeta_con_los_audios>
 """

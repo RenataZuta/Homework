@@ -46,6 +46,3 @@ Tarea Septiembre/Tarea 1/eval/cache_llm/
 *.ogg
 *.opus
 models/
-
-# Tarea 4: audios grabados (se copian con scripts/organize_audio.py; no se commitean)
-Tarea Septiembre/Tarea 4/tasks/*/audio/
