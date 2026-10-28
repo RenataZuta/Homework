@@ -1,0 +1,11 @@
+# Versiones fijadas (últimas estables en PyPI al 2026-10-26).
+faster-whisper==1.2.1
+streamlit==1.66.1
+jiwer==4.0.0
+pydub==0.25.1
+scipy==1.18.1
+numpy==2.5.4
+pandas==3.1.0
+text2num==3.1.0
+pyyaml==6.0.3
+python-dotenv==1.2.4
