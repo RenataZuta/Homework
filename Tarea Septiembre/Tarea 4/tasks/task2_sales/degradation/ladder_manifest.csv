@@ -8,9 +8,9 @@ telefono,telefono,1,"300-3400 Hz, 8 kHz",llamada_01,llamada_01.m4a,telefono/llam
 mp3_32k,compresion,1,MP3 32 kbps,llamada_01,llamada_01.m4a,mp3_32k/llamada_01.wav,61.55,-22.64,0.8006,20.52
 mp3_16k,compresion,2,MP3 16 kbps,llamada_01,llamada_01.m4a,mp3_16k/llamada_01.wav,61.55,-22.64,0.804,14.95
 mp3_8k,compresion,3,MP3 8 kbps,llamada_01,llamada_01.m4a,mp3_8k/llamada_01.wav,61.55,-22.73,0.7676,11.19
-volumen_m20dB,volumen,1,-20 dB,llamada_01,llamada_01.m4a,volumen_m20dB/llamada_01.wav,61.55,-42.2,0.0838,115.33
-volumen_m30dB,volumen,2,-30 dB,llamada_01,llamada_01.m4a,volumen_m30dB/llamada_01.wav,61.55,-52.2,0.0265,111.73
-volumen_m40dB,volumen,3,-40 dB,llamada_01,llamada_01.m4a,volumen_m40dB/llamada_01.wav,61.55,-62.2,0.0084,126.61
+volumen_m20dB,volumen,1,-20 dB,llamada_01,llamada_01.m4a,volumen_m20dB/llamada_01.wav,61.55,-42.2,0.0838,
+volumen_m30dB,volumen,2,-30 dB,llamada_01,llamada_01.m4a,volumen_m30dB/llamada_01.wav,61.55,-52.2,0.0265,
+volumen_m40dB,volumen,3,-40 dB,llamada_01,llamada_01.m4a,volumen_m40dB/llamada_01.wav,61.55,-62.2,0.0084,
 original,original,0,,llamada_02,llamada_02.m4a,original/llamada_02.wav,49.85,-22.74,0.8138,
 ruido_snr20,ruido,1,SNR 20 dB,llamada_02,llamada_02.m4a,ruido_snr20/llamada_02.wav,49.85,-22.7,0.8154,20.0
 ruido_snr10,ruido,2,SNR 10 dB,llamada_02,llamada_02.m4a,ruido_snr10/llamada_02.wav,49.85,-22.32,0.8504,9.99
@@ -20,9 +20,9 @@ telefono,telefono,1,"300-3400 Hz, 8 kHz",llamada_02,llamada_02.m4a,telefono/llam
 mp3_32k,compresion,1,MP3 32 kbps,llamada_02,llamada_02.m4a,mp3_32k/llamada_02.wav,49.85,-23.17,0.7655,19.41
 mp3_16k,compresion,2,MP3 16 kbps,llamada_02,llamada_02.m4a,mp3_16k/llamada_02.wav,49.85,-23.16,0.7158,13.59
 mp3_8k,compresion,3,MP3 8 kbps,llamada_02,llamada_02.m4a,mp3_8k/llamada_02.wav,49.85,-23.35,0.779,9.85
-volumen_m20dB,volumen,1,-20 dB,llamada_02,llamada_02.m4a,volumen_m20dB/llamada_02.wav,49.85,-42.74,0.0814,117.46
-volumen_m30dB,volumen,2,-30 dB,llamada_02,llamada_02.m4a,volumen_m30dB/llamada_02.wav,49.85,-52.74,0.0257,109.03
-volumen_m40dB,volumen,3,-40 dB,llamada_02,llamada_02.m4a,volumen_m40dB/llamada_02.wav,49.85,-62.74,0.0081,131.0
+volumen_m20dB,volumen,1,-20 dB,llamada_02,llamada_02.m4a,volumen_m20dB/llamada_02.wav,49.85,-42.74,0.0814,
+volumen_m30dB,volumen,2,-30 dB,llamada_02,llamada_02.m4a,volumen_m30dB/llamada_02.wav,49.85,-52.74,0.0257,
+volumen_m40dB,volumen,3,-40 dB,llamada_02,llamada_02.m4a,volumen_m40dB/llamada_02.wav,49.85,-62.74,0.0081,
 original,original,0,,llamada_03,llamada_03.m4a,original/llamada_03.wav,46.55,-24.99,0.5526,
 ruido_snr20,ruido,1,SNR 20 dB,llamada_03,llamada_03.m4a,ruido_snr20/llamada_03.wav,46.55,-24.95,0.5583,20.0
 ruido_snr10,ruido,2,SNR 10 dB,llamada_03,llamada_03.m4a,ruido_snr10/llamada_03.wav,46.55,-24.57,0.5621,10.01
@@ -32,9 +32,9 @@ telefono,telefono,1,"300-3400 Hz, 8 kHz",llamada_03,llamada_03.m4a,telefono/llam
 mp3_32k,compresion,1,MP3 32 kbps,llamada_03,llamada_03.m4a,mp3_32k/llamada_03.wav,46.55,-25.43,0.5307,20.06
 mp3_16k,compresion,2,MP3 16 kbps,llamada_03,llamada_03.m4a,mp3_16k/llamada_03.wav,46.55,-25.46,0.5082,14.23
 mp3_8k,compresion,3,MP3 8 kbps,llamada_03,llamada_03.m4a,mp3_8k/llamada_03.wav,46.55,-25.51,0.5355,10.62
-volumen_m20dB,volumen,1,-20 dB,llamada_03,llamada_03.m4a,volumen_m20dB/llamada_03.wav,46.55,-44.99,0.0553,119.05
-volumen_m30dB,volumen,2,-30 dB,llamada_03,llamada_03.m4a,volumen_m30dB/llamada_03.wav,46.55,-54.99,0.0175,107.69
-volumen_m40dB,volumen,3,-40 dB,llamada_03,llamada_03.m4a,volumen_m40dB/llamada_03.wav,46.55,-64.99,0.0055,119.03
+volumen_m20dB,volumen,1,-20 dB,llamada_03,llamada_03.m4a,volumen_m20dB/llamada_03.wav,46.55,-44.99,0.0553,
+volumen_m30dB,volumen,2,-30 dB,llamada_03,llamada_03.m4a,volumen_m30dB/llamada_03.wav,46.55,-54.99,0.0175,
+volumen_m40dB,volumen,3,-40 dB,llamada_03,llamada_03.m4a,volumen_m40dB/llamada_03.wav,46.55,-64.99,0.0055,
 original,original,0,,llamada_04,llamada_04.m4a,original/llamada_04.wav,35.09,-21.17,0.8312,
 ruido_snr20,ruido,1,SNR 20 dB,llamada_04,llamada_04.m4a,ruido_snr20/llamada_04.wav,35.09,-21.13,0.8328,19.99
 ruido_snr10,ruido,2,SNR 10 dB,llamada_04,llamada_04.m4a,ruido_snr10/llamada_04.wav,35.09,-20.75,0.8437,10.0
@@ -44,9 +44,9 @@ telefono,telefono,1,"300-3400 Hz, 8 kHz",llamada_04,llamada_04.m4a,telefono/llam
 mp3_32k,compresion,1,MP3 32 kbps,llamada_04,llamada_04.m4a,mp3_32k/llamada_04.wav,35.09,-21.59,0.8047,20.05
 mp3_16k,compresion,2,MP3 16 kbps,llamada_04,llamada_04.m4a,mp3_16k/llamada_04.wav,35.09,-21.59,0.7394,13.87
 mp3_8k,compresion,3,MP3 8 kbps,llamada_04,llamada_04.m4a,mp3_8k/llamada_04.wav,35.09,-21.7,0.7878,9.83
-volumen_m20dB,volumen,1,-20 dB,llamada_04,llamada_04.m4a,volumen_m20dB/llamada_04.wav,35.09,-41.17,0.0831,119.65
-volumen_m30dB,volumen,2,-30 dB,llamada_04,llamada_04.m4a,volumen_m30dB/llamada_04.wav,35.09,-51.17,0.0263,113.97
-volumen_m40dB,volumen,3,-40 dB,llamada_04,llamada_04.m4a,volumen_m40dB/llamada_04.wav,35.09,-61.17,0.0083,131.0
+volumen_m20dB,volumen,1,-20 dB,llamada_04,llamada_04.m4a,volumen_m20dB/llamada_04.wav,35.09,-41.17,0.0831,
+volumen_m30dB,volumen,2,-30 dB,llamada_04,llamada_04.m4a,volumen_m30dB/llamada_04.wav,35.09,-51.17,0.0263,
+volumen_m40dB,volumen,3,-40 dB,llamada_04,llamada_04.m4a,volumen_m40dB/llamada_04.wav,35.09,-61.17,0.0083,
 original,original,0,,llamada_05,llamada_05.m4a,original/llamada_05.wav,38.59,-22.21,0.8523,
 ruido_snr20,ruido,1,SNR 20 dB,llamada_05,llamada_05.m4a,ruido_snr20/llamada_05.wav,38.59,-22.17,0.8593,20.0
 ruido_snr10,ruido,2,SNR 10 dB,llamada_05,llamada_05.m4a,ruido_snr10/llamada_05.wav,38.59,-21.79,0.8242,10.01
@@ -56,6 +56,6 @@ telefono,telefono,1,"300-3400 Hz, 8 kHz",llamada_05,llamada_05.m4a,telefono/llam
 mp3_32k,compresion,1,MP3 32 kbps,llamada_05,llamada_05.m4a,mp3_32k/llamada_05.wav,38.59,-22.65,0.8378,20.26
 mp3_16k,compresion,2,MP3 16 kbps,llamada_05,llamada_05.m4a,mp3_16k/llamada_05.wav,38.59,-22.62,0.7809,14.16
 mp3_8k,compresion,3,MP3 8 kbps,llamada_05,llamada_05.m4a,mp3_8k/llamada_05.wav,38.59,-22.76,0.6231,10.15
-volumen_m20dB,volumen,1,-20 dB,llamada_05,llamada_05.m4a,volumen_m20dB/llamada_05.wav,38.59,-42.21,0.0852,120.29
-volumen_m30dB,volumen,2,-30 dB,llamada_05,llamada_05.m4a,volumen_m30dB/llamada_05.wav,38.59,-52.21,0.027,111.73
-volumen_m40dB,volumen,3,-40 dB,llamada_05,llamada_05.m4a,volumen_m40dB/llamada_05.wav,38.59,-62.21,0.0085,130.99
+volumen_m20dB,volumen,1,-20 dB,llamada_05,llamada_05.m4a,volumen_m20dB/llamada_05.wav,38.59,-42.21,0.0852,
+volumen_m30dB,volumen,2,-30 dB,llamada_05,llamada_05.m4a,volumen_m30dB/llamada_05.wav,38.59,-52.21,0.027,
+volumen_m40dB,volumen,3,-40 dB,llamada_05,llamada_05.m4a,volumen_m40dB/llamada_05.wav,38.59,-62.21,0.0085,

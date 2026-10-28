@@ -168,7 +168,9 @@ def construir_escalera(input_dir, output_dir, niveles=None, seed=0, progreso=pri
                           "output_file": destino.relative_to(output_dir).as_posix(),  # relativa a output_dir
                           "duration_s": round(len(y) / SR, 2), "rms_dbfs": round(_dbfs(y), 2),
                           "peak": round(float(np.max(np.abs(y))), 4),
-                          "snr_db_measured": round(_snr_db(x, y), 2) if nivel != "original" else ""})
+                          # En volumen la señal solo cambia de ganancia: no hay "ruido" que medir (saldría ~110 dB de
+                          # redondeo numérico), así que se deja vacío.
+                          "snr_db_measured": round(_snr_db(x, y), 2) if familia in ("ruido", "telefono", "compresion") else ""})
     manifiesto = output_dir / MANIFIESTO
     with manifiesto.open("w", encoding="utf-8", newline="") as f:
         w = csv.DictWriter(f, fieldnames=list(filas[0]), lineterminator="\n")
