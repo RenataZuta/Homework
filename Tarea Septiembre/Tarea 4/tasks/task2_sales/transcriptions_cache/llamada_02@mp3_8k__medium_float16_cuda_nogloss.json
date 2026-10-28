@@ -1,0 +1,20 @@
+{
+  "clip": "llamada_02",
+  "level": "mp3_8k",
+  "family": "compresion",
+  "severity": 3,
+  "task": "task2_sales",
+  "model": "medium",
+  "compute_type": "float16",
+  "device_requested": "cuda",
+  "device_used": "cuda",
+  "glossary": false,
+  "glossary_mechanism": null,
+  "language": "es",
+  "transcript": "Buenas tardes, el buen sabor. ¿Qué va a pedir? Hola, quiero un ceviche mixto y dos arroz con mariscos. ¿El ceviche es personal o para compartir? Para compartir. Y los arroces, la verdad que yo solo quiero uno, me he confundido. Un arroz con mariscos o más. Ok, un ceviche mixto para compartir y un arroz con mariscos. ¿Algo de tomar? Dos cincas soles de medio litro. Listo, el ceviche para compartir son 45 soles, el arroz con mariscos 38 y los encacolas 5 soles cada uno. Su total son 80 soles. Ok, ¿y la dirección? ¿Me podrías traer por alivio y para la calle Las Palmeras 456 Medaceres? Genial, ¿y forma de pago? Cuánta arja está al momento de la entrega.",
+  "vram_mb": 0.0,
+  "vram_device_mb": 1998.0,
+  "elapsed_s": 3.18,
+  "faster_whisper": "1.2.1",
+  "timestamp": "2026-10-28T13:59:12"
+}

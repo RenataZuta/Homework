@@ -1,0 +1,20 @@
+{
+  "clip": "llamada_04",
+  "level": "ruido_snr0",
+  "family": "ruido",
+  "severity": 4,
+  "task": "task2_sales",
+  "model": "large-v3",
+  "compute_type": "float16",
+  "device_requested": "cuda",
+  "device_used": "cuda",
+  "glossary": false,
+  "glossary_mechanism": null,
+  "language": "es",
+  "transcript": "Hola, a ver, ¿qué es un chico de aeropuerto grande y un tallarín saltado? No, espera, los personas en el tallarín piden un arroz y soja de pollo. Ok, un aeropuerto grande y un arroz y soja de pollo. ¿Algo para tomar? Una chicha morada personal. Listo, el aeropuerto grande son 28 soles y el soja de pollo 22. Y la chicha 8, en total 58 soles. ¿Cuál es la dirección? Es avenida, la avenida Brasil, 3100 José Luis María. ¿Y cuál método de pago? Pago con clima.",
+  "vram_mb": 0.0,
+  "vram_device_mb": 3626.0,
+  "elapsed_s": 3.85,
+  "faster_whisper": "1.2.1",
+  "timestamp": "2026-10-28T14:05:17"
+}

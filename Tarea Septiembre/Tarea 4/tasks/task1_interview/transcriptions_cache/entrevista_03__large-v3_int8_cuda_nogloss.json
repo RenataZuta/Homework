@@ -1,0 +1,17 @@
+{
+  "clip": "entrevista_03",
+  "task": "task1_interview",
+  "model": "large-v3",
+  "compute_type": "int8",
+  "device_requested": "cuda",
+  "device_used": "cuda",
+  "glossary": false,
+  "glossary_mechanism": null,
+  "language": "es",
+  "transcript": "Cuéntame, ¿qué herramientas usas normalmente? Principalmente Concar, que es el sistema contable que usamos en Perú. También está Excel y un poco de Power BI para los reportes al jefe. ¿Y cuánto tiempo tienes en el rubro? Uy, ya van a ser como año y medio. Bueno, un año y ocho meses si somos exactos. Entre como practicante y ya luego me quedé. ¿Qué cargo tenías? Era asistente contable, apoyaba con los cierres mensuales y la conciliación bancaria. ¿Y cuánto estás buscando ganar? Estoy buscando algo de 3.000 soles, 3.200 si se puede. ¿Inglés? Básico nomás, la verdad. Leo un poco, pero hablar no se me da muy bien. ¿Y cuándo puedes empezar? A partir de quincena de noviembre, que es cuando termino mi periodo de aviso.",
+  "vram_mb": 0.0,
+  "vram_device_mb": 2186.0,
+  "elapsed_s": 5.19,
+  "faster_whisper": "1.2.1",
+  "timestamp": "2026-10-28T12:26:21"
+}

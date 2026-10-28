@@ -1,0 +1,20 @@
+{
+  "clip": "llamada_04",
+  "level": "mp3_16k",
+  "family": "compresion",
+  "severity": 2,
+  "task": "task2_sales",
+  "model": "large-v3",
+  "compute_type": "float16",
+  "device_requested": "cuda",
+  "device_used": "cuda",
+  "glossary": false,
+  "glossary_mechanism": null,
+  "language": "es",
+  "transcript": "El buen sabor, buenas noches. Hola, a ver, quiero un chifa de aeropuerto grande y un tallarín saltado. No, espera, mejor cámbiame el tallarín por un arroz chaufa de pollo. Ok, un aeropuerto grande y un arroz chaufa de pollo. ¿Algo para tomar? Una chicha morada personal. Listo, el aeropuerto grande son 28 soles y el chaufa de pollo 22. Y la chicha 8, en total 58 soles. ¿Cuál es la dirección? Eh, es Avenida, la Avenida Brasil, 3100 por Jesús María. ¿Y cuál método de pago? Por Comply.",
+  "vram_mb": 0.0,
+  "vram_device_mb": 3658.0,
+  "elapsed_s": 4.06,
+  "faster_whisper": "1.2.1",
+  "timestamp": "2026-10-28T14:03:10"
+}

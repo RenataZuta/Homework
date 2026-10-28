@@ -1,0 +1,20 @@
+{
+  "clip": "llamada_04",
+  "level": "ruido_snr5",
+  "family": "ruido",
+  "severity": 3,
+  "task": "task2_sales",
+  "model": "medium",
+  "compute_type": "float16",
+  "device_requested": "cuda",
+  "device_used": "cuda",
+  "glossary": false,
+  "glossary_mechanism": null,
+  "language": "es",
+  "transcript": "Hola, a ver, quiero un chifa de aeropuerto grande y un tallarín saltado. No, espera, mejor también me el tallarín pude un arroz chaufa de pollo. Ok, un aeropuerto grande y un arroz chaufa de pollo. Algo para tomar? Una checha morada personal. Listo, el aeropuerto grande son 28 soles y el chaufa de pollo 22. Y la checha 8, el total 58 soles. ¿Cuál es la dirección? Es avenida... la avenida Brasí 31-0-0 por César María. ¿Y cuál método de pago? Por cumplir.",
+  "vram_mb": 0.0,
+  "vram_device_mb": 1934.0,
+  "elapsed_s": 2.48,
+  "faster_whisper": "1.2.1",
+  "timestamp": "2026-10-28T14:00:04"
+}

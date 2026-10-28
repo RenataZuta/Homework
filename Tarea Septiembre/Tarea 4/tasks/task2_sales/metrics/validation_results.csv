@@ -1,0 +1,6 @@
+task,clip,extractor,campos_sin_verificar,total_esperado,total_dicho,aritmetica,diagnostico,gt_total_incorrecto,detecta_bien
+task2_sales,llamada_01,rules,,142.0,140.0,discrepancia,hablante,True,True
+task2_sales,llamada_02,rules,,93.0,80.0,discrepancia,hablante,True,True
+task2_sales,llamada_03,rules,items,86.0,86.0,ok,ok,True,False
+task2_sales,llamada_04,rules,direccion_entrega,58.0,58.0,ok,ok,False,True
+task2_sales,llamada_05,rules,,108.0,110.0,discrepancia,hablante,True,True

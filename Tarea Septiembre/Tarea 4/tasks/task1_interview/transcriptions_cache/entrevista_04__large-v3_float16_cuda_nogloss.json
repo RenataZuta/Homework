@@ -1,0 +1,17 @@
+{
+  "clip": "entrevista_04",
+  "task": "task1_interview",
+  "model": "large-v3",
+  "compute_type": "float16",
+  "device_requested": "cuda",
+  "device_used": "cuda",
+  "glossary": false,
+  "glossary_mechanism": null,
+  "language": "es",
+  "transcript": "¿Cuánto tiempo llevas en marketing? Siete años más o menos. Empecé haciendo community management y fui subiendo. Lo último que hice fue coordinar todo el equipo de marketing digital en una empresa de e-commerce. ¿Y qué plataformas y herramientas manejas? Usualmente utilizo Google Ads, Meta Ads, Google Analytics, Haspot para el CRM y Figma para coordinar con los diseñadores. ¿Y tu nivel de inglés? Yo diría que intermedio o alto. He llevado cursos en Coursera, en inglés y me defiendo en reuniones, pero no es tan fluido como quisiera. ¿Cuánto esperas ganar de sueldo? 8.500. En mi puesto anterior ganaba 7.500, entonces busco un incremento razonable. ¿Y disponibilidad? Bueno, un mes más o menos. Tengo que dar aviso con 30 días de anticipación según mi contrato.",
+  "vram_mb": 0.0,
+  "vram_device_mb": 3722.0,
+  "elapsed_s": 5.04,
+  "faster_whisper": "1.2.1",
+  "timestamp": "2026-10-28T12:24:14"
+}

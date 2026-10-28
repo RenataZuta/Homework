@@ -1,0 +1,20 @@
+{
+  "clip": "llamada_04",
+  "level": "ruido_snr0",
+  "family": "ruido",
+  "severity": 4,
+  "task": "task2_sales",
+  "model": "medium",
+  "compute_type": "float16",
+  "device_requested": "cuda",
+  "device_used": "cuda",
+  "glossary": false,
+  "glossary_mechanism": null,
+  "language": "es",
+  "transcript": "Hola, a ver, quiero un chifo de aeropuerto grande y un tallarín saltado. No, espera, ¿no puede ser que me tallarín pude una retoja de pollo? Ok, un aeropuerto grande y una retoja de pollo, ¿algo para tomar? Una chicha morada por favor. Listo, el aeropuerto grande son 28 soles y el chifo de pollo 20. Y la chicha 8, el total son 28 soles, ¿cuál es la dirección? Es avenida, la avenida Brastil, 31-0-0, Ocasis María. ¿Y cuál método de pago? Press Conference.",
+  "vram_mb": 0.0,
+  "vram_device_mb": 1934.0,
+  "elapsed_s": 2.47,
+  "faster_whisper": "1.2.1",
+  "timestamp": "2026-10-28T14:00:20"
+}

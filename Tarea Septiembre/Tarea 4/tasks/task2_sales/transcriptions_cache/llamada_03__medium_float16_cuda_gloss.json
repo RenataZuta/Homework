@@ -1,0 +1,17 @@
+{
+  "clip": "llamada_03",
+  "task": "task2_sales",
+  "model": "medium",
+  "compute_type": "float16",
+  "device_requested": "cuda",
+  "device_used": "cuda",
+  "glossary": true,
+  "glossary_mechanism": "initial_prompt",
+  "language": "es",
+  "transcript": "El buen sabor, buenas noches. Buenas noches, quiero pedir cuatro cuartos de pollo a la brasa con papas y dos ensaladas. Los cuartos son de pecho o de pierna? Dos de cada uno, dos de pecho y dos de pierna. Perfecto. Y para tomar? Una gaseosa de litro y medio Coca-Cola. Tenemos la prom familiar, cuatro cuartos más la gaseosa grande por 70 soles en vez de 80. Ah ya, aplícame esa promo entonces. Listo, la promo familiar es 70 soles más las dos ensaladas a 8 soles cada una. Su total sería de 86 soles. La dirección cuál es? Es Giron, Guayaga, 7-8-2, piso 4 por cerca de Lima. Método de pago? Efectivo, con billete de 100.",
+  "vram_mb": 0.0,
+  "vram_device_mb": 2030.0,
+  "elapsed_s": 3.19,
+  "faster_whisper": "1.2.1",
+  "timestamp": "2026-10-28T12:21:45"
+}

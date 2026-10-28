@@ -1,0 +1,4 @@
+model,compute_type,device,reason
+medium,float16,cpu,float16 no está soportado en cpu
+large-v3,float16,cpu,excluida con models_cpu (la CPU es lenta)
+large-v3,int8,cpu,excluida con models_cpu (la CPU es lenta)

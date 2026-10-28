@@ -1,0 +1,20 @@
+{
+  "clip": "llamada_03",
+  "level": "telefono",
+  "family": "telefono",
+  "severity": 1,
+  "task": "task2_sales",
+  "model": "medium",
+  "compute_type": "float16",
+  "device_requested": "cuda",
+  "device_used": "cuda",
+  "glossary": false,
+  "glossary_mechanism": null,
+  "language": "es",
+  "transcript": "el buen sabor buenas noches buenas noches quiero pedir cuatro cuartos de pollo a la brasa con papas y dos ensaladas los cuartos son de pecho o de pierna dos de cada uno dos de pecho y dos de pierna perfecto y para tomar una gaseosa de litro y medio coca cola tenemos la prom familiar cuatro cuartos malas gaseosa grande por 70 soles en vez de 80 ah ya aplica mesa promo entonces listo la prom familiar es 70 soles más las dos ensaladas a ocho soles cada una su total sería de 86 soles la dirección cuál es es giron guayaga 782 piso 4 por cerca de lima método de pago efectivo con billete de cien",
+  "vram_mb": 0.0,
+  "vram_device_mb": 1934.0,
+  "elapsed_s": 2.54,
+  "faster_whisper": "1.2.1",
+  "timestamp": "2026-10-28T14:00:32"
+}

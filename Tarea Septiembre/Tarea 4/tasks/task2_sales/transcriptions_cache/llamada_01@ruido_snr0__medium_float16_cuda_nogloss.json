@@ -1,0 +1,20 @@
+{
+  "clip": "llamada_01",
+  "level": "ruido_snr0",
+  "family": "ruido",
+  "severity": 4,
+  "task": "task2_sales",
+  "model": "medium",
+  "compute_type": "float16",
+  "device_requested": "cuda",
+  "device_used": "cuda",
+  "glossary": false,
+  "glossary_mechanism": null,
+  "language": "es",
+  "transcript": "Buenas noches. Restaurante El Buen Sabor. ¿En qué les puedo ayudar? Hola, aquí me tienen pedido para venir. A ver, dos lomos saltados grandes. ¿Dos lomos saltados grandes? Perfecto. ¿Algo más? Sí, y una... No, espera. Mejor que sean tres lomos, no dos. Es que somos más gente de lo que tenemos. Ok, tres lomos saltados grandes. Entonces, ¿algo más? Sí, una jarra de chica morada y una cocinada rocaja. Perfecto. Tenemos una promoción de dos por uno indebidas, así que la jarra de especiales tendría gratis y tibio otro. Ah, ya. Entonces ponme dos jarras de chica morada. Listo. Entonces, son tres lomas saltados grandes a 35 soles cada uno, dos jarras de chica a 26 soles, pero la segunda va gratis y un arroz choco especial a 25 soles. ¿La dirección? Avenida Javier Plado, 1250, departamento 302, Sanitiba. ¿Método de pago? Ya pues. Perfecto. Si total sería 140 soles.",
+  "vram_mb": 0.0,
+  "vram_device_mb": 2030.0,
+  "elapsed_s": 4.17,
+  "faster_whisper": "1.2.1",
+  "timestamp": "2026-10-28T14:00:11"
+}

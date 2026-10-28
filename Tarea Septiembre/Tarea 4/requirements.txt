@@ -1,5 +1,7 @@
 # Versiones fijadas (últimas estables en PyPI al 2026-10-26).
 faster-whisper==1.2.1
+# av: faster-whisper 1.2.1 llama a av.open(metadata_errors=...), argumento que PyAV 19 ya no acepta (y PyAV 14 aún no tiene).
+av==18.1.0
 streamlit==1.66.1
 jiwer==4.0.0
 pydub==0.25.1
@@ -9,3 +11,6 @@ pandas==3.1.0
 text2num==3.1.0
 pyyaml==6.0.3
 python-dotenv==1.2.4
+# Opcional: solo para el extractor LLM (de pago). Con pipeline.extractor: rules en config.yaml no se usa.
+anthropic==2.3.0
+# Opcional: torch solo se usa para medir la VRAM con torch.cuda.max_memory_allocated() (Colab ya lo trae).

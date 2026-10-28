@@ -1,0 +1,17 @@
+{
+  "clip": "entrevista_05",
+  "task": "task1_interview",
+  "model": "large-v3",
+  "compute_type": "int8",
+  "device_requested": "cuda",
+  "device_used": "cuda",
+  "glossary": false,
+  "glossary_mechanism": null,
+  "language": "es",
+  "transcript": "Buenas tardes, cuéntame de tu experiencia. Bueno, soy todavía estudiante, estoy en el noveno ciclo de administración. Hice mis prácticas pre-profesionales durante seis meses en el área de selección de personal. O sea que tu experiencia total es de seis meses. Sí, seis meses. Fue mi primera experiencia laboral formal. Mi cargo era practicante de recursos humanos. ¿Y qué herramientas usaste ahí? Sobre todo, BOOK, que es la gestión de nóminas. Microsoft Teams para coordinar entrevistas. Y pues Excel para los reportes de rotación y esas cosas. ¿Cuánto esperas ganar? Como practicante, algo de 1500 soles estaría bien. ¿Cuándo podrías empezar? La próxima semana estoy libre. ¿Y tu inglés? Básico, o sea puedo entender textos simples, pero no mucho más.",
+  "vram_mb": 0.0,
+  "vram_device_mb": 2218.0,
+  "elapsed_s": 5.09,
+  "faster_whisper": "1.2.1",
+  "timestamp": "2026-10-28T12:26:31"
+}
