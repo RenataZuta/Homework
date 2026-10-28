@@ -102,11 +102,13 @@ _FIN_PUESTO = r"(?=\s+en\s+(?:una?|la|el|mi|las|los)\b|\s+(?:pero|donde|durante|
 
 
 def _canon_puesto(v):
-    """Unifica grafías que el ASR separa: "full stack" -> "fullstack", "back end" -> "backend"."""
-    return re.sub(r"\b(full|back|front)\s+(stack|end)\b", r"\1\2", v, flags=FLAGS)
+    """Unifica grafías que el ASR separa: "full stack"/"full-stack" -> "fullstack", "back end" -> "backend"."""
+    return re.sub(r"\b(full|back|front)[\s-]+(stack|end)\b", r"\1\2", v, flags=FLAGS)
 
 
 def _ultimo_puesto(t):
+    # El ASR a veces pone una coma entre el rol y su modificador ("desarrollador, full-stack senior"): no corta el puesto.
+    t = re.sub(r",\s+(?=(?:full[\s-]?stack|back[\s-]?end|front[\s-]?end|semi[\s-]?senior|senior|junior)\b)", " ", t, flags=FLAGS)
     patrones = [
         rf"(?:mi\s+)?[uú]ltimo\s+(?:puesto|cargo)\s+(?:fue|era)\s+(?:como\s+)?(?P<v>[^.,;?!]+?){_FIN_PUESTO}",
         rf"\b(?:mi\s+)?(?:cargo|puesto)\s+(?:era|fue)\s+(?:como\s+)?(?P<v>[^.,;?!]+?){_FIN_PUESTO}",

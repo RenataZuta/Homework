@@ -1,0 +1,7 @@
+extractor,campo,tipo,n,accuracy,mae,f1_macro,n_sin_valor
+rules,anios_experiencia,numérico,5,1.0,0.0,,0
+rules,ultimo_puesto,categórico,5,1.0,,,0
+rules,tecnologias,categórico,5,0.2,,,0
+rules,pretension_salarial,numérico,5,1.0,0.0,,0
+rules,disponibilidad,categórico,5,1.0,,,0
+rules,nivel_ingles,categórico,5,1.0,,1.0,0
