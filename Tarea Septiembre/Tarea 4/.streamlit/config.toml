@@ -1,0 +1,12 @@
+# Sin telemetría. El vigilante de archivos se desactiva porque, si torch está instalado, Streamlit intenta recorrer
+# sus módulos y llena el log de errores; para ver los cambios de app.py recarga la página (R).
+[browser]
+gatherUsageStats = false
+
+[client]
+toolbarMode = "minimal"
+
+[server]
+# Solo accesible desde este computador (por defecto Streamlit escucha en todas las interfaces de red).
+address = "localhost"
+fileWatcherType = "none"
