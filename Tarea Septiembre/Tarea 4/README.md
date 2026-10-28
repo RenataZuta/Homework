@@ -15,5 +15,14 @@ El motor común está en `engine/` (transcripción, extracción, validación); l
 
 ```bash
 pip install -r requirements.txt
-cp .env.example .env   # completar ANTHROPIC_API_KEY y HF_TOKEN
+cp .env.example .env   # opcional: ANTHROPIC_API_KEY solo para el extractor LLM (de pago); por defecto no hace falta
 ```
+
+## Interfaz (Streamlit)
+
+```bash
+pip install -r requirements.txt
+streamlit run app.py        # desde esta carpeta; se abre en http://localhost:8501
+```
+
+Cuatro pestañas: **Probador** (sube un audio y obtén transcripción, campos extraídos, verificación y, en ventas, la aritmética del pedido), **Benchmark** (WER/CER, tiempo y VRAM por modelo × precisión × dispositivo), **Escalera de degradación** (cuánto sube el WER al degradar el audio) y **Ejemplos** (guion, ground truth y transcripciones lado a lado). Usa el extractor por reglas, sin API ni clave. En CPU, `tiny` y `base` responden en segundos; `medium` y `large-v3` tardan bastante. La app solo escucha en `localhost` (ver `.streamlit/config.toml`).
