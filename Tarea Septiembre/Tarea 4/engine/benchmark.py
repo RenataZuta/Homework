@@ -12,6 +12,7 @@ Salidas (CSV) en tasks/{task}/metrics/: benchmark_detail, benchmark_summary, glo
 benchmark_skipped. Las transcripciones se guardan como JSON en tasks/{task}/transcriptions_cache/.
 
 Uso:  python -m engine.benchmark [--tasks ...] [--models ...] [--precisions ...] [--devices ...] [--glossary off on]
+      python -m engine.benchmark --ladder-dir tasks/task2_sales/degradation [--levels ...]   (escalera de degradación)
 """
 import argparse
 import itertools
@@ -33,6 +34,8 @@ EXT_AUDIO = {".m4a", ".wav", ".mp3", ".ogg", ".opus", ".flac"}
 COLS_GLOSARIO = ["task", "model", "compute_type", "device", "n_clips", "wer_sin_glosario", "wer_con_glosario",
                  "delta_wer", "delta_ci_low", "delta_ci_high", "clips_mejoran", "clips_empeoran", "clips_iguales",
                  "ic_excluye_cero"]
+COLS_CURVA = ["model", "compute_type", "device", "glossary", "level", "family", "severity", "param", "n_clips",
+              "wer_original", "wer_level", "delta_wer", "delta_ci_low", "delta_ci_high", "ic_excluye_cero"]
 COLS_CAMBIOS = ["task", "clip", "model", "glossary", "eje", "config_a", "config_b", "texto_cambio",
                 "wer_entre_textos", "wer_a", "wer_b"]
 
@@ -218,11 +221,13 @@ def run_benchmark(config, tasks=None, models=None, precisions=None, devices=None
     return out
 
 
-def summarize(detail, n_boot=1000, seed=0, confidence=0.95):
-    """Una fila por (tarea, modelo, precisión, dispositivo, glosario): WER/CER de corpus con IC 95 %, tiempo y VRAM."""
+def summarize(detail, n_boot=1000, seed=0, confidence=0.95, keys=None):
+    """Una fila por (tarea, modelo, precisión, dispositivo, glosario): WER/CER de corpus con IC 95 %, tiempo y VRAM.
+    `keys` cambia las columnas de agrupación (la escalera de degradación añade el nivel)."""
+    keys = keys or ["task", "model", "compute_type", "device", "glossary"]
     filas = []
-    for clave, g in detail.groupby(["task", "model", "compute_type", "device", "glossary"], sort=False):
-        fila = dict(zip(["task", "model", "compute_type", "device", "glossary"], clave), n_clips=len(g))
+    for clave, g in detail.groupby(keys, sort=False):
+        fila = dict(zip(keys, clave), n_clips=len(g))
         for nombre, (n, d) in {"wer": ("w_err", "w_n"), "cer": ("c_err", "c_n"), "wer_numnorm": ("wn_err", "wn_n")}.items():
             fila[nombre], fila[f"{nombre}_ci_low"], fila[f"{nombre}_ci_high"] = bootstrap_ci(g[n], g[d], n_boot, seed, confidence)
         for nombre in ("elapsed_s", "vram_device_mb", "vram_mb"):
@@ -230,6 +235,146 @@ def summarize(detail, n_boot=1000, seed=0, confidence=0.95):
                 pd.to_numeric(g[nombre], errors="coerce"), None, n_boot, seed, confidence)
         filas.append(fila)
     return pd.DataFrame(filas)
+
+
+def load_ladder_meta(ladder_dir):
+    """{nivel: (familia, severidad, parámetro)} leído de ladder_manifest.csv (vacío si no existe)."""
+    ruta = Path(ladder_dir) / "ladder_manifest.csv"
+    if not ruta.exists():
+        return {}
+    df = pd.read_csv(ruta, dtype=str, keep_default_na=False).drop_duplicates("level")
+    return {r["level"]: (r["family"], int(r["severity"]), r["param"]) for r in df.to_dict("records")}
+
+
+def list_ladder(ladder_dir, refs, levels=None, limit=None):
+    """[(ruta, clip, nivel)] de ladder_dir/<nivel>/<clip>.wav que tengan referencia. `original` va primero y el resto
+    por familia y severidad (según ladder_manifest.csv). `limit` recorta los clips de cada nivel."""
+    ladder_dir = Path(ladder_dir)
+    meta = load_ladder_meta(ladder_dir)
+    niveles = [d.name for d in sorted(ladder_dir.iterdir()) if d.is_dir() and any(d.glob("*.wav"))]
+    if levels:
+        faltan = [n for n in levels if n not in niveles]
+        if faltan:
+            raise ValueError(f"niveles sin audios en {ladder_dir}: {faltan} (hay: {niveles})")
+        niveles = [n for n in niveles if n in levels]
+    niveles.sort(key=lambda n: (n != "original", meta.get(n, ("~", 99, ""))[0], meta.get(n, ("~", 99, ""))[1], n))
+    items = []
+    for n in niveles:
+        wavs = [p for p in sorted((ladder_dir / n).glob("*.wav")) if p.stem in refs]
+        items += [(p, p.stem, n) for p in (wavs[:limit] if limit else wavs)]
+    return items
+
+
+def run_ladder(config, ladder_dir, task="task2_sales", levels=None, models=None, precisions=None, devices=None,
+               glossary=None, limit=None, metrics_dir=None, cache_dir=None, warmup=None, use_cache=True, n_boot=None,
+               progress=print, models_cpu=None):
+    """Transcribe cada nivel de la escalera de degradación (tasks/task2_sales/degradation/build_ladder.py) y mide cuánto
+    empeora el WER respecto al nivel `original`. Escribe en tasks/{task}/metrics/: ladder_detail, ladder_summary
+    (WER/CER por nivel con IC 95 %), ladder_curve (diferencia de WER contra `original`, pareada por clip, con IC 95 %) y
+    ladder_skipped. Las transcripciones van a transcriptions_cache/ como {clip}@{nivel}__{modelo}_{precisión}_....json."""
+    asr, bench = config["asr"], config.get("benchmark", {})
+    models = models or asr["models"]
+    precisions = precisions or asr["precisions"]
+    devices = devices or bench.get("devices", ["cuda", "cpu"])
+    glosarios = glossary or bench.get("glossary", ["off", "on"])
+    warmup = bench.get("warmup", True) if warmup is None else warmup
+    n_boot = n_boot or bench.get("bootstrap_samples", 1000)
+    seed, confianza = bench.get("bootstrap_seed", 0), bench.get("confidence", 0.95)
+
+    refs = load_references(config, task)
+    items = list_ladder(ladder_dir, refs, levels, limit)
+    if not items:
+        raise ValueError(f"no hay audios con referencia en {ladder_dir}")
+    meta = load_ladder_meta(ladder_dir)
+    niveles = list(dict.fromkeys(n for _, _, n in items))
+    progress(f"{task}: {len(items)} audios en {len(niveles)} niveles: {niveles}")
+    cdir = (Path(cache_dir) / task) if cache_dir else task_dir(config, task, "transcriptions_cache")
+    cdir.mkdir(parents=True, exist_ok=True)
+
+    filas, omitidas = [], []
+    for dispositivo, modelo, precision in itertools.product(devices, models, precisions):
+        if dispositivo == "cpu" and models_cpu is not None and modelo not in models_cpu:
+            omitidas.append({"model": modelo, "compute_type": precision, "device": dispositivo,
+                             "reason": "excluida con models_cpu (la CPU es lenta)"})
+            continue
+        if not is_supported(dispositivo, precision):
+            motivo = "sin GPU disponible" if dispositivo == "cuda" and not is_supported("cuda", "float32") \
+                else f"{precision} no está soportado en {dispositivo}"
+            omitidas.append({"model": modelo, "compute_type": precision, "device": dispositivo, "reason": motivo})
+            progress(f"  [omitida] {modelo} {precision} {dispositivo}: {motivo}")
+            continue
+        progress(f"== {modelo} · {precision} · {dispositivo}")
+        tr = None
+        for gl in glosarios:
+            for ruta, clip, nivel in items:
+                cp = _cache_path(cdir, f"{clip}@{nivel}", modelo, precision, dispositivo, gl == "on")
+                familia, severidad, parametro = meta.get(nivel, ("", "", ""))
+                if use_cache and cp.exists():
+                    res = json.loads(cp.read_text(encoding="utf-8"))
+                else:
+                    if tr is None:
+                        tr = Transcriber(modelo, dispositivo, precision, config).load()
+                        if warmup:
+                            tr.transcribe(items[0][0], None)  # descartada: arranque de CUDA/CPU
+                    r = tr.transcribe(ruta, build_glossary(config, SCHEMA_DE_TAREA.get(task)) if gl == "on" else None)
+                    res = {"clip": clip, "level": nivel, "family": familia, "severity": severidad, "task": task,
+                           "model": modelo, "compute_type": precision, "device_requested": dispositivo,
+                           "device_used": r.device_used, "glossary": gl == "on",
+                           "glossary_mechanism": r.glossary_mechanism, "language": r.language, "transcript": r.text,
+                           "vram_mb": r.vram_peak_mb, "vram_device_mb": r.vram_device_peak_mb,
+                           "elapsed_s": r.elapsed_seconds, "faster_whisper": _version_faster_whisper(),
+                           "timestamp": time.strftime("%Y-%m-%dT%H:%M:%S")}
+                    cp.write_text(json.dumps(res, ensure_ascii=False, indent=2), encoding="utf-8")
+                ref = refs[clip]
+                w_err, w_n, c_err, c_n = _conteos(normalize_for_wer(ref), normalize_for_wer(res["transcript"]))
+                n_err, n_n, _, _ = _conteos(_normalize_numnorm(ref), _normalize_numnorm(res["transcript"]))
+                filas.append({"task": task, "level": nivel, "family": familia, "severity": severidad, "param": parametro,
+                              "clip": clip, "model": modelo, "compute_type": precision, "device": dispositivo,
+                              "device_used": res["device_used"], "glossary": gl, "w_err": w_err, "w_n": w_n,
+                              "c_err": c_err, "c_n": c_n, "wn_err": n_err, "wn_n": n_n, "wer": w_err / w_n,
+                              "cer": c_err / c_n, "wer_numnorm": n_err / n_n, "elapsed_s": res["elapsed_s"],
+                              "vram_mb": res["vram_mb"], "vram_device_mb": res["vram_device_mb"]})
+        if tr is not None:
+            tr.close()
+
+    detail = pd.DataFrame(filas)
+    out = {"detail": detail, "skipped": pd.DataFrame(omitidas, columns=["model", "compute_type", "device", "reason"])}
+    if detail.empty:
+        out.update(summary=pd.DataFrame(), curve=pd.DataFrame(columns=COLS_CURVA))
+    else:
+        claves = ["task", "level", "family", "severity", "param", "model", "compute_type", "device", "glossary"]
+        out["summary"] = summarize(detail, n_boot, seed, confianza, keys=claves)
+        out["curve"] = degradation_curve(detail, n_boot, seed, confianza)
+    mdir = (Path(metrics_dir) / task) if metrics_dir else task_dir(config, task, "metrics")
+    mdir.mkdir(parents=True, exist_ok=True)
+    for nombre, clave in (("ladder_detail", "detail"), ("ladder_summary", "summary"), ("ladder_curve", "curve"),
+                          ("ladder_skipped", "skipped")):
+        out[clave].to_csv(mdir / f"{nombre}.csv", index=False, encoding="utf-8")
+    progress(f"CSVs de la escalera guardados en {mdir}")
+    return out
+
+
+def degradation_curve(detail, n_boot=1000, seed=0, confidence=0.95):
+    """Cuánto sube el WER de corpus en cada nivel respecto a `original` (pareado por clip), con IC 95 % por bootstrap."""
+    claves = ["model", "compute_type", "device", "glossary"]
+    filas = []
+    for clave, g in detail.groupby(claves, sort=False):
+        base = g[g["level"] == "original"].set_index("clip")
+        if base.empty:
+            continue
+        for nivel, h in g[g["level"] != "original"].groupby("level", sort=False):
+            h = h.set_index("clip")
+            comunes = h.index.intersection(base.index)
+            if len(comunes) == 0:
+                continue
+            b, h = base.loc[comunes], h.loc[comunes]
+            punto, lo, hi = bootstrap_ci((h["w_err"] - b["w_err"]).values, h["w_n"].values, n_boot, seed, confidence)
+            filas.append({**dict(zip(claves, clave)), "level": nivel, "family": h["family"].iloc[0],
+                          "severity": h["severity"].iloc[0], "param": h["param"].iloc[0], "n_clips": len(comunes),
+                          "wer_original": b["w_err"].sum() / b["w_n"].sum(), "wer_level": h["w_err"].sum() / h["w_n"].sum(),
+                          "delta_wer": punto, "delta_ci_low": lo, "delta_ci_high": hi,
+                          "ic_excluye_cero": bool(not np.isnan(lo) and (lo > 0 or hi < 0))})
+    return pd.DataFrame(filas, columns=COLS_CURVA)
 
 
 def glossary_effect(detail, n_boot=1000, seed=0, confidence=0.95):
@@ -362,7 +507,16 @@ def main():
     p.add_argument("--no-cache", action="store_true", help="volver a transcribir aunque exista la caché")
     p.add_argument("--n-boot", type=int)
     p.add_argument("--models-cpu", nargs="+", help="modelos que corren en CPU (por defecto, los mismos que en GPU)")
+    p.add_argument("--ladder-dir", type=Path, help="carpeta de la escalera de degradación (build_ladder.py): "
+                   "transcribe cada nivel en vez de los audios normales")
+    p.add_argument("--levels", nargs="+", help="con --ladder-dir: subconjunto de niveles")
+    p.add_argument("--ladder-task", default="task2_sales", help="tarea de la escalera (por defecto task2_sales)")
     a = p.parse_args()
+    if a.ladder_dir:
+        run_ladder(load_config(a.config), a.ladder_dir, a.ladder_task, a.levels, a.models, a.precisions, a.devices,
+                   a.glossary, a.limit, a.metrics_dir, a.cache_dir, False if a.no_warmup else None, not a.no_cache,
+                   a.n_boot, models_cpu=a.models_cpu)
+        return
     run_benchmark(load_config(a.config), a.tasks, a.models, a.precisions, a.devices, a.glossary, a.limit,
                   a.metrics_dir, a.cache_dir, False if a.no_warmup else None, not a.no_cache, a.n_boot,
                   models_cpu=a.models_cpu)
