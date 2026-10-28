@@ -1,0 +1,2 @@
+extractor,n_clips,wer,wer_numnorm,cer,registro_accuracy,clips_registro_perfecto,acc_anios_experiencia,acc_ultimo_puesto,acc_tecnologias,acc_pretension_salarial,acc_disponibilidad,acc_nivel_ingles,f1_macro_nivel_ingles,mae_anios_experiencia,mae_pretension_salarial
+rules,5,0.1354,0.1063,0.0911,0.8667,1,1.0,1.0,0.2,1.0,1.0,1.0,1.0,0.0,0.0

@@ -1,0 +1,6 @@
+extractor,clip,wer,wer_numnorm,cer,campos_correctos,registro_accuracy,ok_anios_experiencia,ok_ultimo_puesto,ok_tecnologias,ok_pretension_salarial,ok_disponibilidad,ok_nivel_ingles
+rules,entrevista_01,0.0483,0.028,0.0334,5,0.8333,True,True,False,True,True,True
+rules,entrevista_02,0.1007,0.0657,0.0765,5,0.8333,True,True,False,True,True,True
+rules,entrevista_03,0.168,0.1311,0.0895,6,1.0,True,True,True,True,True,True
+rules,entrevista_04,0.2609,0.2232,0.1988,5,0.8333,True,True,False,True,True,True
+rules,entrevista_05,0.0992,0.0833,0.0572,5,0.8333,True,True,False,True,True,True

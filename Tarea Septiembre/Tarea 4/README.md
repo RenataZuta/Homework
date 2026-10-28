@@ -39,6 +39,14 @@ Genera `L0/` (original), `L1/` (Opus 24 kbps mono, estilo nota de voz de WhatsAp
 
 Las transcripciones de L0–L3 (`medium` y `large-v3`, `float16`, GPU) están en `tasks/task2_sales/transcriptions_cache/` y los resultados en `tasks/task2_sales/metrics/l0_l3_*.csv` (`wer_*`: WER por nivel; `detail/summary/validation`: extracción por reglas y aritmética del pedido por nivel). Para regenerar estos últimos sin ASR: `python -m engine.evaluate_ladder --levels L0 L1 L2 L3 --prefix l0_l3`.
 
+## Métricas de extracción en dos capas (entrevistas)
+
+```bash
+python tasks/task1_interview/metrics/compute_extraction_metrics.py          # reglas; --llm answers|api para el camino LLM
+```
+
+Compara los campos extraídos con el ground truth (accuracy por campo, MAE en los numéricos, macro F1 de `nivel_ingles`), la tabla de dos capas (transcripción: WER/CER; registro: campos correctos) y los dos contrastes para el video: **WER alto con registro perfecto** y **WER bajo con registro roto**. Salida en `tasks/task1_interview/metrics/extraction_metrics_*.csv`.
+
 ## Interfaz (Streamlit)
 
 ```bash
