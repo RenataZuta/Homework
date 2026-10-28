@@ -356,15 +356,15 @@ def run_ladder(config, ladder_dir, task="task2_sales", levels=None, models=None,
     return out
 
 
-def degradation_curve(detail, n_boot=1000, seed=0, confidence=0.95):
-    """Cuánto sube el WER de corpus en cada nivel respecto a `original` (pareado por clip), con IC 95 % por bootstrap."""
+def degradation_curve(detail, n_boot=1000, seed=0, confidence=0.95, baseline="original"):
+    """Cuánto sube el WER de corpus en cada nivel respecto a `baseline` (por defecto `original`; pareado por clip), con IC 95 % por bootstrap."""
     claves = ["model", "compute_type", "device", "glossary"]
     filas = []
     for clave, g in detail.groupby(claves, sort=False):
-        base = g[g["level"] == "original"].set_index("clip")
+        base = g[g["level"] == baseline].set_index("clip")
         if base.empty:
             continue
-        for nivel, h in g[g["level"] != "original"].groupby("level", sort=False):
+        for nivel, h in g[g["level"] != baseline].groupby("level", sort=False):
             h = h.set_index("clip")
             comunes = h.index.intersection(base.index)
             if len(comunes) == 0:

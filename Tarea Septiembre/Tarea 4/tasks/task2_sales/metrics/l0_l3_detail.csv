@@ -1,0 +1,201 @@
+clip,level,model,compute_type,campo,correcto,valor,verificacion
+llamada_01,L0,large-v3,float16,items,True,"[{""plato"": ""lomo saltado"", ""cantidad"": 3, ""precio_unitario"": 35, ""tamaño"": ""grande""}, {""plato"": ""chicha morada"", ""cantidad"": 2, ""precio_unitario"": 12, ""tamaño"": ""jarra""}, {""plato"": ""arroz chaufa especial"", ""cantidad"": 1, ""precio_unitario"": 25, ""tamaño"": ""porción""}]",verificado
+llamada_01,L0,large-v3,float16,promocion,True,"""2x1 en bebidas""",verificado
+llamada_01,L0,large-v3,float16,direccion_entrega,True,"""Av. Javier Prado 1250, depto 302, San Isidro""",verificado
+llamada_01,L0,large-v3,float16,metodo_pago,True,"""Yape""",verificado
+llamada_01,L0,large-v3,float16,total_dicho,True,140,verificado
+llamada_01,L0,medium,float16,items,True,"[{""plato"": ""lomo saltado"", ""cantidad"": 3, ""precio_unitario"": 35, ""tamaño"": ""grande""}, {""plato"": ""chicha morada"", ""cantidad"": 2, ""precio_unitario"": 12, ""tamaño"": ""jarra""}, {""plato"": ""arroz chaufa especial"", ""cantidad"": 1, ""precio_unitario"": 25, ""tamaño"": ""porción""}]",verificado
+llamada_01,L0,medium,float16,promocion,True,"""2x1 en bebidas""",verificado
+llamada_01,L0,medium,float16,direccion_entrega,True,"""Av. Javier Prado 1250, depto 302, San Isidro""",verificado
+llamada_01,L0,medium,float16,metodo_pago,True,"""Yape""",verificado
+llamada_01,L0,medium,float16,total_dicho,True,140,verificado
+llamada_01,L1,large-v3,float16,items,True,"[{""plato"": ""lomo saltado"", ""cantidad"": 3, ""precio_unitario"": 35, ""tamaño"": ""grande""}, {""plato"": ""chicha morada"", ""cantidad"": 2, ""precio_unitario"": 12, ""tamaño"": ""jarra""}, {""plato"": ""arroz chaufa especial"", ""cantidad"": 1, ""precio_unitario"": 25, ""tamaño"": ""porción""}]",verificado
+llamada_01,L1,large-v3,float16,promocion,True,"""2x1 en bebidas""",verificado
+llamada_01,L1,large-v3,float16,direccion_entrega,True,"""Av. Javier Prado 1250, depto 302, San Isidro""",verificado
+llamada_01,L1,large-v3,float16,metodo_pago,True,"""Yape""",verificado
+llamada_01,L1,large-v3,float16,total_dicho,True,140,verificado
+llamada_01,L1,medium,float16,items,True,"[{""plato"": ""lomo saltado"", ""cantidad"": 3, ""precio_unitario"": 35, ""tamaño"": ""grande""}, {""plato"": ""chicha morada"", ""cantidad"": 2, ""precio_unitario"": 12, ""tamaño"": ""jarra""}, {""plato"": ""arroz chaufa especial"", ""cantidad"": 1, ""precio_unitario"": 25, ""tamaño"": ""porción""}]",verificado
+llamada_01,L1,medium,float16,promocion,True,"""2x1 en bebidas""",verificado
+llamada_01,L1,medium,float16,direccion_entrega,True,"""Av. Javier Prado 1250, depto 302, San Isidro""",verificado
+llamada_01,L1,medium,float16,metodo_pago,True,"""Yape""",verificado
+llamada_01,L1,medium,float16,total_dicho,True,140,verificado
+llamada_01,L2,large-v3,float16,items,True,"[{""plato"": ""lomo saltado"", ""cantidad"": 3, ""precio_unitario"": 35, ""tamaño"": ""grande""}, {""plato"": ""chicha morada"", ""cantidad"": 2, ""precio_unitario"": 12, ""tamaño"": ""jarra""}, {""plato"": ""arroz chaufa especial"", ""cantidad"": 1, ""precio_unitario"": 25, ""tamaño"": ""porción""}]",verificado
+llamada_01,L2,large-v3,float16,promocion,True,"""2x1 en bebidas""",verificado
+llamada_01,L2,large-v3,float16,direccion_entrega,True,"""Av. Javier Prado 1250, depto 302, San Isidro""",verificado
+llamada_01,L2,large-v3,float16,metodo_pago,True,"""Yape""",verificado
+llamada_01,L2,large-v3,float16,total_dicho,True,140,verificado
+llamada_01,L2,medium,float16,items,True,"[{""plato"": ""lomo saltado"", ""cantidad"": 3, ""precio_unitario"": 35, ""tamaño"": ""grande""}, {""plato"": ""chicha morada"", ""cantidad"": 2, ""precio_unitario"": 12, ""tamaño"": ""jarra""}, {""plato"": ""arroz chaufa especial"", ""cantidad"": 1, ""precio_unitario"": 25, ""tamaño"": ""porción""}]",verificado
+llamada_01,L2,medium,float16,promocion,True,"""2x1 en bebidas""",verificado
+llamada_01,L2,medium,float16,direccion_entrega,True,"""Av. Javier Prado 1250, depto 302, San Isidro""",verificado
+llamada_01,L2,medium,float16,metodo_pago,False,null,sin_valor
+llamada_01,L2,medium,float16,total_dicho,True,140,verificado
+llamada_01,L3,large-v3,float16,items,True,"[{""plato"": ""lomo saltado"", ""cantidad"": 3, ""precio_unitario"": 35, ""tamaño"": ""grande""}, {""plato"": ""chicha morada"", ""cantidad"": 2, ""precio_unitario"": 12, ""tamaño"": ""jarra""}, {""plato"": ""arroz chaufa especial"", ""cantidad"": 1, ""precio_unitario"": 25, ""tamaño"": ""porción""}]",verificado
+llamada_01,L3,large-v3,float16,promocion,True,"""2x1 en bebidas""",verificado
+llamada_01,L3,large-v3,float16,direccion_entrega,True,"""Av. Javier Prado 1250, depto 302, San Isidro""",verificado
+llamada_01,L3,large-v3,float16,metodo_pago,False,null,sin_valor
+llamada_01,L3,large-v3,float16,total_dicho,True,140,verificado
+llamada_01,L3,medium,float16,items,True,"[{""plato"": ""lomo saltado"", ""cantidad"": 3, ""precio_unitario"": 35, ""tamaño"": ""grande""}, {""plato"": ""chicha morada"", ""cantidad"": 2, ""precio_unitario"": 12, ""tamaño"": ""jarra""}, {""plato"": ""arroz chaufa especial"", ""cantidad"": 1, ""precio_unitario"": 25, ""tamaño"": ""porción""}]",verificado
+llamada_01,L3,medium,float16,promocion,True,"""2x1 en bebidas""",verificado
+llamada_01,L3,medium,float16,direccion_entrega,True,"""Av. Javier Prado 1250, depto 302, San Isidro""",verificado
+llamada_01,L3,medium,float16,metodo_pago,True,"""Yape""",verificado
+llamada_01,L3,medium,float16,total_dicho,True,140,verificado
+llamada_02,L0,large-v3,float16,items,False,"[{""plato"": ""ceviche mixto"", ""cantidad"": 1, ""precio_unitario"": 45, ""tamaño"": ""para compartir""}, {""plato"": ""arroz con mariscos"", ""cantidad"": 1, ""precio_unitario"": 38}]",verificado
+llamada_02,L0,large-v3,float16,promocion,True,null,sin_valor
+llamada_02,L0,large-v3,float16,direccion_entrega,True,"""Calle Las Palmeras 456, Miraflores""",verificado
+llamada_02,L0,large-v3,float16,metodo_pago,True,"""Tarjeta""",verificado
+llamada_02,L0,large-v3,float16,total_dicho,True,80,verificado
+llamada_02,L0,medium,float16,items,False,"[{""plato"": ""ceviche mixto"", ""cantidad"": 1, ""precio_unitario"": 45, ""tamaño"": ""para compartir""}, {""plato"": ""arroz con mariscos"", ""cantidad"": 1, ""precio_unitario"": 38}]",verificado
+llamada_02,L0,medium,float16,promocion,True,null,sin_valor
+llamada_02,L0,medium,float16,direccion_entrega,False,"""Calle las palmeras 456, migaflores genial forma de pago con tarjeta al momento de la entrega""",verificado
+llamada_02,L0,medium,float16,metodo_pago,True,"""Tarjeta""",verificado
+llamada_02,L0,medium,float16,total_dicho,True,80,verificado
+llamada_02,L1,large-v3,float16,items,False,"[{""plato"": ""ceviche mixto"", ""cantidad"": 1, ""precio_unitario"": 45, ""tamaño"": ""para compartir""}, {""plato"": ""arroz con mariscos"", ""cantidad"": 1, ""precio_unitario"": 38}, {""plato"": ""Inca Kola"", ""cantidad"": 1, ""precio_unitario"": 5}]",sin_verificar
+llamada_02,L1,large-v3,float16,promocion,True,null,sin_valor
+llamada_02,L1,large-v3,float16,direccion_entrega,True,"""Calle Las Palmeras 456, Miraflores""",verificado
+llamada_02,L1,large-v3,float16,metodo_pago,True,"""Tarjeta""",verificado
+llamada_02,L1,large-v3,float16,total_dicho,True,80,verificado
+llamada_02,L1,medium,float16,items,False,"[{""plato"": ""ceviche mixto"", ""cantidad"": 1, ""precio_unitario"": 45, ""tamaño"": ""para compartir""}, {""plato"": ""arroz con mariscos"", ""cantidad"": 1, ""precio_unitario"": 38}]",verificado
+llamada_02,L1,medium,float16,promocion,True,null,sin_valor
+llamada_02,L1,medium,float16,direccion_entrega,False,"""Calle las palmeras 456, migaflores""",verificado
+llamada_02,L1,medium,float16,metodo_pago,True,"""Tarjeta""",verificado
+llamada_02,L1,medium,float16,total_dicho,True,80,verificado
+llamada_02,L2,large-v3,float16,items,False,"[{""plato"": ""ceviche mixto"", ""cantidad"": 1, ""precio_unitario"": 45, ""tamaño"": ""para compartir""}, {""plato"": ""arroz con mariscos"", ""cantidad"": 1, ""precio_unitario"": 38}]",verificado
+llamada_02,L2,large-v3,float16,promocion,True,null,sin_valor
+llamada_02,L2,large-v3,float16,direccion_entrega,True,"""Calle Las Palmeras 456, Miraflores""",verificado
+llamada_02,L2,large-v3,float16,metodo_pago,True,"""Tarjeta""",verificado
+llamada_02,L2,large-v3,float16,total_dicho,True,80,verificado
+llamada_02,L2,medium,float16,items,False,"[{""plato"": ""ceviche mixto"", ""cantidad"": 1, ""precio_unitario"": 45, ""tamaño"": ""para compartir""}, {""plato"": ""arroz con mariscos"", ""cantidad"": 1, ""precio_unitario"": 38}]",verificado
+llamada_02,L2,medium,float16,promocion,True,null,sin_valor
+llamada_02,L2,medium,float16,direccion_entrega,False,"""Calle las palmeras 456, miraflores genial forma de pago con tarjeta al momento de la entrega""",verificado
+llamada_02,L2,medium,float16,metodo_pago,True,"""Tarjeta""",verificado
+llamada_02,L2,medium,float16,total_dicho,True,80,verificado
+llamada_02,L3,large-v3,float16,items,False,"[{""plato"": ""ceviche mixto"", ""cantidad"": 1, ""precio_unitario"": 45, ""tamaño"": ""para compartir""}, {""plato"": ""arroz con mariscos"", ""cantidad"": 1, ""precio_unitario"": 38}, {""plato"": ""Inca Kola"", ""cantidad"": 1, ""precio_unitario"": 5}]",sin_verificar
+llamada_02,L3,large-v3,float16,promocion,True,null,sin_valor
+llamada_02,L3,large-v3,float16,direccion_entrega,True,"""Calle Las Palmeras 456, Miraflores""",verificado
+llamada_02,L3,large-v3,float16,metodo_pago,True,"""Tarjeta""",verificado
+llamada_02,L3,large-v3,float16,total_dicho,True,80,verificado
+llamada_02,L3,medium,float16,items,False,"[{""plato"": ""ceviche mixto"", ""cantidad"": 1, ""precio_unitario"": 45, ""tamaño"": ""para compartir""}, {""plato"": ""arroz con mariscos"", ""cantidad"": 1, ""precio_unitario"": 38}]",verificado
+llamada_02,L3,medium,float16,promocion,True,null,sin_valor
+llamada_02,L3,medium,float16,direccion_entrega,True,"""Calle Las Palmeras 456, Miraflores""",verificado
+llamada_02,L3,medium,float16,metodo_pago,True,"""Tarjeta""",verificado
+llamada_02,L3,medium,float16,total_dicho,True,80,verificado
+llamada_03,L0,large-v3,float16,items,True,"[{""plato"": ""cuarto de pollo brasa pecho"", ""cantidad"": 2, ""precio_unitario"": null}, {""plato"": ""cuarto de pollo brasa pierna"", ""cantidad"": 2, ""precio_unitario"": null}, {""plato"": ""ensalada"", ""cantidad"": 2, ""precio_unitario"": 8}, {""plato"": ""Coca-Cola 1.5L"", ""cantidad"": 1, ""precio_unitario"": null}]",sin_verificar
+llamada_03,L0,large-v3,float16,promocion,True,"""Promo familiar: 4 cuartos + gaseosa por 70""",verificado
+llamada_03,L0,large-v3,float16,direccion_entrega,False,null,sin_valor
+llamada_03,L0,large-v3,float16,metodo_pago,True,"""Efectivo""",verificado
+llamada_03,L0,large-v3,float16,total_dicho,True,86,verificado
+llamada_03,L0,medium,float16,items,False,"[{""plato"": ""cuarto de pollo brasa pecho"", ""cantidad"": 1, ""precio_unitario"": null}, {""plato"": ""cuarto de pollo brasa pierna"", ""cantidad"": 2, ""precio_unitario"": null}, {""plato"": ""ensalada"", ""cantidad"": 2, ""precio_unitario"": 8}, {""plato"": ""Coca-Cola 1.5L"", ""cantidad"": 1, ""precio_unitario"": null}]",sin_verificar
+llamada_03,L0,medium,float16,promocion,False,null,sin_valor
+llamada_03,L0,medium,float16,direccion_entrega,False,null,sin_valor
+llamada_03,L0,medium,float16,metodo_pago,True,"""Efectivo""",verificado
+llamada_03,L0,medium,float16,total_dicho,True,86,verificado
+llamada_03,L1,large-v3,float16,items,True,"[{""plato"": ""cuarto de pollo brasa pecho"", ""cantidad"": 2, ""precio_unitario"": null}, {""plato"": ""cuarto de pollo brasa pierna"", ""cantidad"": 2, ""precio_unitario"": null}, {""plato"": ""ensalada"", ""cantidad"": 2, ""precio_unitario"": 8}, {""plato"": ""Coca-Cola 1.5L"", ""cantidad"": 1, ""precio_unitario"": null}]",sin_verificar
+llamada_03,L1,large-v3,float16,promocion,True,"""Promo familiar: 4 cuartos + gaseosa por 70""",verificado
+llamada_03,L1,large-v3,float16,direccion_entrega,False,null,sin_valor
+llamada_03,L1,large-v3,float16,metodo_pago,True,"""Efectivo""",verificado
+llamada_03,L1,large-v3,float16,total_dicho,True,86,verificado
+llamada_03,L1,medium,float16,items,False,"[{""plato"": ""cuarto de pollo brasa pecho"", ""cantidad"": 1, ""precio_unitario"": null}, {""plato"": ""cuarto de pollo brasa pierna"", ""cantidad"": 2, ""precio_unitario"": null}, {""plato"": ""ensalada"", ""cantidad"": 2, ""precio_unitario"": 8}, {""plato"": ""Coca-Cola 1.5L"", ""cantidad"": 1, ""precio_unitario"": null}]",sin_verificar
+llamada_03,L1,medium,float16,promocion,False,null,sin_valor
+llamada_03,L1,medium,float16,direccion_entrega,False,null,sin_valor
+llamada_03,L1,medium,float16,metodo_pago,True,"""Efectivo""",verificado
+llamada_03,L1,medium,float16,total_dicho,True,86,verificado
+llamada_03,L2,large-v3,float16,items,True,"[{""plato"": ""cuarto de pollo brasa pecho"", ""cantidad"": 2, ""precio_unitario"": null}, {""plato"": ""cuarto de pollo brasa pierna"", ""cantidad"": 2, ""precio_unitario"": null}, {""plato"": ""ensalada"", ""cantidad"": 2, ""precio_unitario"": 8}, {""plato"": ""Coca-Cola 1.5L"", ""cantidad"": 1, ""precio_unitario"": null}]",sin_verificar
+llamada_03,L2,large-v3,float16,promocion,True,"""Promo familiar: 4 cuartos + gaseosa por 70""",verificado
+llamada_03,L2,large-v3,float16,direccion_entrega,False,null,sin_valor
+llamada_03,L2,large-v3,float16,metodo_pago,True,"""Efectivo""",verificado
+llamada_03,L2,large-v3,float16,total_dicho,True,86,verificado
+llamada_03,L2,medium,float16,items,True,"[{""plato"": ""cuarto de pollo brasa pecho"", ""cantidad"": 2, ""precio_unitario"": null}, {""plato"": ""cuarto de pollo brasa pierna"", ""cantidad"": 2, ""precio_unitario"": null}, {""plato"": ""ensalada"", ""cantidad"": 2, ""precio_unitario"": 8}, {""plato"": ""Coca-Cola 1.5L"", ""cantidad"": 1, ""precio_unitario"": null}]",sin_verificar
+llamada_03,L2,medium,float16,promocion,False,"""El buen sabor buenas noches buenas noches quiero pedir 4 cuartos de pollo a la brasa con papas y 2 ensaladas los cuartos son de pecho o de pierna 2 de cada 1 2 de pecho y 2 de pierna perfecto y para tomar una gaseosa de litro y medio coca cola tenemos la prom familiar 4 cuartos malas gaseosa grande por 70 en vez de 80 ah ya aplica mesa promo entonces listo la prom familiar es 70 más las 2 ensaladas a 8 cada una su total sería de 86 la dirección cuál es es giron guayaga 782 piso 4 por cerca de lima método de pago efectivo con billete de 100""",verificado
+llamada_03,L2,medium,float16,direccion_entrega,False,null,sin_valor
+llamada_03,L2,medium,float16,metodo_pago,True,"""Efectivo""",verificado
+llamada_03,L2,medium,float16,total_dicho,True,86,verificado
+llamada_03,L3,large-v3,float16,items,True,"[{""plato"": ""cuarto de pollo brasa pecho"", ""cantidad"": 2, ""precio_unitario"": null}, {""plato"": ""cuarto de pollo brasa pierna"", ""cantidad"": 2, ""precio_unitario"": null}, {""plato"": ""ensalada"", ""cantidad"": 2, ""precio_unitario"": 8}, {""plato"": ""Coca-Cola 1.5L"", ""cantidad"": 1, ""precio_unitario"": null}]",sin_verificar
+llamada_03,L3,large-v3,float16,promocion,True,"""Promo familiar: 4 cuartos + gaseosa por 70""",verificado
+llamada_03,L3,large-v3,float16,direccion_entrega,False,null,sin_valor
+llamada_03,L3,large-v3,float16,metodo_pago,True,"""Efectivo""",verificado
+llamada_03,L3,large-v3,float16,total_dicho,True,86,verificado
+llamada_03,L3,medium,float16,items,True,"[{""plato"": ""cuarto de pollo brasa pecho"", ""cantidad"": 2, ""precio_unitario"": null}, {""plato"": ""cuarto de pollo brasa pierna"", ""cantidad"": 2, ""precio_unitario"": null}, {""plato"": ""ensalada"", ""cantidad"": 2, ""precio_unitario"": 8}, {""plato"": ""Coca-Cola 1.5L"", ""cantidad"": 1, ""precio_unitario"": null}]",sin_verificar
+llamada_03,L3,medium,float16,promocion,True,"""Promo familiar: 4 cuartos + gaseosa por 70""",verificado
+llamada_03,L3,medium,float16,direccion_entrega,False,null,sin_valor
+llamada_03,L3,medium,float16,metodo_pago,True,"""Efectivo""",verificado
+llamada_03,L3,medium,float16,total_dicho,True,86,verificado
+llamada_04,L0,large-v3,float16,items,True,"[{""plato"": ""chifa aeropuerto"", ""cantidad"": 1, ""precio_unitario"": 28, ""tamaño"": ""grande""}, {""plato"": ""arroz chaufa de pollo"", ""cantidad"": 1, ""precio_unitario"": 22}, {""plato"": ""chicha morada"", ""cantidad"": 1, ""precio_unitario"": 8, ""tamaño"": ""personal""}]",sin_verificar
+llamada_04,L0,large-v3,float16,promocion,True,null,sin_valor
+llamada_04,L0,large-v3,float16,direccion_entrega,True,"""Av. Brasil 3100, Jesús María""",sin_verificar
+llamada_04,L0,large-v3,float16,metodo_pago,False,null,sin_valor
+llamada_04,L0,large-v3,float16,total_dicho,True,58,verificado
+llamada_04,L0,medium,float16,items,False,"[{""plato"": ""chifa aeropuerto"", ""cantidad"": 1, ""precio_unitario"": 28, ""tamaño"": ""grande""}, {""plato"": ""tallarín saltado"", ""cantidad"": 1, ""precio_unitario"": null}, {""plato"": ""arroz chaufa de pollo"", ""cantidad"": 1, ""precio_unitario"": 22}, {""plato"": ""chicha morada"", ""cantidad"": 1, ""precio_unitario"": 8, ""tamaño"": ""personal""}]",sin_verificar
+llamada_04,L0,medium,float16,promocion,True,null,sin_valor
+llamada_04,L0,medium,float16,direccion_entrega,False,"""Av. brasil 31""",sin_verificar
+llamada_04,L0,medium,float16,metodo_pago,False,null,sin_valor
+llamada_04,L0,medium,float16,total_dicho,True,58,verificado
+llamada_04,L1,large-v3,float16,items,True,"[{""plato"": ""chifa aeropuerto"", ""cantidad"": 1, ""precio_unitario"": 28, ""tamaño"": ""grande""}, {""plato"": ""arroz chaufa de pollo"", ""cantidad"": 1, ""precio_unitario"": 22}, {""plato"": ""chicha morada"", ""cantidad"": 1, ""precio_unitario"": 8, ""tamaño"": ""personal""}]",sin_verificar
+llamada_04,L1,large-v3,float16,promocion,True,null,sin_valor
+llamada_04,L1,large-v3,float16,direccion_entrega,True,"""Av. Brasil 3100, Jesús María""",sin_verificar
+llamada_04,L1,large-v3,float16,metodo_pago,False,null,sin_valor
+llamada_04,L1,large-v3,float16,total_dicho,True,58,verificado
+llamada_04,L1,medium,float16,items,False,"[{""plato"": ""chifa aeropuerto"", ""cantidad"": 1, ""precio_unitario"": 28, ""tamaño"": ""grande""}, {""plato"": ""tallarín saltado"", ""cantidad"": 1, ""precio_unitario"": null}, {""plato"": ""arroz chaufa de pollo"", ""cantidad"": 1, ""precio_unitario"": 22}, {""plato"": ""chicha morada"", ""cantidad"": 1, ""precio_unitario"": 8, ""tamaño"": ""personal""}]",sin_verificar
+llamada_04,L1,medium,float16,promocion,True,null,sin_valor
+llamada_04,L1,medium,float16,direccion_entrega,False,"""Av. Brasil 31""",sin_verificar
+llamada_04,L1,medium,float16,metodo_pago,False,null,sin_valor
+llamada_04,L1,medium,float16,total_dicho,True,58,verificado
+llamada_04,L2,large-v3,float16,items,True,"[{""plato"": ""chifa aeropuerto"", ""cantidad"": 1, ""precio_unitario"": 28, ""tamaño"": ""grande""}, {""plato"": ""arroz chaufa de pollo"", ""cantidad"": 1, ""precio_unitario"": 22}, {""plato"": ""chicha morada"", ""cantidad"": 1, ""precio_unitario"": 8, ""tamaño"": ""personal""}]",sin_verificar
+llamada_04,L2,large-v3,float16,promocion,True,null,sin_valor
+llamada_04,L2,large-v3,float16,direccion_entrega,True,"""Av. Brasil 3100, Jesús María""",sin_verificar
+llamada_04,L2,large-v3,float16,metodo_pago,False,null,sin_valor
+llamada_04,L2,large-v3,float16,total_dicho,True,58,verificado
+llamada_04,L2,medium,float16,items,False,"[{""plato"": ""chifa aeropuerto"", ""cantidad"": 1, ""precio_unitario"": 28, ""tamaño"": ""grande""}, {""plato"": ""tallarín saltado"", ""cantidad"": 1, ""precio_unitario"": null}, {""plato"": ""arroz chaufa de pollo"", ""cantidad"": 1, ""precio_unitario"": 22}, {""plato"": ""chicha morada"", ""cantidad"": 1, ""precio_unitario"": 8}]",sin_verificar
+llamada_04,L2,medium,float16,promocion,True,null,sin_valor
+llamada_04,L2,medium,float16,direccion_entrega,False,"""Av. Brasil 31""",sin_verificar
+llamada_04,L2,medium,float16,metodo_pago,False,null,sin_valor
+llamada_04,L2,medium,float16,total_dicho,True,58,verificado
+llamada_04,L3,large-v3,float16,items,True,"[{""plato"": ""chifa aeropuerto"", ""cantidad"": 1, ""precio_unitario"": 28, ""tamaño"": ""grande""}, {""plato"": ""arroz chaufa de pollo"", ""cantidad"": 1, ""precio_unitario"": 22}, {""plato"": ""chicha morada"", ""cantidad"": 1, ""precio_unitario"": 8, ""tamaño"": ""personal""}]",sin_verificar
+llamada_04,L3,large-v3,float16,promocion,True,null,sin_valor
+llamada_04,L3,large-v3,float16,direccion_entrega,False,"""Av. Brasil 3100, Jesús María ¿Y cuál método de pago""",sin_verificar
+llamada_04,L3,large-v3,float16,metodo_pago,False,null,sin_valor
+llamada_04,L3,large-v3,float16,total_dicho,True,58,verificado
+llamada_04,L3,medium,float16,items,False,"[{""plato"": ""chifa aeropuerto"", ""cantidad"": 1, ""precio_unitario"": 28, ""tamaño"": ""grande""}, {""plato"": ""tallarín saltado"", ""cantidad"": 1, ""precio_unitario"": null}, {""plato"": ""arroz chaufa de pollo"", ""cantidad"": 1, ""precio_unitario"": 22}]",sin_verificar
+llamada_04,L3,medium,float16,promocion,True,null,sin_valor
+llamada_04,L3,medium,float16,direccion_entrega,True,"""Av. Brasil 3100, Jesus Maria""",sin_verificar
+llamada_04,L3,medium,float16,metodo_pago,False,null,sin_valor
+llamada_04,L3,medium,float16,total_dicho,True,58,verificado
+llamada_05,L0,large-v3,float16,items,True,"[{""plato"": ""causa limeña"", ""cantidad"": 5, ""precio_unitario"": 15, ""tamaño"": ""porción""}, {""plato"": ""sopa de la casa"", ""cantidad"": 2, ""precio_unitario"": 12}, {""plato"": ""limonada"", ""cantidad"": 3, ""precio_unitario"": 3}]",verificado
+llamada_05,L0,large-v3,float16,promocion,True,"""Happy hour: limonadas a mitad de precio""",verificado
+llamada_05,L0,large-v3,float16,direccion_entrega,True,"""Pasaje Los Olivos 28, interior B, Surquillo""",verificado
+llamada_05,L0,large-v3,float16,metodo_pago,True,"""Transferencia""",verificado
+llamada_05,L0,large-v3,float16,total_dicho,True,110,verificado
+llamada_05,L0,medium,float16,items,True,"[{""plato"": ""causa limeña"", ""cantidad"": 5, ""precio_unitario"": 15}, {""plato"": ""sopa de la casa"", ""cantidad"": 2, ""precio_unitario"": 12}, {""plato"": ""limonada"", ""cantidad"": 3, ""precio_unitario"": 3}]",verificado
+llamada_05,L0,medium,float16,promocion,True,"""Happy hour: limonadas a mitad de precio""",verificado
+llamada_05,L0,medium,float16,direccion_entrega,True,"""Pasaje Los Olivos 28, interior B, Surquillo""",verificado
+llamada_05,L0,medium,float16,metodo_pago,True,"""Transferencia""",verificado
+llamada_05,L0,medium,float16,total_dicho,True,110,verificado
+llamada_05,L1,large-v3,float16,items,True,"[{""plato"": ""causa limeña"", ""cantidad"": 5, ""precio_unitario"": 15, ""tamaño"": ""porción""}, {""plato"": ""sopa de la casa"", ""cantidad"": 2, ""precio_unitario"": 12}, {""plato"": ""limonada"", ""cantidad"": 3, ""precio_unitario"": 3}]",verificado
+llamada_05,L1,large-v3,float16,promocion,True,"""Happy hour: limonadas a mitad de precio""",verificado
+llamada_05,L1,large-v3,float16,direccion_entrega,True,"""Pasaje Los Olivos 28, interior B, Surquillo""",verificado
+llamada_05,L1,large-v3,float16,metodo_pago,True,"""Transferencia""",verificado
+llamada_05,L1,large-v3,float16,total_dicho,True,110,verificado
+llamada_05,L1,medium,float16,items,True,"[{""plato"": ""causa limeña"", ""cantidad"": 5, ""precio_unitario"": 15}, {""plato"": ""sopa de la casa"", ""cantidad"": 2, ""precio_unitario"": 12}, {""plato"": ""limonada"", ""cantidad"": 3, ""precio_unitario"": 3}]",verificado
+llamada_05,L1,medium,float16,promocion,True,"""Happy hour: limonadas a mitad de precio""",verificado
+llamada_05,L1,medium,float16,direccion_entrega,True,"""Pasaje Los Olivos 28, interior B, Surquillo""",verificado
+llamada_05,L1,medium,float16,metodo_pago,True,"""Transferencia""",verificado
+llamada_05,L1,medium,float16,total_dicho,True,110,verificado
+llamada_05,L2,large-v3,float16,items,True,"[{""plato"": ""causa limeña"", ""cantidad"": 5, ""precio_unitario"": 15, ""tamaño"": ""porción""}, {""plato"": ""sopa de la casa"", ""cantidad"": 2, ""precio_unitario"": 12}, {""plato"": ""limonada"", ""cantidad"": 3, ""precio_unitario"": 3}]",verificado
+llamada_05,L2,large-v3,float16,promocion,True,"""Happy hour: limonadas a mitad de precio""",verificado
+llamada_05,L2,large-v3,float16,direccion_entrega,True,"""Pasaje Los Olivos 28, interior B, Surquillo""",verificado
+llamada_05,L2,large-v3,float16,metodo_pago,True,"""Transferencia""",verificado
+llamada_05,L2,large-v3,float16,total_dicho,True,110,verificado
+llamada_05,L2,medium,float16,items,True,"[{""plato"": ""causa limeña"", ""cantidad"": 5, ""precio_unitario"": 15}, {""plato"": ""sopa de la casa"", ""cantidad"": 2, ""precio_unitario"": 12}, {""plato"": ""limonada"", ""cantidad"": 3, ""precio_unitario"": 3}]",verificado
+llamada_05,L2,medium,float16,promocion,True,"""Happy hour: limonadas a mitad de precio""",verificado
+llamada_05,L2,medium,float16,direccion_entrega,True,"""Pasaje Los Olivos 28, interior B, Surquillo""",verificado
+llamada_05,L2,medium,float16,metodo_pago,True,"""Transferencia""",verificado
+llamada_05,L2,medium,float16,total_dicho,True,110,verificado
+llamada_05,L3,large-v3,float16,items,True,"[{""plato"": ""causa limeña"", ""cantidad"": 5, ""precio_unitario"": 15, ""tamaño"": ""porción""}, {""plato"": ""sopa de la casa"", ""cantidad"": 2, ""precio_unitario"": 12}, {""plato"": ""limonada"", ""cantidad"": 3, ""precio_unitario"": 3}]",verificado
+llamada_05,L3,large-v3,float16,promocion,True,"""Happy hour: limonadas a mitad de precio""",verificado
+llamada_05,L3,large-v3,float16,direccion_entrega,True,"""Pasaje Los Olivos 28, interior B, Surquillo""",verificado
+llamada_05,L3,large-v3,float16,metodo_pago,True,"""Transferencia""",verificado
+llamada_05,L3,large-v3,float16,total_dicho,True,110,verificado
+llamada_05,L3,medium,float16,items,True,"[{""plato"": ""causa limeña"", ""cantidad"": 5, ""precio_unitario"": 15}, {""plato"": ""sopa de la casa"", ""cantidad"": 2, ""precio_unitario"": 12}, {""plato"": ""limonada"", ""cantidad"": 3, ""precio_unitario"": 3}]",verificado
+llamada_05,L3,medium,float16,promocion,True,"""Happy hour: limonadas a mitad de precio""",verificado
+llamada_05,L3,medium,float16,direccion_entrega,True,"""Pasaje Los Olivos 28, interior B, Surquillo""",verificado
+llamada_05,L3,medium,float16,metodo_pago,True,"""Transferencia""",verificado
+llamada_05,L3,medium,float16,total_dicho,True,110,verificado
