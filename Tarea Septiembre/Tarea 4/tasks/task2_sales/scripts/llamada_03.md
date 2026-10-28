@@ -28,7 +28,7 @@ B: Efectivo, con billete de cien.
 - promocion = "Promo familiar: 4 cuartos + gaseosa por 70 (descuento de 10)"
 - direccion_entrega = "Jr. Huallaga 782, piso 4, Cercado de Lima"
 - metodo_pago = "Efectivo"
-- total_dicho = 90
+- total_dicho = 86  <!-- el guion decía 90 (total incorrecto a propósito); en la grabación el operador dijo 86 (confirmado en todas las condiciones de audio) -->
 - total_correcto = 86 (70 + 16 = 86)
 - tiene_correccion = No
-- total_es_incorrecto = Sí
+- total_es_incorrecto = No  <!-- consecuencia: lo dicho en la grabación coincide con el total correcto -->

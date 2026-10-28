@@ -18,6 +18,6 @@ B: Un mes, tengo que dar aviso con treinta días de anticipación según mi cont
 - anios_experiencia = 7
 - ultimo_puesto = "coordinador de marketing digital"
 - tecnologias = ["Google Ads", "Meta Ads", "Google Analytics", "HubSpot", "Figma"]
-- pretension_salarial = 8000 PEN
+- pretension_salarial = 8500 PEN  <!-- el guion decía 8000; en la grabación el candidato dijo 8.500 (confirmado en las 10 configuraciones de ASR) -->
 - disponibilidad = "1 mes"
 - nivel_ingles = "Intermedio"

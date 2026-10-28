@@ -15,12 +15,12 @@ task1_interview,entrevista_03,rules,anios_experiencia,1.67,True,verificado
 task1_interview,entrevista_03,rules,ultimo_puesto,"""asistente contable""",True,verificado
 task1_interview,entrevista_03,rules,tecnologias,"[""Concar"", ""Excel"", ""Power BI""]",True,verificado
 task1_interview,entrevista_03,rules,pretension_salarial,3000,True,verificado
-task1_interview,entrevista_03,rules,disponibilidad,null,False,sin_valor
+task1_interview,entrevista_03,rules,disponibilidad,"""15 de noviembre""",True,sin_verificar
 task1_interview,entrevista_03,rules,nivel_ingles,"""Básico""",True,verificado
 task1_interview,entrevista_04,rules,anios_experiencia,7,True,verificado
 task1_interview,entrevista_04,rules,ultimo_puesto,"""coordinador de marketing digital""",True,sin_verificar
-task1_interview,entrevista_04,rules,tecnologias,"[""Google Ads"", ""Meta Ads"", ""Google Analytics"", ""Figma""]",False,verificado
-task1_interview,entrevista_04,rules,pretension_salarial,8500,False,verificado
+task1_interview,entrevista_04,rules,tecnologias,"[""Google Ads"", ""Meta Ads"", ""Google Analytics"", ""Haspot"", ""Figma""]",False,verificado
+task1_interview,entrevista_04,rules,pretension_salarial,8500,True,verificado
 task1_interview,entrevista_04,rules,disponibilidad,"""1 mes""",True,verificado
 task1_interview,entrevista_04,rules,nivel_ingles,"""Intermedio""",True,verificado
 task1_interview,entrevista_05,rules,anios_experiencia,0.5,True,verificado
