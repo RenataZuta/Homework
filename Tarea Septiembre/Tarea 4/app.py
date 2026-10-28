@@ -682,11 +682,24 @@ def pestana_task2():
 
 # ── Pestaña 4: Demo en vivo ───────────────────────────────────────────────────
 
+TAMANIO_MODELO = {"medium": "~1.5 GB", "small": "~480 MB", "base": "~145 MB", "tiny": "~75 MB"}
+
+
+def modelo_descargado(modelo):
+    """True/False si los pesos del modelo están en la caché local de Hugging Face; None si no se puede saber."""
+    try:
+        from huggingface_hub import try_to_load_from_cache
+
+        return isinstance(try_to_load_from_cache(f"Systran/faster-whisper-{modelo}", "model.bin"), str)
+    except Exception:
+        return None
+
+
 def pestana_demo():
     cfg = config()
-    st.caption("Sube un audio (WAV recomendado), elige el tipo y se transcribe con `faster-whisper` (modelo **medium**), se extraen los campos con las "
-               "reglas y se verifican literalmente. Corre en CPU, pero `medium` tarda: la primera vez descarga el modelo (~1.5 GB) y "
-               "transcribir un minuto de audio puede tomar varios minutos.")
+    st.caption("Sube un audio (WAV recomendado), elige el tipo y se transcribe con `faster-whisper`, se extraen los campos con las "
+               "reglas y se verifican literalmente. El modelo por defecto es **medium**, que corre en CPU pero tarda: "
+               "transcribir un minuto de audio puede tomar varios minutos. Con `small`, `base` o `tiny` es más rápido y menos preciso.")
     izq, der = st.columns(2)
     with izq:
         archivo = st.file_uploader("Audio", type=EXT_AUDIO, key="demo_audio")
@@ -695,8 +708,14 @@ def pestana_demo():
     with der:
         etiqueta_tipo = st.radio("Tipo de audio", ["Entrevista", "Venta"], horizontal=True, key="demo_tipo")
         schema = "interview" if etiqueta_tipo == "Entrevista" else "sales"
-        st.markdown("**Modelo:** `medium` · **Extractor:** reglas · **Verificación:** literal (con números hablados normalizados)")
+        modelo = st.selectbox("Modelo", list(TAMANIO_MODELO), index=0, key="demo_modelo",
+                              format_func=lambda m: f"{m} ({TAMANIO_MODELO[m]})" + (" · recomendado" if m == "medium" else ""))
         glosario = st.checkbox("Usar el glosario de dominio (initial_prompt)", key="demo_glosario")
+        st.caption("Extractor: reglas · Verificación: literal (con números hablados normalizados)")
+    descargado = modelo_descargado(modelo)
+    if descargado is False:
+        st.warning(f"El modelo `{modelo}` aún no está descargado: la primera ejecución bajará {TAMANIO_MODELO[modelo]} "
+                   "(puede tardar varios minutos según tu conexión) y la pantalla se verá en gris mientras tanto. Es normal; solo ocurre la primera vez.")
     if archivo is not None:
         nombre, datos = archivo.name, archivo.getvalue()
     elif ejemplo != "—":
@@ -708,8 +727,15 @@ def pestana_demo():
             f.write(datos)
             ruta = f.name
         try:
-            with st.spinner("Transcribiendo con medium… (la primera vez descarga el modelo)"):
-                r = process_audio(ruta, schema, extractor="rules", model="medium", device="auto", compute_type="auto", glossary=glosario)
+            with st.status(f"Procesando «{nombre}» con {modelo}…", expanded=True) as estado:
+                if descargado is False:
+                    st.write(f"⬇️ Descargando el modelo {modelo} ({TAMANIO_MODELO[modelo]}); solo la primera vez…")
+                st.write("🎧 Transcribiendo, extrayendo campos y verificando…")
+                r = process_audio(ruta, schema, extractor="rules", model=modelo, device="auto", compute_type="auto", glossary=glosario)
+                if r["error"]:
+                    estado.update(label="Terminó con un error", state="error", expanded=True)
+                else:
+                    estado.update(label=f"Listo en {r['pipeline_seconds']} s", state="complete", expanded=False)
             st.session_state["ultimo"] = {"r": r, "schema": schema, "nombre": nombre}
         finally:
             os.unlink(ruta)
