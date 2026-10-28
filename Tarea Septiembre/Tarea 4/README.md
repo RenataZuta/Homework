@@ -18,6 +18,17 @@ pip install -r requirements.txt
 cp .env.example .env   # opcional: ANTHROPIC_API_KEY solo para el extractor LLM (de pago); por defecto no hace falta
 ```
 
+## Comparar extractores (reglas vs LLM)
+
+```bash
+python -m engine.compare_extractors                       # solo reglas, sin clave: exactitud por campo vs ground truth
+python -m engine.compare_extractors --llm api --confirm-api   # API real (de pago, ANTHROPIC_API_KEY); 10 llamadas, tope --max-calls
+python -m engine.compare_extractors --llm answers --answers tasks/comparison/llm_answers_simulado.json   # respuestas simuladas
+```
+
+Usa las transcripciones cacheadas de la mejor configuración del benchmark (no hace ASR). `--llm answers` prueba el flujo sin clave, pero
+sus respuestas están escritas a mano viendo el ground truth: **no son una medición del LLM**.
+
 ## Interfaz (Streamlit)
 
 ```bash
