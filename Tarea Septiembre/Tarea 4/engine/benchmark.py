@@ -252,6 +252,8 @@ def list_ladder(ladder_dir, refs, levels=None, limit=None):
     ladder_dir = Path(ladder_dir)
     meta = load_ladder_meta(ladder_dir)
     niveles = [d.name for d in sorted(ladder_dir.iterdir()) if d.is_dir() and any(d.glob("*.wav"))]
+    if meta and not levels:  # carpetas ajenas al manifiesto (p. ej. L0-L3 del preset) solo entran si se piden con levels
+        niveles = [n for n in niveles if n in meta]
     if levels:
         faltan = [n for n in levels if n not in niveles]
         if faltan:
