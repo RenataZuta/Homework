@@ -462,7 +462,7 @@ class RuleExtractor:
     def __init__(self, config):
         self.config = config
 
-    def extract(self, transcript, schema):
+    def extract(self, transcript: str, schema: str) -> dict:
         t = _preparar(transcript)
         if schema == "interview":
             return _extraer_entrevista(t, self.config)
@@ -507,7 +507,7 @@ class LLMExtractor:
         campos = "\n".join(f'- "{k}": {v}' for k, v in self.config["schemas"][schema].items())
         return self.cfg["prompts"][schema].format(transcript=transcript, fields=campos)
 
-    def extract(self, transcript, schema):
+    def extract(self, transcript: str, schema: str) -> dict:
         if schema not in self.config["schemas"]:
             raise ValueError(f"schema desconocido: {schema!r}")
         kwargs = dict(model=self.cfg["model"], max_tokens=self.cfg.get("max_tokens", 2048),
