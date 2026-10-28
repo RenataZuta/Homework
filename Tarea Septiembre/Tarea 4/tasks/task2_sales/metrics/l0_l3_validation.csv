@@ -22,7 +22,7 @@ llamada_03,L1,medium,float16,86,,incompleto,indeterminado,indeterminado,False,
 llamada_03,L2,large-v3,float16,86,86.0,ok,ok,ok,False,True
 llamada_03,L2,medium,float16,86,70.0,discrepancia,hablante,hablante,False,False
 llamada_03,L3,large-v3,float16,86,86.0,ok,ok,ok,False,True
-llamada_03,L3,medium,float16,86,86.0,ok,ok,ok,False,True
+llamada_03,L3,medium,float16,86,70.0,discrepancia,hablante,asr,False,False
 llamada_04,L0,large-v3,float16,58,58.0,ok,ok,ok,False,True
 llamada_04,L0,medium,float16,58,,incompleto,indeterminado,indeterminado,False,
 llamada_04,L1,large-v3,float16,58,58.0,ok,ok,ok,False,True
