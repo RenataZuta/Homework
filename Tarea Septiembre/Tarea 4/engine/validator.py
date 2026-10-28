@@ -2,7 +2,7 @@
 
 Tres piezas:
   - normalize_spoken_numbers: "seis mil quinientos" -> 6500 (regla de normalización del pipeline).
-  - verify_literal: ¿el valor extraído existe en el texto transcrito? Si no, queda "sin_verificar".
+  - verify_literal: ¿el valor extraído existe en el texto transcrito? Primero forma literal, luego normalizada; si no, "sin_verificar".
   - validate_order_arithmetic: ¿cantidad × precio − promo = total dicho? Con diagnóstico ASR vs hablante.
 """
 import difflib
@@ -82,8 +82,8 @@ def _stem(tok):
     return tok
 
 
-def _tokens(text):
-    return [_stem(t) for t in normalize_text(text).split()]
+def _tokens(text, numbers=True):
+    return [_stem(t) for t in normalize_text(text, numbers).split()]
 
 
 # ── Verificación literal ──────────────────────────────────────────────────────
@@ -115,10 +115,13 @@ def _numero_presente(valor, texto_norm):
     return None
 
 
-def _cadena_presente(valor, transcript):
-    """Devuelve (encontrado_como, coincidencia_cercana). Compara tokens normalizados y singularizados."""
-    v = _tokens(str(valor))
-    t_norm = normalize_text(transcript).split()
+def _cadena_presente(valor, transcript, numbers=True):
+    """Devuelve (encontrado_como, coincidencia_cercana). Compara tokens normalizados y singularizados.
+
+    `numbers=False` deja los números tal como se dijeron (paso literal); `True` los pasa a dígitos (paso normalizado).
+    """
+    v = _tokens(str(valor), numbers)
+    t_norm = normalize_text(transcript, numbers).split()
     t = [_stem(x) for x in t_norm]
     if not v:
         return None, None
@@ -146,26 +149,38 @@ def _es_numero(valor):
 
 
 def verify_literal(value, transcript):
-    """¿El valor extraído existe literalmente en la transcripción?
+    """¿El valor extraído existe literalmente en la transcripción? Si no, queda `sin_verificar`.
 
-    Devuelve {"status": "verificado" | "sin_verificar" | "sin_valor", "found_as": str|None, "near_match": str|None,
-    "items": [...]}. Compara sin mayúsculas, tildes ni puntuación; singulariza ("lomos" ~ "lomo"), expande abreviaturas
-    ("Av." ~ "Avenida") y normaliza números hablados ("cuatro mil quinientos" ~ 4500). Una lista queda verificada
-    solo si todos sus elementos lo están. `near_match` señala un texto casi igual (probable error del ASR).
+    Se intenta en dos pasos, siempre en este orden:
+      1. Forma literal: el valor tal cual aparece en lo dicho. Se compara sin mayúsculas, tildes ni puntuación, con
+         abreviaturas expandidas ("Av." ~ "Avenida") y singularizando ("lomos" ~ "lomo"), pero SIN convertir números
+         hablados: "seis mil quinientos" solo coincide con "seis mil quinientos", y 6500 solo con "6500"/"6.500".
+      2. Forma normalizada (solo si el paso 1 falla): se pasan a dígitos los números hablados de ambos lados con
+         `normalize_spoken_numbers`, así 6500 ~ "seis mil quinientos" y "2 semanas" ~ "dos semanas". Para números también
+         se aceptan duraciones derivadas ("1 año ocho meses" -> 1.67).
+
+    Devuelve {"status": "verificado" | "sin_verificar" | "sin_valor", "mode": "literal" | "normalizada" | None,
+    "found_as": str|None, "near_match": str|None, "items": [...]}. `mode` dice con qué paso se verificó. Una lista queda
+    verificada solo si todos sus elementos lo están. `near_match` señala un texto casi igual (probable error del ASR).
     """
     if value is None or value == "" or value == []:
-        return {"status": SIN_VALOR, "found_as": None, "near_match": None, "items": []}
+        return {"status": SIN_VALOR, "mode": None, "found_as": None, "near_match": None, "items": []}
     if isinstance(value, (list, tuple)):
         items = [dict(verify_literal(v, transcript), value=v) for v in value]
         ok = all(i["status"] == VERIFICADO for i in items)
-        return {"status": VERIFICADO if ok else SIN_VERIFICAR, "found_as": None,
+        return {"status": VERIFICADO if ok else SIN_VERIFICAR, "mode": None, "found_as": None,
                 "near_match": next((i["near_match"] for i in items if i["near_match"]), None), "items": items}
-    texto_num = normalize_text(transcript)
     if _es_numero(value):
-        hallado = _numero_presente(float(value), texto_num)
-        return {"status": VERIFICADO if hallado else SIN_VERIFICAR, "found_as": hallado, "near_match": None, "items": []}
-    hallado, cercano = _cadena_presente(value, transcript)
-    return {"status": VERIFICADO if hallado else SIN_VERIFICAR, "found_as": hallado, "near_match": cercano, "items": []}
+        for modo, numbers in (("literal", False), ("normalizada", True)):
+            hallado = _numero_presente(float(value), normalize_text(transcript, numbers))
+            if hallado:
+                return {"status": VERIFICADO, "mode": modo, "found_as": hallado, "near_match": None, "items": []}
+        return {"status": SIN_VERIFICAR, "mode": None, "found_as": None, "near_match": None, "items": []}
+    for modo, numbers in (("literal", False), ("normalizada", True)):
+        hallado, cercano = _cadena_presente(value, transcript, numbers)
+        if hallado:
+            return {"status": VERIFICADO, "mode": modo, "found_as": hallado, "near_match": None, "items": []}
+    return {"status": SIN_VERIFICAR, "mode": None, "found_as": None, "near_match": cercano, "items": []}
 
 
 # ── Aritmética de pedidos ─────────────────────────────────────────────────────
