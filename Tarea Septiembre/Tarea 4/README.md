@@ -29,6 +29,14 @@ python -m engine.compare_extractors --llm answers --answers tasks/comparison/llm
 Usa las transcripciones cacheadas de la mejor configuración del benchmark (no hace ASR). `--llm answers` prueba el flujo sin clave, pero
 sus respuestas están escritas a mano viendo el ground truth: **no son una medición del LLM**.
 
+## Escalera de degradación L0–L3
+
+```bash
+python tasks/task2_sales/degradation/build_ladder.py --input_dir tasks/task2_sales/audio --preset l0-l3
+```
+
+Genera `L0/` (original), `L1/` (Opus 24 kbps mono, estilo nota de voz de WhatsApp), `L2/` (pasa-banda 300–3400 Hz a 8 kHz, estilo llamada) y `L3/` (L1 + ruido ambiente a SNR 10 dB) y el manifiesto `ladder_l0_l3_manifest.csv` con el SNR real de cada archivo. Opus usa `ffmpeg` si está en el PATH y, si no, PyAV con el mismo códec. Sin `--preset` se genera la escalera de 12 niveles de siempre; para transcribir L0–L3 con el benchmark hay que pedirlos: `--ladder-dir ... --levels L0 L1 L2 L3`.
+
 ## Interfaz (Streamlit)
 
 ```bash
