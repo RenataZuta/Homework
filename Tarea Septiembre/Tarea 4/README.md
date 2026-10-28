@@ -10,6 +10,7 @@ El motor común está en `engine/` (transcripción, extracción, validación); l
 ## Documentación
 
 - [Pipeline — From Voice to Record (HW05)](https://app.notion.com/p/Pipeline-From-Voice-to-Record-HW05-4056115a59c180839c95d663f3bdbd5c?source=copy_link) — documento del pipeline en Notion.
+- [Video de la tarea](https://drive.google.com/file/d/1tMp0EvvaZB9O4bKNhcTNaKo09sM0768M/view?usp=sharing) — demostración en video (Google Drive).
 
 ## Herramientas usadas en el desarrollo
 
