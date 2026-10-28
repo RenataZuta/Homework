@@ -46,3 +46,5 @@ Tarea Septiembre/Tarea 1/eval/cache_llm/
 *.ogg
 *.opus
 models/
+# Excepción: el ruido ambiente de dominio público de L3 (2 MB, con su licencia en noise/README.md) sí se versiona.
+!Tarea Septiembre/Tarea 4/tasks/task2_sales/degradation/noise/*.ogg
