@@ -11,6 +11,11 @@ El motor común está en `engine/` (transcripción, extracción, validación); l
 
 - [Pipeline — From Voice to Record (HW05)](https://app.notion.com/p/Pipeline-From-Voice-to-Record-HW05-4056115a59c180839c95d663f3bdbd5c?source=copy_link) — documento del pipeline en Notion.
 
+## Herramientas usadas en el desarrollo
+
+- **MCP servers**: solo uno, `claude-in-chrome` (automatización de Chrome). Se usó para operar Google Colab: abrir el notebook, conectar la GPU T4, subir los audios, ejecutar las celdas de transcripción, descargar los resultados y desconectar el runtime.
+- No se usó ningún otro MCP. GitHub (ramas, PRs y merges) se manejó con `git` y la API REST de GitHub, y las búsquedas web con las herramientas `WebSearch` y `WebFetch` de Claude Code.
+
 ## Puesta en marcha
 
 ```bash
