@@ -1,6 +1,6 @@
 task,clip,extractor,campos_sin_verificar,total_esperado,total_dicho,aritmetica,diagnostico,gt_total_incorrecto,detecta_bien
 task1_interview,entrevista_01,rules,,,,,,,
 task1_interview,entrevista_02,rules,,,,,,,
-task1_interview,entrevista_03,rules,,,,,,,
+task1_interview,entrevista_03,rules,disponibilidad,,,,,,
 task1_interview,entrevista_04,rules,ultimo_puesto,,,,,,
 task1_interview,entrevista_05,rules,,,,,,,

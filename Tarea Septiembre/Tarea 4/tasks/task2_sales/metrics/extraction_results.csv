@@ -13,7 +13,7 @@ task2_sales,llamada_03,rules,items,"[{""plato"": ""cuarto de pollo brasa pecho""
 task2_sales,llamada_03,rules,promocion,"""Promo familiar: 4 cuartos + gaseosa por 70""",True,verificado
 task2_sales,llamada_03,rules,direccion_entrega,null,False,sin_valor
 task2_sales,llamada_03,rules,metodo_pago,"""Efectivo""",True,verificado
-task2_sales,llamada_03,rules,total_dicho,86,False,verificado
+task2_sales,llamada_03,rules,total_dicho,86,True,verificado
 task2_sales,llamada_04,rules,items,"[{""plato"": ""chifa aeropuerto"", ""cantidad"": 1, ""precio_unitario"": 28, ""tamaño"": ""grande""}, {""plato"": ""arroz chaufa de pollo"", ""cantidad"": 1, ""precio_unitario"": 22}, {""plato"": ""chicha morada"", ""cantidad"": 1, ""precio_unitario"": 8, ""tamaño"": ""personal""}]",True,verificado
 task2_sales,llamada_04,rules,promocion,null,True,sin_valor
 task2_sales,llamada_04,rules,direccion_entrega,"""Av. Brasil 3100, Jesús María""",True,sin_verificar

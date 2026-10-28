@@ -101,6 +101,11 @@ _ROLES = (r"analista|desarrolladora?|asistente|coordinador[a]?|practicante|geren
 _FIN_PUESTO = r"(?=\s+en\s+(?:una?|la|el|mi|las|los)\b|\s+(?:pero|donde|durante|desde|hasta|por\s+\d|hace)\b|[.,;:?!]|$)"
 
 
+def _canon_puesto(v):
+    """Unifica grafías que el ASR separa: "full stack" -> "fullstack", "back end" -> "backend"."""
+    return re.sub(r"\b(full|back|front)\s+(stack|end)\b", r"\1\2", v, flags=FLAGS)
+
+
 def _ultimo_puesto(t):
     patrones = [
         rf"(?:mi\s+)?[uú]ltimo\s+(?:puesto|cargo)\s+(?:fue|era)\s+(?:como\s+)?(?P<v>[^.,;?!]+?){_FIN_PUESTO}",
@@ -111,7 +116,7 @@ def _ultimo_puesto(t):
     for p in patrones:
         m = re.search(p, t, FLAGS)
         if m:
-            return m.group("v").strip()
+            return _canon_puesto(m.group("v").strip())
     m = re.search(r"\bcoordin(?:ar|é|e|aba|ando)\s+(?:todo\s+)?(?:el\s+)?equipo\s+de\s+(?P<a>[^.,;?!]+?)"
                   r"(?=\s+en\s+(?:una?|la|el)\b|[.,;?!]|$)", t, FLAGS)
     if m:  # "coordiné el equipo de marketing digital" -> "coordinador de marketing digital"
@@ -201,6 +206,9 @@ def _disponibilidad(t):
             continue
         if re.search(r"\binmediat[ao]\b", oracion, FLAGS):
             return "Inmediata"
+        m = re.search(rf"\bquincena\s+de\s+({_MESES})\b", oracion, FLAGS)
+        if m:  # "a partir de quincena de noviembre" -> 15 de noviembre
+            return f"15 de {m.group(1).lower()}"
         m = re.search(rf"\b(\d{{1,2}})\s+de\s+({_MESES})\b", oracion, FLAGS)
         if m:
             return f"{m.group(1)} de {m.group(2).lower()}"
