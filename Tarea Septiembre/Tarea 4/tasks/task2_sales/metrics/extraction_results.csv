@@ -1,0 +1,26 @@
+task,clip,extractor,campo,valor,correcto,verificacion
+task2_sales,llamada_01,rules,items,"[{""plato"": ""lomo saltado"", ""cantidad"": 3, ""precio_unitario"": 35, ""tamaño"": ""grande""}, {""plato"": ""chicha morada"", ""cantidad"": 2, ""precio_unitario"": 12, ""tamaño"": ""jarra""}, {""plato"": ""arroz chaufa especial"", ""cantidad"": 1, ""precio_unitario"": 25, ""tamaño"": ""porción""}]",True,verificado
+task2_sales,llamada_01,rules,promocion,"""2x1 en bebidas""",True,verificado
+task2_sales,llamada_01,rules,direccion_entrega,"""Av. Javier Prado 1250, depto 302, San Isidro""",True,verificado
+task2_sales,llamada_01,rules,metodo_pago,"""Yape""",True,verificado
+task2_sales,llamada_01,rules,total_dicho,140,True,verificado
+task2_sales,llamada_02,rules,items,"[{""plato"": ""ceviche mixto"", ""cantidad"": 1, ""precio_unitario"": 45, ""tamaño"": ""para compartir""}, {""plato"": ""arroz con mariscos"", ""cantidad"": 1, ""precio_unitario"": 38}, {""plato"": ""Inca Kola"", ""cantidad"": 2, ""precio_unitario"": 5, ""tamaño"": ""medio litro""}]",True,verificado
+task2_sales,llamada_02,rules,promocion,null,True,sin_valor
+task2_sales,llamada_02,rules,direccion_entrega,"""Calle Las Palmeras 456, Miraflores""",True,verificado
+task2_sales,llamada_02,rules,metodo_pago,"""Tarjeta""",True,verificado
+task2_sales,llamada_02,rules,total_dicho,80,True,verificado
+task2_sales,llamada_03,rules,items,"[{""plato"": ""cuarto de pollo brasa pecho"", ""cantidad"": 2, ""precio_unitario"": null}, {""plato"": ""cuarto de pollo brasa pierna"", ""cantidad"": 2, ""precio_unitario"": null}, {""plato"": ""ensalada"", ""cantidad"": 2, ""precio_unitario"": 8}, {""plato"": ""Coca-Cola 1.5L"", ""cantidad"": 1, ""precio_unitario"": null}]",True,sin_verificar
+task2_sales,llamada_03,rules,promocion,"""Promo familiar: 4 cuartos + gaseosa por 70""",True,verificado
+task2_sales,llamada_03,rules,direccion_entrega,null,False,sin_valor
+task2_sales,llamada_03,rules,metodo_pago,"""Efectivo""",True,verificado
+task2_sales,llamada_03,rules,total_dicho,86,False,verificado
+task2_sales,llamada_04,rules,items,"[{""plato"": ""chifa aeropuerto"", ""cantidad"": 1, ""precio_unitario"": 28, ""tamaño"": ""grande""}, {""plato"": ""arroz chaufa de pollo"", ""cantidad"": 1, ""precio_unitario"": 22}, {""plato"": ""chicha morada"", ""cantidad"": 1, ""precio_unitario"": 8, ""tamaño"": ""personal""}]",True,verificado
+task2_sales,llamada_04,rules,promocion,null,True,sin_valor
+task2_sales,llamada_04,rules,direccion_entrega,"""Av. Brasil 3100, Jesús María""",True,sin_verificar
+task2_sales,llamada_04,rules,metodo_pago,null,False,sin_valor
+task2_sales,llamada_04,rules,total_dicho,58,True,verificado
+task2_sales,llamada_05,rules,items,"[{""plato"": ""causa limeña"", ""cantidad"": 5, ""precio_unitario"": 15, ""tamaño"": ""porción""}, {""plato"": ""sopa de la casa"", ""cantidad"": 2, ""precio_unitario"": 12}, {""plato"": ""limonada"", ""cantidad"": 3, ""precio_unitario"": 3}]",True,verificado
+task2_sales,llamada_05,rules,promocion,"""Happy hour: limonadas a mitad de precio""",True,verificado
+task2_sales,llamada_05,rules,direccion_entrega,"""Pasaje Los Olivos 28, interior B, Surquillo""",True,verificado
+task2_sales,llamada_05,rules,metodo_pago,"""Transferencia""",True,verificado
+task2_sales,llamada_05,rules,total_dicho,110,True,verificado

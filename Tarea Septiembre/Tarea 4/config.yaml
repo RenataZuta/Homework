@@ -1,4 +1,4 @@
-# Configuración base del sistema ASR (Tarea 4 — From Voice to Record).
+# Configuración del sistema ASR (Tarea 4 — From Voice to Record).
 # Todos los paths son relativos a tasks/ (raíz de cada tarea: task1_interview/, task2_sales/).
 
 asr:
@@ -6,18 +6,29 @@ asr:
   models: ["medium", "large-v3"]
   precisions: ["float16", "int8"]   # compute_type de faster-whisper
   default_model: "medium"
-  default_precision: "int8"
+  default_precision: "auto"         # auto = float16 en GPU, int8 en CPU
+  default_device: "auto"            # auto = cuda si hay GPU, si no cpu
+  beam_size: 5
+  # Cómo se inyecta el glosario. Ambos parámetros existen en faster-whisper 1.2.1:
+  #   initial_prompt -> texto que se antepone como contexto previo en cada ventana (sesga ortografía y vocabulario)
+  #   hotwords       -> frases clave que se añaden al prompt (no tienen efecto si se usa `prefix`)
+  glossary_mechanism: "initial_prompt"
+  glossary_intro:
+    interview: "Entrevista laboral en español. Herramientas y tecnologías que pueden mencionarse:"
+    sales: "Llamada de pedido a un restaurante peruano. Platos, bebidas y formas de pago:"
 
 paths:
   root: "tasks"
   task1_interview:
     scripts: "task1_interview/scripts"
     ground_truth: "task1_interview/ground_truth"
+    audio: "task1_interview/audio"
     transcriptions_cache: "task1_interview/transcriptions_cache"
     metrics: "task1_interview/metrics"
   task2_sales:
     scripts: "task2_sales/scripts"
     ground_truth: "task2_sales/ground_truth"
+    audio: "task2_sales/audio"
     transcriptions_cache: "task2_sales/transcriptions_cache"
     degradation: "task2_sales/degradation"
     metrics: "task2_sales/metrics"
@@ -25,39 +36,147 @@ paths:
 # Campos que el extractor debe devolver por cada tipo de audio.
 schemas:
   interview:
-    anios_experiencia: int
+    anios_experiencia: float          # años totales (1 año 8 meses -> 1.67; seis meses -> 0.5)
     ultimo_puesto: str
     tecnologias: list[str]
-    pretension_salarial: float
-    disponibilidad: str
-    nivel_ingles: str
+    pretension_salarial: float        # en soles
+    disponibilidad: str               # "2 semanas", "Inmediata", "15 de noviembre", "1 mes", "Próxima semana"
+    nivel_ingles: str                 # Básico | Intermedio | Avanzado
   sales:
-    items: list[str]
-    promocion: str
+    items: list[dict]                 # {plato, cantidad, precio_unitario, tamaño (opcional)}; orden FINAL tras correcciones
+    promocion: str                    # null si no hay
     direccion_entrega: str
-    metodo_pago: str
-    total_dicho: float
+    metodo_pago: str                  # Yape | Plin | Tarjeta | Efectivo | Transferencia
+    total_dicho: float                # el total que dijo el operador, aunque esté mal
 
-# Glosario de ejemplo: términos de dominio que Whisper suele transcribir mal.
-# Se usa para sesgar la transcripción (initial_prompt) y corregir tras el ASR.
+# Glosario de dominio. Se usa (1) para sesgar al ASR (initial_prompt) y (2) como léxico del extractor por reglas.
+# Incluye herramientas que NO aparecen en los audios de prueba, para que no sea un calco del ground truth.
 domain_glossary:
   tecnologias:
+    - Excel
     - Python
     - SQL
     - Power BI
+    - SAP
+    - Concar
+    - React
+    - Node.js
+    - PostgreSQL
     - Docker
     - Kubernetes
+    - AWS
     - TensorFlow
-    - PostgreSQL
     - GitHub
+    - Git
+    - Java
+    - JavaScript
+    - Tableau
+    - Jira
+    - Salesforce
+    - HubSpot
+    - Google Ads
+    - Meta Ads
+    - Google Analytics
+    - Figma
+    - Buk
+    - Microsoft Teams
+    - Slack
   ventas:
+    - lomo saltado
+    - arroz chaufa
+    - ceviche
+    - Inca Kola
+    - Coca-Cola
+    - chicha morada
+    - causa limeña
     - Yape
     - Plin
-    - contraentrega
     - delivery
-    - boleta
-    - combo
-  correcciones:
-    "pai zon": "Python"
-    "escuele": "SQL"
+    - contraentrega
+  correcciones:                       # error típico del ASR -> forma correcta (sirve de referencia para diagnosticar)
+    "payton": "Python"
     "yap": "Yape"
+
+# Carta del restaurante (ventas): léxico del extractor por reglas y de la validación aritmética.
+#   aliases: formas habladas (singular/plural) | category: bebida/plato | variants: sub-tipos que se piden por separado
+#   size_in_name: el tamaño forma parte del nombre del plato (Coca-Cola 1.5L)
+menu:
+  - {name: lomo saltado, aliases: [lomos saltados, lomo saltado, lomos, lomo], category: plato}
+  - {name: chicha morada, aliases: [chicha morada, chicha], category: bebida}
+  - {name: arroz chaufa especial, aliases: [arroz chaufa especial, chaufa especial], category: plato}
+  - {name: arroz chaufa de pollo, aliases: [arroz chaufa de pollo, chaufa de pollo], category: plato}
+  - {name: ceviche mixto, aliases: [ceviche mixto, ceviche], category: plato}
+  - {name: arroz con mariscos, aliases: [arroces con mariscos, arroz con mariscos], category: plato}
+  - {name: Inca Kola, aliases: [inca kolas, inca kola], category: bebida}
+  - {name: Coca-Cola, aliases: [gaseosa de litro y medio, coca-cola, coca cola], category: bebida, size_in_name: true}
+  - {name: cuarto de pollo brasa, aliases: [cuartos de pollo a la brasa, cuarto de pollo a la brasa, cuartos de pollo, cuarto de pollo], category: plato, variants: [pecho, pierna]}
+  - {name: ensalada, aliases: [ensaladas, ensalada], category: plato}
+  - {name: chifa aeropuerto, aliases: [chifa aeropuerto, aeropuerto], category: plato}
+  - {name: tallarín saltado, aliases: [tallarin saltado, tallarines saltados, tallarin, tallarines], category: plato}
+  - {name: causa limeña, aliases: [causas limeñas, causa limeña, causas, causa], category: plato}
+  - {name: sopa de la casa, aliases: [sopas de la casa, sopa de la casa, sopas, sopa], category: plato}
+  - {name: limonada, aliases: [limonadas, limonada], category: bebida}
+
+# Extractor con LLM (API de Anthropic). La clave va en ANTHROPIC_API_KEY (ver .env.example).
+llm:
+  model: "claude-opus-5-5"
+  max_tokens: 2048
+  effort: "low"                       # low | medium | high ... (control de profundidad de razonamiento)
+  use_fallbacks: true                 # reintenta en otro modelo si un clasificador de seguridad rechaza la petición
+  prompts:
+    system: |
+      Eres un extractor de datos estructurados a partir de transcripciones automáticas de audio en español.
+      Responde ÚNICAMENTE con un objeto JSON válido (sin texto antes o después, sin bloques de código).
+      Reglas generales:
+      - Usa solo lo que se dice en la transcripción. Si un campo no aparece, usa null (o [] para listas).
+      - Los números van como números JSON, en dígitos: "cuatro mil quinientos" -> 4500.
+      - Si un término técnico o un nombre propio aparece deformado por la transcripción (p. ej. "Payton" por Python),
+        devuelve su forma correcta.
+    interview: |
+      Transcripción de una entrevista laboral (entrevistador y candidato, sin etiquetas de hablante):
+      <transcripcion>
+      {transcript}
+      </transcripcion>
+
+      Devuelve un JSON con exactamente estas claves:
+      {fields}
+
+      Reglas:
+      - anios_experiencia: años TOTALES de experiencia profesional del candidato, en años (número). "1 año y 8 meses" -> 1.67;
+        "seis meses" -> 0.5. Ignora duraciones que no sean la experiencia total (tiempo con un cliente, avisos, etc.).
+      - ultimo_puesto: el último cargo que tuvo, en minúsculas ("analista financiero junior").
+      - tecnologias: lista de herramientas, lenguajes y plataformas que dice usar, con su nombre habitual.
+      - pretension_salarial: el sueldo que busca (número, soles). No uses el sueldo anterior.
+      - disponibilidad: cuándo puede empezar, en forma corta ("2 semanas", "1 mes", "Inmediata", "15 de noviembre", "Próxima semana").
+      - nivel_ingles: "Básico", "Intermedio" o "Avanzado" (un "intermedio alto" cuenta como "Intermedio").
+    sales: |
+      Transcripción de una llamada de pedido a un restaurante (operador y cliente, sin etiquetas de hablante):
+      <transcripcion>
+      {transcript}
+      </transcripcion>
+
+      Devuelve un JSON con exactamente estas claves:
+      {fields}
+
+      Reglas:
+      - items: la orden FINAL, después de todas las correcciones del cliente ("mejor que sean tres", "cámbiame X por Y").
+        Cada ítem es {{"plato": nombre en minúsculas y singular, "cantidad": número, "precio_unitario": número o null,
+        "tamaño": texto (solo si se menciona: grande, personal, jarra, porción, para compartir, medio litro)}}.
+        precio_unitario es el precio que el operador dice por unidad (el cobrado, ya con la promoción). null si no se dice.
+      - promocion: texto corto de la promoción ofrecida ("2x1 en bebidas") o null.
+      - direccion_entrega: dirección completa con abreviaturas habituales (Av., Jr., depto), p. ej. "Av. Brasil 3100, Jesús María".
+      - metodo_pago: Yape, Plin, Tarjeta, Efectivo o Transferencia.
+      - total_dicho: el total que el operador DICE al final, tal cual, aunque no cuadre con la suma. No lo recalcules.
+
+# Flujo de process_audio
+pipeline:
+  extractor: "auto"                   # auto = llm si hay ANTHROPIC_API_KEY, si no rules | rules | llm | both
+
+# Benchmark (engine/benchmark.py)
+benchmark:
+  devices: ["cuda", "cpu"]
+  glossary: ["off", "on"]
+  warmup: true                        # una transcripción previa descartada para no medir el arranque de CUDA
+  bootstrap_samples: 1000
+  bootstrap_seed: 0
+  confidence: 0.95

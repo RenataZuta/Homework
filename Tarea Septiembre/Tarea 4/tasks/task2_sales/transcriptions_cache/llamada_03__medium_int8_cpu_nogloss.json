@@ -1,0 +1,17 @@
+{
+  "clip": "llamada_03",
+  "task": "task2_sales",
+  "model": "medium",
+  "compute_type": "int8",
+  "device_requested": "cpu",
+  "device_used": "cpu",
+  "glossary": false,
+  "glossary_mechanism": null,
+  "language": "es",
+  "transcript": "el buen sabor buenas noches buenas noches quiero pedir cuatro cuartos de pollo a la brasa con papas y dos ensaladas los cuartos son de pecho o de pierna dos de cada uno de pecho y de pierna perfecto y para tomar una gaseosa de litro y medio coca cola tenemos la próndom familiar cuatro cuartos malas gaseosa grande por 70 soles en vez de 80 ya aplica mesa pronto entonces listo la próndom familiar es 70 soles más las dos ensaladas a ocho soles cada una su total sería de 86 soles la dirección cuál es es giron guayaga 782 piso 4 por cerca de lima método de pago efectivo con billete de 100",
+  "vram_mb": null,
+  "vram_device_mb": null,
+  "elapsed_s": 50.53,
+  "faster_whisper": "1.2.1",
+  "timestamp": "2026-10-28T12:56:28"
+}

@@ -1,0 +1,17 @@
+{
+  "clip": "entrevista_01",
+  "task": "task1_interview",
+  "model": "large-v3",
+  "compute_type": "float16",
+  "device_requested": "cuda",
+  "device_used": "cuda",
+  "glossary": true,
+  "glossary_mechanism": "initial_prompt",
+  "language": "es",
+  "transcript": "Bueno, cuéntame un poco sobre tu experiencia profesional. Claro, yo llevo trabajando como tres años ya en el área financiera. Mi último puesto fue como analista financiero junior en una consultora mediana. ¿Y qué herramientas manejas en tu día a día? Bueno, sobre todo Excel, bastante Excel avanzado con macros y tablas dinámicas. También he usado un poco de Python para automatizar reportes y SAP para la parte contable. Perfecto. Y en cuanto a tu pretensión salarial, ¿cuánto estás buscando? Mira, estoy buscando algo alrededor de 4.500 soles mensuales. Por ahí, más o menos. Entendido. ¿Y cuándo podrías empezar? Yo creo que en unas dos semanas podría estar disponible. Tengo que cerrar unos temas en mi trabajo actual. ¿Y tu nivel de inglés, cómo lo calificarías? Yo diría que intermedio. Puedo leer documentación técnica y escribir mails. Pero en conversación todavía me tengo que calificar. Perfecto. Voy a repetirlo un poco.",
+  "vram_mb": 0.0,
+  "vram_device_mb": 3946.0,
+  "elapsed_s": 6.63,
+  "faster_whisper": "1.2.1",
+  "timestamp": "2026-10-28T12:24:26"
+}

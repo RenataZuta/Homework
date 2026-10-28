@@ -1,0 +1,17 @@
+{
+  "clip": "entrevista_02",
+  "task": "task1_interview",
+  "model": "medium",
+  "compute_type": "int8",
+  "device_requested": "cuda",
+  "device_used": "cuda",
+  "glossary": false,
+  "glossary_mechanism": null,
+  "language": "es",
+  "transcript": "Hola, bienvenido. Empecemos hablando de tu inglés. ¿Cómo te desenvuelves? En inglés lo manejo bastante bien. Yo diría que avanzado. He trabajado en equipos en Estados Unidos durante año y medio. ¡Qué bien! ¿Y qué tecnología te especializas? Mi fuerte es React y Node.js. También he trabajado con SQL, Docker y algo de AWS. Sobre todo S3 y Lambda. ¡Genial! ¿Cuántos años de experiencia tienes en total? A ver, si cuento todo, serían como cinco años. Sí, cinco años desde que empecé como practicante. ¿Cuál fue tu último cargo? Fui desarrollador full-stack senior. Bueno, no tan senior, pero así era el título de la empresa. Era una startup. ¿Cuánto esperas ganar? Mira, mi expectativa está entre 6.500 soles negociables realmente, dependiendo de los beneficios. ¿Y disponibilidad para comenzar? Disponibilidad inmediata. Yo terminé mi contrato la semana pasada.",
+  "vram_mb": 0.0,
+  "vram_device_mb": 1226.0,
+  "elapsed_s": 3.8,
+  "faster_whisper": "1.2.1",
+  "timestamp": "2026-10-28T12:22:05"
+}

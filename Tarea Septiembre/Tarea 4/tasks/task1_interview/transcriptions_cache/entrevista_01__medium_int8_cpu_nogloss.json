@@ -1,0 +1,17 @@
+{
+  "clip": "entrevista_01",
+  "task": "task1_interview",
+  "model": "medium",
+  "compute_type": "int8",
+  "device_requested": "cpu",
+  "device_used": "cpu",
+  "glossary": false,
+  "glossary_mechanism": null,
+  "language": "es",
+  "transcript": "Bueno, cuéntame un poco sobre tu experiencia profesional. Claro, yo llevo trabajando como tres años ya en el área financiera. Mi último puesto fue como analista financiero junior en una consultora mediana. ¿Y qué herramientas manejas en tu día a día? Bueno, sobre todo Excel, bastante Excel avanzado con macros y tablas dinámicas. También he usado un poco de Payton para automatizar reportes y SAP para la parte contable. Perfecto. Y en cuanto a tu pretensión salarial, ¿cuánto estás buscando? Mira, estoy buscando algo alrededor de 4,500 soles mensuales, por ahí más o menos. Entendido. ¿Y cuándo podrías empezar? Yo creo que en unas dos semanas podría estar disponible. Tengo que cerrar unos temas en mi trabajo actual. ¿Y tu nivel de inglés cómo lo calificarías? Yo diría que intermedio. Puedo leer documentación técnica y escribir mails. Pero en conversación todavía me traba un poco.",
+  "vram_mb": null,
+  "vram_device_mb": null,
+  "elapsed_s": 86.3,
+  "faster_whisper": "1.2.1",
+  "timestamp": "2026-10-28T12:42:05"
+}
