@@ -1,0 +1,20 @@
+{
+  "clip": "llamada_02",
+  "level": "volumen_m20dB",
+  "family": "volumen",
+  "severity": 1,
+  "task": "task2_sales",
+  "model": "medium",
+  "compute_type": "float16",
+  "device_requested": "cuda",
+  "device_used": "cuda",
+  "glossary": false,
+  "glossary_mechanism": null,
+  "language": "es",
+  "transcript": "buenas tardes el buen sabor que va a pedir hola quiero un ceviche mixto y dos arroz con mariscos el ceviche personal o para compartir para compartir y los arroces la verdad creo que sólo quiero uno me confundido un arroz con mariscos nomás ok un ceviche mixto para compartir y un arroz con mariscos algo de tomar dos cincacoles de medio litro listo el ceviche para compartir son 45 soles el arroz con mariscos 38 y los cincacoles 5 soles cada una su total son 80 soles ok y la dirección me podría traer por delivery para la calle las palmeras 456 migaflores genial forma de pago con tarjeta al momento de la entrega",
+  "vram_mb": 0.0,
+  "vram_device_mb": 1934.0,
+  "elapsed_s": 2.54,
+  "faster_whisper": "1.2.1",
+  "timestamp": "2026-10-28T14:00:44"
+}

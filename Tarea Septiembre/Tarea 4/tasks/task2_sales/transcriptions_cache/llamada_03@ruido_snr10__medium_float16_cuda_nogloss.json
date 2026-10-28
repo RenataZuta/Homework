@@ -1,0 +1,20 @@
+{
+  "clip": "llamada_03",
+  "level": "ruido_snr10",
+  "family": "ruido",
+  "severity": 2,
+  "task": "task2_sales",
+  "model": "medium",
+  "compute_type": "float16",
+  "device_requested": "cuda",
+  "device_used": "cuda",
+  "glossary": false,
+  "glossary_mechanism": null,
+  "language": "es",
+  "transcript": "El buen sabor, buenas noches. Buenas noches, quiero pedir 4 cuartos de pollo a la brasa con papas y 2 ensaladas. Los cuartos son de pecho o de pierna? Dos de cada uno, dos de pecho y dos de pierna. Perfecto, y para tomar? Una gaseosa de litro y medio Coca Cola. Tenemos la promo familiar, 4 cuartos más la gaseosa grande por 70 soles en vez de 80. Ah ya, aplícame esa otra vez entonces. Listo, la promo familiar es 70 soles más las dos ensaladas a 8 soles cada una. Su total sería de 86 soles. La dirección cuál es? Giron, guayaga, 7-8-2, piso 4 por sal cabelino. Método de pago? Efectivo, con billete adhesivo.",
+  "vram_mb": 0.0,
+  "vram_device_mb": 1966.0,
+  "elapsed_s": 3.01,
+  "faster_whisper": "1.2.1",
+  "timestamp": "2026-10-28T13:59:45"
+}

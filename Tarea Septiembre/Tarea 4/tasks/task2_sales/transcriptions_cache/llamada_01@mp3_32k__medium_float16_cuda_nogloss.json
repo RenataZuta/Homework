@@ -1,0 +1,20 @@
+{
+  "clip": "llamada_01",
+  "level": "mp3_32k",
+  "family": "compresion",
+  "severity": 1,
+  "task": "task2_sales",
+  "model": "medium",
+  "compute_type": "float16",
+  "device_requested": "cuda",
+  "device_used": "cuda",
+  "glossary": false,
+  "glossary_mechanism": null,
+  "language": "es",
+  "transcript": "Buenas noches, restaurante, el buen sabor, ¿en qué le puedo ayudar? Hola, quiero hacer un pedido para delivery. A ver, quiero dos lomos saltados grandes. ¿Dos lomos saltados grandes? Perfecto. ¿Algo más? Sí, y una... No, espera. Mejor que sean tres lomos, no dos. Es que somos más gente de lo que pensé. Ok, tres lomos saltados grandes. Entonces, ¿algo más? Sí, una jarra de chicha morada y una porción de arroz chaufa especial. Perfecto. Tenemos una promoción de dos por uno en bebidas, así que la jarra de chicha les saldría gratis si pide otra. Ah, ya, entonces ponme dos jarras de chicha morada. Listo. Entonces, son tres lomos saltados grandes a 35 soles cada uno, dos jarras de chicha a 12 soles, pero la segunda va gratis y un arroz chaufa especial a 25. ¿La dirección? Avenida Javier Prado, 1250, departamento 302 San Isidro. ¿Método de pago? Yape. Perfecto. Su total sería 140 soles.",
+  "vram_mb": 0.0,
+  "vram_device_mb": 2030.0,
+  "elapsed_s": 4.2,
+  "faster_whisper": "1.2.1",
+  "timestamp": "2026-10-28T13:58:39"
+}

@@ -1,0 +1,20 @@
+{
+  "clip": "llamada_05",
+  "level": "volumen_m40dB",
+  "family": "volumen",
+  "severity": 3,
+  "task": "task2_sales",
+  "model": "medium",
+  "compute_type": "float16",
+  "device_requested": "cuda",
+  "device_used": "cuda",
+  "glossary": false,
+  "glossary_mechanism": null,
+  "language": "es",
+  "transcript": "El buen sabor, ¿cómo le ayudo? Buenas, quiero 5% de causa limeña y 3 sopas de la casa. No, espera, mejor que sean solo 2. 5 causas y 2 sopas, ¿algo de tomar? 3 limonadas. Tenemos Happy Hour, las limonadas están a mitad de precio, 3 soles en vez de 6. Perfecto, me la aplicas, porfa. Entonces, 5 causas a 15 soles, 2 sopas a 12 y 3 limonadas a 3 soles con la promo. Son totales de 110, ¿cuál es la dirección? La dirección es pasaje Los Olivos 28 Interior B Surquillo. ¿Método de pago? Con transferencia bancaria.",
+  "vram_mb": 0.0,
+  "vram_device_mb": 1934.0,
+  "elapsed_s": 2.64,
+  "faster_whisper": "1.2.1",
+  "timestamp": "2026-10-28T14:01:22"
+}

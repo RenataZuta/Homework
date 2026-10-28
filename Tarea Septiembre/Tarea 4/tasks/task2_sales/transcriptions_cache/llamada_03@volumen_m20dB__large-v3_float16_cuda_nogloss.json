@@ -1,0 +1,20 @@
+{
+  "clip": "llamada_03",
+  "level": "volumen_m20dB",
+  "family": "volumen",
+  "severity": 1,
+  "task": "task2_sales",
+  "model": "large-v3",
+  "compute_type": "float16",
+  "device_requested": "cuda",
+  "device_used": "cuda",
+  "glossary": false,
+  "glossary_mechanism": null,
+  "language": "es",
+  "transcript": "El Buen Sabor, buenas noches. Buenas noches, quiero pedir 4 cuartos de pollo a la brasa con papas y 2 ensaladas. ¿Los cuartos son de pecho o de pierna? Dos de cada uno, dos de pecho y dos de pierna. Perfecto, ¿y para tomar? Una gaseosa de litro y medio Coca-Cola. Tenemos la promo familiar, 4 cuartos más la gaseosa grande por 70 soles en vez de 80. Ah, ya, aplícame esa promo entonces. Listo, la promo familiar es 70 soles más las 2 ensaladas a 8 soles cada una. Su total sería de 86 soles. ¿La dirección cuál es? Es Girón, Guayaba, 782, piso 4, por cerca de Lima. ¿Método de pago? Efectivo, con billete de 100.",
+  "vram_mb": 0.0,
+  "vram_device_mb": 3754.0,
+  "elapsed_s": 5.01,
+  "faster_whisper": "1.2.1",
+  "timestamp": "2026-10-28T14:06:04"
+}

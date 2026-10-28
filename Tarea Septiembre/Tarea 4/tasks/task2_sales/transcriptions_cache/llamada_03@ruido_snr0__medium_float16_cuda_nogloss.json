@@ -1,0 +1,20 @@
+{
+  "clip": "llamada_03",
+  "level": "ruido_snr0",
+  "family": "ruido",
+  "severity": 4,
+  "task": "task2_sales",
+  "model": "medium",
+  "compute_type": "float16",
+  "device_requested": "cuda",
+  "device_used": "cuda",
+  "glossary": false,
+  "glossary_mechanism": null,
+  "language": "es",
+  "transcript": "¿El buen sabor? ¿Buenas noches? Mariana, el choclo tiene 4 cuartos de espejo, la braza con tajas y dos ensaladas. ¿Los cuartos son de pecho o de pierna? Dos de cada uno, dos de pecho y una de pierna. Perfecto. ¿Y para tomar? Una vasilla y un medico con oliva. Tenemos la pronga familiar. ¿Cuatro cuartos mezclas? ¿Esa grande por 70 soles en vez de la chocla? Ah ya, aquí tienes la pronga entonces. Listo, la pronga familiar es 70 soles más las dos ensaladas a ocho soles cada una. Tu total sería de 86 soles. ¿La dirección cuál es? Es Kirón, Guayá, 7.82, 5.4, ocho cabalinas. ¿Método de pago? Efectivo, con billetes.",
+  "vram_mb": 0.0,
+  "vram_device_mb": 1998.0,
+  "elapsed_s": 3.37,
+  "faster_whisper": "1.2.1",
+  "timestamp": "2026-10-28T14:00:17"
+}

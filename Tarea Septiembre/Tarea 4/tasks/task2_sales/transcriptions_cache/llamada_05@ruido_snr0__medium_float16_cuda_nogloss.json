@@ -1,0 +1,20 @@
+{
+  "clip": "llamada_05",
+  "level": "ruido_snr0",
+  "family": "ruido",
+  "severity": 4,
+  "task": "task2_sales",
+  "model": "medium",
+  "compute_type": "float16",
+  "device_requested": "cuda",
+  "device_used": "cuda",
+  "glossary": false,
+  "glossary_mechanism": null,
+  "language": "es",
+  "transcript": "El buen sabor, ¿como le ayudo? Bueno, quiero 5 causos y 2 totas, y 3 totas de la casa. No, espera, mejor que sean solo 2. 5 causos y 2 totas, ¿algo de tomar? 1 limonada. Tenemos Happy Hour, las limonadas están a mitad de precio, 3 soles y 10 soles. Perfecto, me la aplicas por favor. Entonces, 5 causos a 13 soles, 2 totas a 12 soles, 3 limonadas a 3 soles, ¿cómo está? Tu total es de 110, ¿cuál es la dirección? La dirección es pasaje a los olivos 28 interior de subida. ¿Método de pago? Contrastorencia bancaria.",
+  "vram_mb": 0.0,
+  "vram_device_mb": 1934.0,
+  "elapsed_s": 2.72,
+  "faster_whisper": "1.2.1",
+  "timestamp": "2026-10-28T14:00:23"
+}

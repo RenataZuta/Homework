@@ -1,0 +1,20 @@
+{
+  "clip": "llamada_01",
+  "level": "ruido_snr5",
+  "family": "ruido",
+  "severity": 3,
+  "task": "task2_sales",
+  "model": "medium",
+  "compute_type": "float16",
+  "device_requested": "cuda",
+  "device_used": "cuda",
+  "glossary": false,
+  "glossary_mechanism": null,
+  "language": "es",
+  "transcript": "Buenas noches, restaurante, el buen sabor, ¿en qué les puedo ayudar? Hola, quiero ser un querido para The Living, a ver, yo hago lomos saltados grandes. ¿Dos lomos saltados grandes? Perfecto, ¿algo más? Sí, y una... no, espera, mejor que sean tres lomos, no dos, es que somos más gente de lo que pensé. Ok, tres lomos saltados grandes, entonces, ¿algo más? Sí, una jarra de chicha morada y una porción de arroz chapa. Perfecto, tenemos una promoción de dos por uno en bebidas, así que la jarra de chicha les tendría gratis si pide otra. Ah, ya, entonces ponme dos jarras de chicha morada. Listo, entonces, son tres lomos saltados grandes, a 35 soles cada uno, dos jarras de chicha a 20 soles, pero la segunda va gratis y un arroz chapa especial a 25. ¿La dirección? Avenida Javier Prado, 1250, departamento 302, Santiago. ¿Método de pago? Yape. Perfecto, su total sería 140 soles.",
+  "vram_mb": 0.0,
+  "vram_device_mb": 2030.0,
+  "elapsed_s": 4.37,
+  "faster_whisper": "1.2.1",
+  "timestamp": "2026-10-28T13:59:55"
+}

@@ -1,0 +1,20 @@
+{
+  "clip": "llamada_01",
+  "level": "ruido_snr0",
+  "family": "ruido",
+  "severity": 4,
+  "task": "task2_sales",
+  "model": "large-v3",
+  "compute_type": "float16",
+  "device_requested": "cuda",
+  "device_used": "cuda",
+  "glossary": false,
+  "glossary_mechanism": null,
+  "language": "es",
+  "transcript": "Buenas noches, restaurante El Buen Sabor, ¿en qué les puedo ayudar? Hola, quiero hacer un pedido para el vídeo, a ver, clavos negros saltados grandes. Dos lomos saltados grandes, perfecto. ¿Algo más? Sí, y una... no, espera, mejor que sean tres lomos, no dos. Es que somos más gente de lo que pensé. Ok, tres lomos saltados grandes, entonces, ¿algo más? Sí, una jarra de chicha morada y una colchón de arroz salsa, por favor. Perfecto, tenemos una promoción de 2x1 en bebidas, así que la jarra de chicha le saldría gratis si pide otra. Ah, ya, entonces se pone dos jarras de chicha morada. Listo, entonces, son tres lomos saltados grandes, a 35 soles cada uno, dos jarras de chicha a 12 soles, pero la segunda va gratis y un arroz salsa especial a 25. ¿La dirección? A vería Javier Prado, 1250, departamento 302, San Isidro. ¿Metodo de pago? Ya, pues. Perfecto. Así que tal sería 140 soles.",
+  "vram_mb": 0.0,
+  "vram_device_mb": 3850.0,
+  "elapsed_s": 7.04,
+  "faster_whisper": "1.2.1",
+  "timestamp": "2026-10-28T14:05:03"
+}

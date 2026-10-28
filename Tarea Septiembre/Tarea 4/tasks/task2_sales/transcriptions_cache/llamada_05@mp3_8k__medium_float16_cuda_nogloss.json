@@ -1,0 +1,20 @@
+{
+  "clip": "llamada_05",
+  "level": "mp3_8k",
+  "family": "compresion",
+  "severity": 3,
+  "task": "task2_sales",
+  "model": "medium",
+  "compute_type": "float16",
+  "device_requested": "cuda",
+  "device_used": "cuda",
+  "glossary": false,
+  "glossary_mechanism": null,
+  "language": "es",
+  "transcript": "El buen sabor, ¿cómo le ayudo? Bueno, quiero 5% de causa limeña y... 3 sopas de la casa. No, espera, mejor que sean sólo 2. 5 causas y 2 sopas, ¿algo de tomar? 3 limonadas. Tenemos Happy Hour. Las limonadas están a mitad de precio. 3 soles en vez de 6. Perfecto, me lo aplicas perfecto. Entonces, 5 causas a 15 soles, 2 sopas a 12 y 3 limonadas a 3 soles con acrón. Tus totales de 110. ¿Cuál es la dirección? La dirección es pasaje los olivos 28 interior de furtivo. ¿Metodo de pago? Contrastenencia de pantalla.",
+  "vram_mb": 0.0,
+  "vram_device_mb": 1934.0,
+  "elapsed_s": 2.74,
+  "faster_whisper": "1.2.1",
+  "timestamp": "2026-10-28T13:59:20"
+}

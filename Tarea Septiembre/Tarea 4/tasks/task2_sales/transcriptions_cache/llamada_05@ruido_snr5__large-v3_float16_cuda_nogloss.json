@@ -1,0 +1,20 @@
+{
+  "clip": "llamada_05",
+  "level": "ruido_snr5",
+  "family": "ruido",
+  "severity": 3,
+  "task": "task2_sales",
+  "model": "large-v3",
+  "compute_type": "float16",
+  "device_requested": "cuda",
+  "device_used": "cuda",
+  "glossary": false,
+  "glossary_mechanism": null,
+  "language": "es",
+  "transcript": "El buen sabor, ¿cómo le ayudo? Buenas, quiero 5 coces de coche de mi niño y 3 sopas de la casa No, espera, mejor que sean solo 2 5 coces y 2 sopas, ¿algo de tomar? 3 limonadas Tenemos happy hour, las limonadas están a mitad de precio, 3 soles en vez de 6 Perfecto, me la aplicas, por favor Entonces, 5 coces a 15 soles, 2 sopas a 12 y 3 limonadas a 3 soles con la proma Tu total es de 110, ¿cuál es la dirección? La dirección es Pasaje Los Olivos, 28, Interior B, Junquillo ¿Método de pago? Con transferencia de voluntarios",
+  "vram_mb": 0.0,
+  "vram_device_mb": 3690.0,
+  "elapsed_s": 4.17,
+  "faster_whisper": "1.2.1",
+  "timestamp": "2026-10-28T14:04:56"
+}
